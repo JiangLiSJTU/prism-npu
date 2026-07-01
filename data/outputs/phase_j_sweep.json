@@ -1,0 +1,1923 @@
+{
+  "baseline_arch": {
+    "name": "910B4-baseline",
+    "n_cores": 24,
+    "cube_m": 16,
+    "cube_n": 16,
+    "cube_k": 16,
+    "l2_mb": 96,
+    "bw_gbs": 392,
+    "aiv_per_aic": 2,
+    "vector_lanes_per_aiv": 128,
+    "ub_kb_per_aiv": 192,
+    "tdp_w": 300,
+    "clock_ghz": 1.6,
+    "fp16_tflops": 280,
+    "variant_dim": "baseline",
+    "variant_value": null,
+    "baseline": null
+  },
+  "baseline_results": {
+    "BERT-base-S128-L12": {
+      "cube_us": 103.40505805634072,
+      "vector_us": 2.88,
+      "npu_compute_us": 106.28505805634072,
+      "overhead_us": 1776.1999999999998,
+      "wall_clock_us": 1776.1999999999998
+    },
+    "Qwen3-0.6B-prefill-S4096-L28": {
+      "cube_us": 15551.760100398973,
+      "vector_us": 3201.706666666667,
+      "npu_compute_us": 18753.46676706564,
+      "overhead_us": 15810.199999999999,
+      "wall_clock_us": 18753.46676706564
+    },
+    "Qwen3-Embedding-S4096-L28": {
+      "cube_us": 15551.760100398973,
+      "vector_us": 3201.706666666667,
+      "npu_compute_us": 18753.46676706564,
+      "overhead_us": 15810.199999999999,
+      "wall_clock_us": 18753.46676706564
+    },
+    "GPT-2-small-S512-L12": {
+      "cube_us": 363.06509824489575,
+      "vector_us": 23.04,
+      "npu_compute_us": 386.10509824489577,
+      "overhead_us": 4386.200000000001,
+      "wall_clock_us": 4386.200000000001
+    },
+    "Net-Transformer-S256-L1": {
+      "cube_us": 5.023309194280368,
+      "vector_us": 0.24,
+      "npu_compute_us": 5.263309194280368,
+      "overhead_us": 199.4,
+      "wall_clock_us": 199.4
+    }
+  },
+  "fit_params": {
+    "alpha_MN_coupling": 14.597652077846478,
+    "beta_MK_coupling": 2.5051309396869823,
+    "gamma_NK_coupling": 1.7483797813947597,
+    "delta_linear_edge": 2.480461057222181e-34,
+    "gamma_B_batch": 0.01016885060722087
+  },
+  "batch": 1,
+  "variants": [
+    {
+      "variant": "n_cores=8",
+      "variant_dim": "n_cores",
+      "variant_value": "8",
+      "arch": {
+        "n_cores": 8,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 96,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 80.768,
+        "power_proxy": 300,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 239.9072
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 310.2151741690223,
+          "vector_us": 8.64,
+          "npu_compute_us": 318.8551741690223,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 46655.28030119692,
+          "vector_us": 9605.12,
+          "npu_compute_us": 56260.400301196925,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 56260.400301196925,
+          "ratio_vs_baseline": 3.0
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 46655.28030119692,
+          "vector_us": 9605.12,
+          "npu_compute_us": 56260.400301196925,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 56260.400301196925,
+          "ratio_vs_baseline": 3.0
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 1089.1952947346874,
+          "vector_us": 69.12,
+          "npu_compute_us": 1158.3152947346875,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 15.069927582841103,
+          "vector_us": 0.72,
+          "npu_compute_us": 15.789927582841104,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "n_cores=12",
+      "variant_dim": "n_cores",
+      "variant_value": "12",
+      "arch": {
+        "n_cores": 12,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 96,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 97.152,
+        "power_proxy": 300,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 246.4608
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 206.81011611268144,
+          "vector_us": 5.76,
+          "npu_compute_us": 212.57011611268143,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 31103.520200797946,
+          "vector_us": 6403.413333333334,
+          "npu_compute_us": 37506.93353413128,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 37506.93353413128,
+          "ratio_vs_baseline": 2.0
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 31103.520200797946,
+          "vector_us": 6403.413333333334,
+          "npu_compute_us": 37506.93353413128,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 37506.93353413128,
+          "ratio_vs_baseline": 2.0
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 726.1301964897915,
+          "vector_us": 46.08,
+          "npu_compute_us": 772.2101964897915,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 10.046618388560736,
+          "vector_us": 0.48,
+          "npu_compute_us": 10.526618388560737,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "n_cores=16",
+      "variant_dim": "n_cores",
+      "variant_value": "16",
+      "arch": {
+        "n_cores": 16,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 96,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 113.536,
+        "power_proxy": 300,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 253.0144
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 155.10758708451115,
+          "vector_us": 4.32,
+          "npu_compute_us": 159.42758708451115,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 23327.64015059846,
+          "vector_us": 4802.56,
+          "npu_compute_us": 28130.200150598463,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 28130.200150598463,
+          "ratio_vs_baseline": 1.5
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 23327.64015059846,
+          "vector_us": 4802.56,
+          "npu_compute_us": 28130.200150598463,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 28130.200150598463,
+          "ratio_vs_baseline": 1.5
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 544.5976473673437,
+          "vector_us": 34.56,
+          "npu_compute_us": 579.1576473673438,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 7.534963791420552,
+          "vector_us": 0.36,
+          "npu_compute_us": 7.894963791420552,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "n_cores=24",
+      "variant_dim": "n_cores",
+      "variant_value": "24",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 96,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 146.304,
+        "power_proxy": 300,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 266.1216
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 103.40505805634072,
+          "vector_us": 2.88,
+          "npu_compute_us": 106.28505805634072,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 363.06509824489575,
+          "vector_us": 23.04,
+          "npu_compute_us": 386.10509824489577,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 5.023309194280368,
+          "vector_us": 0.24,
+          "npu_compute_us": 5.263309194280368,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "n_cores=32",
+      "variant_dim": "n_cores",
+      "variant_value": "32",
+      "arch": {
+        "n_cores": 32,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 96,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 179.072,
+        "power_proxy": 300,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 279.2288
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 77.55379354225558,
+          "vector_us": 2.16,
+          "npu_compute_us": 79.71379354225557,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 11663.82007529923,
+          "vector_us": 2401.28,
+          "npu_compute_us": 14065.100075299231,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 15810.199999999999,
+          "ratio_vs_baseline": 0.8430547906889124
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 11663.82007529923,
+          "vector_us": 2401.28,
+          "npu_compute_us": 14065.100075299231,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 15810.199999999999,
+          "ratio_vs_baseline": 0.8430547906889124
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 272.29882368367186,
+          "vector_us": 17.28,
+          "npu_compute_us": 289.5788236836719,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 3.767481895710276,
+          "vector_us": 0.18,
+          "npu_compute_us": 3.947481895710276,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "n_cores=48",
+      "variant_dim": "n_cores",
+      "variant_value": "48",
+      "arch": {
+        "n_cores": 48,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 96,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 244.608,
+        "power_proxy": 300,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 305.44320000000005
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 51.70252902817036,
+          "vector_us": 1.44,
+          "npu_compute_us": 53.14252902817036,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 7775.8800501994865,
+          "vector_us": 1600.8533333333335,
+          "npu_compute_us": 9376.73338353282,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 15810.199999999999,
+          "ratio_vs_baseline": 0.8430547906889124
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 7775.8800501994865,
+          "vector_us": 1600.8533333333335,
+          "npu_compute_us": 9376.73338353282,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 15810.199999999999,
+          "ratio_vs_baseline": 0.8430547906889124
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 181.53254912244788,
+          "vector_us": 11.52,
+          "npu_compute_us": 193.05254912244789,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 2.511654597140184,
+          "vector_us": 0.12,
+          "npu_compute_us": 2.631654597140184,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "cube8x8x16",
+      "variant_dim": "cube_kdim",
+      "variant_value": "(8, 8, 16)",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 8,
+        "cube_n": 8,
+        "cube_k": 16,
+        "l2_mb": 96,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 72.576,
+        "power_proxy": 300,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 236.6304
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 377.77690372550063,
+          "vector_us": 2.88,
+          "npu_compute_us": 380.6569037255006,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 61194.47692668397,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 64396.18359335064,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 64396.18359335064,
+          "ratio_vs_baseline": 3.4338282299058203
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 61194.47692668397,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 64396.18359335064,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 64396.18359335064,
+          "ratio_vs_baseline": 3.4338282299058203
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 1405.213910442385,
+          "vector_us": 23.04,
+          "npu_compute_us": 1428.253910442385,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 18.939482137463365,
+          "vector_us": 0.24,
+          "npu_compute_us": 19.179482137463364,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "cube8x16x16",
+      "variant_dim": "cube_kdim",
+      "variant_value": "(8, 16, 16)",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 8,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 96,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 97.152,
+        "power_proxy": 300,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 246.4608
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 191.66914720580286,
+          "vector_us": 2.88,
+          "npu_compute_us": 194.54914720580285,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 31019.9709589777,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 34221.67762564437,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 34221.67762564437,
+          "ratio_vs_baseline": 1.8248187415536206
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 31019.9709589777,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 34221.67762564437,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 34221.67762564437,
+          "ratio_vs_baseline": 1.8248187415536206
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 711.0241951785407,
+          "vector_us": 23.04,
+          "npu_compute_us": 734.0641951785407,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 9.720254162700378,
+          "vector_us": 0.24,
+          "npu_compute_us": 9.960254162700378,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "cube16x16x16",
+      "variant_dim": "cube_kdim",
+      "variant_value": "(16, 16, 16)",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 96,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 146.304,
+        "power_proxy": 300,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 266.1216
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 103.40505805634072,
+          "vector_us": 2.88,
+          "npu_compute_us": 106.28505805634072,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 363.06509824489575,
+          "vector_us": 23.04,
+          "npu_compute_us": 386.10509824489577,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 5.023309194280368,
+          "vector_us": 0.24,
+          "npu_compute_us": 5.263309194280368,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "cube16x16x32",
+      "variant_dim": "cube_kdim",
+      "variant_value": "(16, 16, 32)",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 32,
+        "l2_mb": 96,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 244.608,
+        "power_proxy": 300,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 305.44320000000005
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 59.80422593137517,
+          "vector_us": 2.88,
+          "npu_compute_us": 62.684225931375174,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 9181.92589833766,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 12383.632565004327,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 15810.199999999999,
+          "ratio_vs_baseline": 0.8430547906889124
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 9181.92589833766,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 12383.632565004327,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 15810.199999999999,
+          "ratio_vs_baseline": 0.8430547906889124
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 213.06347761059632,
+          "vector_us": 23.04,
+          "npu_compute_us": 236.10347761059631,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 3.2415372010325076,
+          "vector_us": 0.24,
+          "npu_compute_us": 3.4815372010325074,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "cube32x32x16",
+      "variant_dim": "cube_kdim",
+      "variant_value": "(32, 32, 16)",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 32,
+        "cube_n": 32,
+        "cube_k": 16,
+        "l2_mb": 96,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 441.216,
+        "power_proxy": 300,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 384.0864
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 30.331680576567983,
+          "vector_us": 2.88,
+          "npu_compute_us": 33.211680576567986,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 4014.5104594637355,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 7216.217126130403,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 15810.199999999999,
+          "ratio_vs_baseline": 0.8430547906889124
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 4014.5104594637355,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 7216.217126130403,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 15810.199999999999,
+          "ratio_vs_baseline": 0.8430547906889124
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 96.6470848783737,
+          "vector_us": 23.04,
+          "npu_compute_us": 119.6870848783737,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 1.4000466285273554,
+          "vector_us": 0.24,
+          "npu_compute_us": 1.6400466285273554,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "l2_mb=8",
+      "variant_dim": "l2_mb",
+      "variant_value": "8",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 8,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 102.304,
+        "power_proxy": 300,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 248.5216
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 103.40505805634072,
+          "vector_us": 2.88,
+          "npu_compute_us": 106.28505805634072,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 363.06509824489575,
+          "vector_us": 23.04,
+          "npu_compute_us": 386.10509824489577,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 5.023309194280368,
+          "vector_us": 0.24,
+          "npu_compute_us": 5.263309194280368,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "l2_mb=16",
+      "variant_dim": "l2_mb",
+      "variant_value": "16",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 16,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 106.304,
+        "power_proxy": 300,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 250.1216
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 103.40505805634072,
+          "vector_us": 2.88,
+          "npu_compute_us": 106.28505805634072,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 363.06509824489575,
+          "vector_us": 23.04,
+          "npu_compute_us": 386.10509824489577,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 5.023309194280368,
+          "vector_us": 0.24,
+          "npu_compute_us": 5.263309194280368,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "l2_mb=32",
+      "variant_dim": "l2_mb",
+      "variant_value": "32",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 32,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 114.304,
+        "power_proxy": 300,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 253.3216
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 103.40505805634072,
+          "vector_us": 2.88,
+          "npu_compute_us": 106.28505805634072,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 363.06509824489575,
+          "vector_us": 23.04,
+          "npu_compute_us": 386.10509824489577,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 5.023309194280368,
+          "vector_us": 0.24,
+          "npu_compute_us": 5.263309194280368,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "l2_mb=96",
+      "variant_dim": "l2_mb",
+      "variant_value": "96",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 96,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 146.304,
+        "power_proxy": 300,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 266.1216
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 103.40505805634072,
+          "vector_us": 2.88,
+          "npu_compute_us": 106.28505805634072,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 363.06509824489575,
+          "vector_us": 23.04,
+          "npu_compute_us": 386.10509824489577,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 5.023309194280368,
+          "vector_us": 0.24,
+          "npu_compute_us": 5.263309194280368,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "l2_mb=192",
+      "variant_dim": "l2_mb",
+      "variant_value": "192",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 192,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 194.304,
+        "power_proxy": 300,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 285.3216
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 103.40505805634072,
+          "vector_us": 2.88,
+          "npu_compute_us": 106.28505805634072,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 363.06509824489575,
+          "vector_us": 23.04,
+          "npu_compute_us": 386.10509824489577,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 5.023309194280368,
+          "vector_us": 0.24,
+          "npu_compute_us": 5.263309194280368,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "l2_mb=384",
+      "variant_dim": "l2_mb",
+      "variant_value": "384",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 384,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 290.304,
+        "power_proxy": 300,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 323.72159999999997
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 103.40505805634072,
+          "vector_us": 2.88,
+          "npu_compute_us": 106.28505805634072,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 363.06509824489575,
+          "vector_us": 23.04,
+          "npu_compute_us": 386.10509824489577,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 5.023309194280368,
+          "vector_us": 0.24,
+          "npu_compute_us": 5.263309194280368,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "bw_gbs=50",
+      "variant_dim": "bw_gbs",
+      "variant_value": "50",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 96,
+        "bw_gbs": 50,
+        "aiv_per_aic": 2,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 146.304,
+        "power_proxy": 300,
+        "mem_cost_proxy": 0.25,
+        "tco_score": 156.0216
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 103.40505805634072,
+          "vector_us": 2.88,
+          "npu_compute_us": 106.28505805634072,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 363.06509824489575,
+          "vector_us": 23.04,
+          "npu_compute_us": 386.10509824489577,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 5.023309194280368,
+          "vector_us": 0.24,
+          "npu_compute_us": 5.263309194280368,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "bw_gbs=100",
+      "variant_dim": "bw_gbs",
+      "variant_value": "100",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 96,
+        "bw_gbs": 100,
+        "aiv_per_aic": 2,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 146.304,
+        "power_proxy": 300,
+        "mem_cost_proxy": 0.5,
+        "tco_score": 163.5216
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 103.40505805634072,
+          "vector_us": 2.88,
+          "npu_compute_us": 106.28505805634072,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 363.06509824489575,
+          "vector_us": 23.04,
+          "npu_compute_us": 386.10509824489577,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 5.023309194280368,
+          "vector_us": 0.24,
+          "npu_compute_us": 5.263309194280368,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "bw_gbs=392",
+      "variant_dim": "bw_gbs",
+      "variant_value": "392",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 96,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 146.304,
+        "power_proxy": 300,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 266.1216
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 103.40505805634072,
+          "vector_us": 2.88,
+          "npu_compute_us": 106.28505805634072,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 363.06509824489575,
+          "vector_us": 23.04,
+          "npu_compute_us": 386.10509824489577,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 5.023309194280368,
+          "vector_us": 0.24,
+          "npu_compute_us": 5.263309194280368,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "bw_gbs=800",
+      "variant_dim": "bw_gbs",
+      "variant_value": "800",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 96,
+        "bw_gbs": 800,
+        "aiv_per_aic": 2,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 146.304,
+        "power_proxy": 300,
+        "mem_cost_proxy": 8.0,
+        "tco_score": 388.52160000000003
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 103.40505805634072,
+          "vector_us": 2.88,
+          "npu_compute_us": 106.28505805634072,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 363.06509824489575,
+          "vector_us": 23.04,
+          "npu_compute_us": 386.10509824489577,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 5.023309194280368,
+          "vector_us": 0.24,
+          "npu_compute_us": 5.263309194280368,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "aiv_per_aic=1",
+      "variant_dim": "aiv_per_aic",
+      "variant_value": "1",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 96,
+        "bw_gbs": 392,
+        "aiv_per_aic": 1,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 146.304,
+        "power_proxy": 300,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 266.1216
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 103.40505805634072,
+          "vector_us": 5.76,
+          "npu_compute_us": 109.16505805634073,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 6403.413333333334,
+          "npu_compute_us": 21955.173433732307,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 21955.173433732307,
+          "ratio_vs_baseline": 1.1707261226116026
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 6403.413333333334,
+          "npu_compute_us": 21955.173433732307,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 21955.173433732307,
+          "ratio_vs_baseline": 1.1707261226116026
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 363.06509824489575,
+          "vector_us": 46.08,
+          "npu_compute_us": 409.14509824489573,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 5.023309194280368,
+          "vector_us": 0.48,
+          "npu_compute_us": 5.503309194280368,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "aiv_per_aic=2",
+      "variant_dim": "aiv_per_aic",
+      "variant_value": "2",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 96,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 146.304,
+        "power_proxy": 300,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 266.1216
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 103.40505805634072,
+          "vector_us": 2.88,
+          "npu_compute_us": 106.28505805634072,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 363.06509824489575,
+          "vector_us": 23.04,
+          "npu_compute_us": 386.10509824489577,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 5.023309194280368,
+          "vector_us": 0.24,
+          "npu_compute_us": 5.263309194280368,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "aiv_per_aic=4",
+      "variant_dim": "aiv_per_aic",
+      "variant_value": "4",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 96,
+        "bw_gbs": 392,
+        "aiv_per_aic": 4,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 146.304,
+        "power_proxy": 300,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 266.1216
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 103.40505805634072,
+          "vector_us": 1.44,
+          "npu_compute_us": 104.84505805634072,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 1600.8533333333335,
+          "npu_compute_us": 17152.613433732306,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 17152.613433732306,
+          "ratio_vs_baseline": 0.9146369386941985
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 1600.8533333333335,
+          "npu_compute_us": 17152.613433732306,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 17152.613433732306,
+          "ratio_vs_baseline": 0.9146369386941985
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 363.06509824489575,
+          "vector_us": 11.52,
+          "npu_compute_us": 374.58509824489573,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 5.023309194280368,
+          "vector_us": 0.12,
+          "npu_compute_us": 5.143309194280368,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "TDP100W",
+      "variant_dim": "tdp_w",
+      "variant_value": "100",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 96,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 100,
+        "clock_ghz": 1.1093780389610155
+      },
+      "tco": {
+        "die_area_proxy": 146.304,
+        "power_proxy": 100,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 206.1216
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 149.13590054937004,
+          "vector_us": 4.1536787624853355,
+          "npu_compute_us": 153.28957931185536,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 22429.51932232432,
+          "vector_us": 4617.6600642503645,
+          "npu_compute_us": 27047.179386574684,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 27047.179386574684,
+          "ratio_vs_baseline": 1.4422495703074083
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 22429.51932232432,
+          "vector_us": 4617.6600642503645,
+          "npu_compute_us": 27047.179386574684,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 27047.179386574684,
+          "ratio_vs_baseline": 1.4422495703074083
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 523.6304819373179,
+          "vector_us": 33.229430099882684,
+          "npu_compute_us": 556.8599120372006,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 7.244865526972114,
+          "vector_us": 0.346139896873778,
+          "npu_compute_us": 7.591005423845892,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "TDP150W",
+      "variant_dim": "tdp_w",
+      "variant_value": "150",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 96,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 150,
+        "clock_ghz": 1.2699208415745598
+      },
+      "tco": {
+        "die_area_proxy": 146.304,
+        "power_proxy": 150,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 221.1216
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 130.28220931078513,
+          "vector_us": 3.6285726236972344,
+          "npu_compute_us": 133.91078193448237,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 19593.98991340787,
+          "vector_us": 4033.897624922081,
+          "npu_compute_us": 23627.88753832995,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 23627.88753832995,
+          "ratio_vs_baseline": 1.2599210498948727
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 19593.98991340787,
+          "vector_us": 4033.897624922081,
+          "npu_compute_us": 23627.88753832995,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 23627.88753832995,
+          "ratio_vs_baseline": 1.2599210498948727
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 457.4333597608943,
+          "vector_us": 29.028580989577875,
+          "npu_compute_us": 486.4619407504722,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 6.32897299400429,
+          "vector_us": 0.3023810519747695,
+          "npu_compute_us": 6.63135404597906,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "TDP200W",
+      "variant_dim": "tdp_w",
+      "variant_value": "200",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 96,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 200,
+        "clock_ghz": 1.3977287435780783
+      },
+      "tco": {
+        "die_area_proxy": 146.304,
+        "power_proxy": 200,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 236.1216
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 118.36924270914739,
+          "vector_us": 3.296777018553595,
+          "npu_compute_us": 121.66601972770098,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 17802.32128369934,
+          "vector_us": 3665.039221811286,
+          "npu_compute_us": 21467.360505510627,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 21467.360505510627,
+          "ratio_vs_baseline": 1.1447142425533319
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 17802.32128369934,
+          "vector_us": 3665.039221811286,
+          "npu_compute_us": 21467.360505510627,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 21467.360505510627,
+          "ratio_vs_baseline": 1.1447142425533319
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 415.6057889349568,
+          "vector_us": 26.37421614842876,
+          "npu_compute_us": 441.9800050833856,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 5.750253579441838,
+          "vector_us": 0.2747314182127996,
+          "npu_compute_us": 6.024984997654638,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "TDP300W",
+      "variant_dim": "tdp_w",
+      "variant_value": "300",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 96,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 300,
+        "clock_ghz": 1.6
+      },
+      "tco": {
+        "die_area_proxy": 146.304,
+        "power_proxy": 300,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 266.1216
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 103.40505805634072,
+          "vector_us": 2.88,
+          "npu_compute_us": 106.28505805634072,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 15551.760100398973,
+          "vector_us": 3201.706666666667,
+          "npu_compute_us": 18753.46676706564,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 18753.46676706564,
+          "ratio_vs_baseline": 1.0
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 363.06509824489575,
+          "vector_us": 23.04,
+          "npu_compute_us": 386.10509824489577,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 5.023309194280368,
+          "vector_us": 0.24,
+          "npu_compute_us": 5.263309194280368,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    },
+    {
+      "variant": "TDP400W",
+      "variant_dim": "tdp_w",
+      "variant_value": "400",
+      "arch": {
+        "n_cores": 24,
+        "cube_m": 16,
+        "cube_n": 16,
+        "cube_k": 16,
+        "l2_mb": 96,
+        "bw_gbs": 392,
+        "aiv_per_aic": 2,
+        "tdp_w": 400,
+        "clock_ghz": 1.7610278660771344
+      },
+      "tco": {
+        "die_area_proxy": 146.304,
+        "power_proxy": 400,
+        "mem_cost_proxy": 3.92,
+        "tco_score": 296.1216
+      },
+      "models": {
+        "BERT-base-S128-L12": {
+          "cube_us": 93.94973019858986,
+          "vector_us": 2.6166536536782807,
+          "npu_compute_us": 96.56638385226815,
+          "overhead_us": 1776.1999999999998,
+          "wall_clock_us": 1776.1999999999998,
+          "ratio_vs_baseline": 1.0
+        },
+        "Qwen3-0.6B-prefill-S4096-L28": {
+          "cube_us": 14129.7117666101,
+          "vector_us": 2908.9435581039734,
+          "npu_compute_us": 17038.655324714073,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 17038.655324714073,
+          "ratio_vs_baseline": 0.9085602964160697
+        },
+        "Qwen3-Embedding-S4096-L28": {
+          "cube_us": 14129.7117666101,
+          "vector_us": 2908.9435581039734,
+          "npu_compute_us": 17038.655324714073,
+          "overhead_us": 15810.199999999999,
+          "wall_clock_us": 17038.655324714073,
+          "ratio_vs_baseline": 0.9085602964160697
+        },
+        "GPT-2-small-S512-L12": {
+          "cube_us": 329.86653327971203,
+          "vector_us": 20.933229229426246,
+          "npu_compute_us": 350.7997625091383,
+          "overhead_us": 4386.200000000001,
+          "wall_clock_us": 4386.200000000001,
+          "ratio_vs_baseline": 1.0
+        },
+        "Net-Transformer-S256-L1": {
+          "cube_us": 4.56397929054494,
+          "vector_us": 0.21805447113985674,
+          "npu_compute_us": 4.782033761684796,
+          "overhead_us": 199.4,
+          "wall_clock_us": 199.4,
+          "ratio_vs_baseline": 1.0
+        }
+      }
+    }
+  ]
+}

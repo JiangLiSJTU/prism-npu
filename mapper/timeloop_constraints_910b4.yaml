@@ -1,0 +1,118 @@
+# Timeloop 约束配置（昇腾 910B4 DaVinci Cube 路径）
+# 创建日期：2026-05-05
+# 数据来源：arch/ascend_910b4.yaml（.ini 权威值）
+#
+# 约束层次（从内到外，对应 DaVinci 存储层次）：
+#   Cube_Reg → L0A/L0B/L0C → L1_Buffer → L2_Buffer → DRAM
+#
+# DaVinci Cube 16×16×16 阵列（FP16）约束：
+#   - 最内层（Cube_MAC）spatial 并行度必须是 16 的倍数
+#   - L0A/L0B 各 64KB/核，L0C 128KB/核
+#   - Cube 阵列要求 M 和 N 对齐到 16（FP16），K 对齐到 16
+#
+# 参考：
+#   Ascend910B4.ini: cube_core_cnt=20, l0_a_size=65536, l0_b_size=65536
+#   l0_c_size=131072, l1_size=524288, ub_size=196608, l2_size=100663296
+
+constraints:
+  targets:
+
+    # ── DRAM 层：外层循环，不限制 ──────────────────────────────────
+    - target: DRAM
+      type: temporal
+      # 无约束：DRAM 层存放完整 tensor，所有维度均可在此循环
+
+    # ── L2_Buffer（96 MB 共享）：权重常驻策略 ──────────────────────
+    - target: L2_Buffer
+      type: temporal
+      factors: M>=1 N>=1 K>=1    # 无强制约束
+      permutation: [M, N, K]     # 建议 M 最外，N 其次（WS 权重常驻时 K 靠内）
+
+    - target: L2_Buffer
+      type: spatial
+      factors: N==8              # 精确约束 8 个 DaVinci Core（>=不被 binary 支持，用==）
+
+    - target: L2_Buffer
+      type: dataspace
+      keep: [Weights]            # 偏好：权重常驻 L2（若 weight_size ≤ 96MB）
+      bypass: []
+
+    # ── L1_Buffer（512 KB/核）：单核级别 tiling ─────────────────────
+    - target: L1_Buffer
+      type: temporal
+      # L1 = 512 KB = 524288 Bytes
+      # FP16 = 2 Bytes/element
+      # 可存 262144 个 FP16 元素
+      # 典型分块：M_tile × K_tile（输入）+ K_tile × N_tile（权重）+ M_tile × N_tile（输出）
+      # 保守估计：M_tile=64, N_tile=64, K_tile=512 → 64×512×2+64×512×2+64×64×2 = 139264B < 512KB ✓
+      factors: M>=1 N>=1 K>=1
+
+    - target: L1_Buffer
+      type: dataspace
+      keep: [Inputs, Weights, Outputs]
+      bypass: []
+
+    # ── L0C_Buffer（128 KB/核）：输出部分和累积 ──────────────────────
+    - target: L0C_Buffer
+      type: temporal
+      # L0C = 128 KB = 131072 Bytes，存输出 C（FP32 累加）
+      # 最大 M × N = 131072 / 4 = 32768 个 FP32 元素
+      # Cube 阵列输出块：16×16=256 或 16×N_tile_L0（N_tile_L0 ≤ 64 for FP16）
+      # 约束：M_L0 × N_L0 ≤ 32768（FP32）= 16384（FP16，含 2× 精度转换 buffer）
+      factors: M<=(128) N<=(128) K>=1
+
+    - target: L0C_Buffer
+      type: spatial
+      factors: K==1              # K 是 reduce 维度，禁止作为 spatial（物理不可并行 K）
+
+    - target: L0C_Buffer
+      type: dataspace
+      keep: [Outputs]            # L0C 仅存输出（部分和）
+      bypass: [Inputs, Weights]
+
+    # ── L0A_Buffer（64 KB/核）：输入激活分块 ────────────────────────
+    - target: L0A_Buffer
+      type: temporal
+      # L0A = 64 KB = 65536 Bytes
+      # 存输入 A（FP16）：M_L0 × K_L0 ≤ 65536/2 = 32768 elements
+      # Cube 最小块：16×16=256 elements，最大 M_L0=128, K_L0=256 时 = 32768 ✓
+      factors: M<=(128) K<=(256) N==1   # N 不在 L0A 中循环（L0A 只存输入）
+
+    - target: L0A_Buffer
+      type: dataspace
+      keep: [Inputs]             # L0A 仅存输入
+      bypass: [Weights, Outputs]
+
+    # ── L0B_Buffer（64 KB/核）：权重分块 ────────────────────────────
+    - target: L0B_Buffer
+      type: temporal
+      # L0B = 64 KB = 65536 Bytes
+      # 存权重 B（FP16）：K_L0 × N_L0 ≤ 65536/2 = 32768 elements
+      # WS（Weight Stationary）时：N_L0 × K_L0 保持不动，M 循环
+      # 约束：K_L0=16（最小 Cube 块），N_L0=16*64=1024? No，N_L0 ≤ 64
+      factors: N<=(64) K<=(512) M==1    # M 不在 L0B 中循环（L0B 只存权重）
+
+    - target: L0B_Buffer
+      type: dataspace
+      keep: [Weights]            # L0B 仅存权重（WS dataflow 偏好）
+      bypass: [Inputs, Outputs]
+
+    # ── Cube_Reg（寄存器）：最内层，Cube 阵列直接操作 ────────────────
+    - target: Cube_Reg
+      type: temporal
+      # Cube 阵列：16×16×16（FP16）
+      # M/N 由 spatial 负责（16×16 并行），K 为 reduce 方向（串行累加）
+      # 注意：不能加 M==16 N==16 temporal——对 M=128 GEMM 会导致 M_spatial × M_temporal = 256 > 128 不可行
+      factors: K>=1              # 只约束 K 方向（reduce），M/N 交由 spatial/上层处理
+
+    - target: Cube_Reg
+      type: spatial
+      # Spatial 展开：Cube_MAC[0..4095] 对应 M=16, N=16 并行（256 active MACs/core）
+      # split: 1 → M 在 X 方向（16 实例），N 在 Y 方向（16 实例）
+      factors: M==16 N==16       # 16×16 Cube 阵列并行
+      split: 1                   # M→X方向，N→Y方向
+
+    - target: Cube_Reg
+      type: dataspace
+      keep: [Outputs]            # 部分和在 Cube 寄存器中累加
+      bypass: [Inputs, Weights]  # 输入/权重直接从 L0A/L0B 读取，不额外缓存

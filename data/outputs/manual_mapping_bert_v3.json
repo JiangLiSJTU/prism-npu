@@ -1,0 +1,17 @@
+{
+  "success": true,
+  "cycles": 3072,
+  "utilization": null,
+  "pj_per_compute": null,
+  "stderr_tail": "",
+  "stdout_tail": "imeloop-accelergy-exercises/workspace/example_designs/example_designs/_components/regfile.yaml --oprefix timeloop-model. -o ./ > timeloop-model.accelergy.log 2>&1\nStart Parsering Layout\nNo Layout specified, so using bandwidth based modeling\nUtilization = 1.00 | pJ/Compute =   15.102 | Cycles = 3072\n",
+  "utilization_pct": 100.0,
+  "fj_per_compute": 15102.35,
+  "energy_uj": 4560.76,
+  "cycles_raw": 3072,
+  "cycles_corrected": 3072,
+  "wall_clock_us_raw": 3.072,
+  "wall_clock_us_corrected": 3.072,
+  "cube_k_correction_factor": 1,
+  "clock_mhz": 1000
+}

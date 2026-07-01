@@ -1,0 +1,28 @@
+# Flan-T5-base encoder — 12 层 encoder with gated GeLU（S=512, d=768）
+# 数据来源：google/flan-t5-base config.json (encoder only for predict_pipe)
+# 典型场景：seq2seq prefill
+
+name: Flan-T5-base-encoder-S512-b1
+arch: encoder
+layers: 12
+ops_b1: 35.0e9                # ~35 GFLOPs encoder @ S=512 (gated FFN heavier)
+weight_mb: 495.0              # 248M params × 2 bytes (encoder+decoder; FP16)
+bytes_total: 3.99e8           # HBM overflow = (495-96) × 1e6 = 399 MB
+alpha_per_batch: null
+beta_layer_override: null
+note: |
+  S=512, D=768, L=12 encoder, intermediate=2048, MHA 12 heads d_head=64.
+  Flan-T5 uses gated GeLU FFN (DenseReluDense → DenseGatedGeluDense in T5-v1.1).
+  注：本 YAML 只建模 encoder pass；完整 flan-t5 prefill 含 cross-attention 在 decoder
+  side（本工具不建模）。如要全模型预测需拆 encoder + decoder 两个 YAML.
+  预期 regime: memory-bound（大权重 + 中等 S）.
+
+gemm_spec:
+  S: 512
+  d_model: 768
+  d_ff: 2048
+  n_heads: 12
+  n_kv_heads: 0
+  d_head: 64
+  vocab: 32128
+  ffn_type: glu

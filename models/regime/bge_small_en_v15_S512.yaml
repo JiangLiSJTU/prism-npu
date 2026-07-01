@@ -1,0 +1,27 @@
+# BGE-small-en-v1.5 — 12 层 encoder（S=512, d=384）
+# 数据来源：BAAI/bge-small-en-v1.5 config.json
+# 典型场景：检索 / sentence embedding，S=512
+
+name: BGE-small-en-v1.5-S512-b1
+arch: encoder
+layers: 12
+ops_b1: 2.36e9                # ~12 × 0.197G/层
+weight_mb: 67.0               # 33M params × 2 bytes (FP16)
+bytes_total: 0.0              # weight < L2 96 MB, 无 HBM overflow
+alpha_per_batch: null
+beta_layer_override: null
+note: |
+  S=512, D=384, L=12, intermediate=1536, MHA 12 heads d_head=32.
+  Encoder for retrieval (sentence-transformers). Standard GeLU FFN.
+  权重 67 MB < L2 96 MB → 无 HBM overflow，HBM bound 很弱.
+  预期 regime: 调度受限 (short S + small d → host_gap 主导).
+
+gemm_spec:
+  S: 512
+  d_model: 384
+  d_ff: 1536
+  n_heads: 12
+  n_kv_heads: 0
+  d_head: 32
+  vocab: 30522
+  ffn_type: standard

@@ -1,0 +1,85 @@
+# 昇腾 910B4 架构描述（**Phase J sweep v3 专用，Phase N N6a 派生**）
+# 派生自：arch/ascend_910b4_for_mapping.yaml（L#2 fix）
+# 创建日期：2026-05-09
+#
+# Phase N N6a 修复要点：
+#   原 sweep v2 公式只用 Cube/AIV ALU 算力 + HBM BW + L2 容量。
+#   v3 加入 pipe-aware 建模：
+#     - L0A/L0B/L0C 容量 × bank 数（影响 mte1 stall）
+#     - L1↔L0 带宽（mte1 throughput）
+#     - FixPipe 带宽（L0C→L1/UB writeback）
+#     - UB 容量 × UB↔L1 带宽（aiv_mte2 throughput）
+#     - host gap per kernel（CANN runtime overhead）
+#   所有新字段都是 sweep-aware：可以独立加减验证 hypothesis。
+#
+# 关键规格（与 ascend_910b4.yaml 一致 + 新增 sweep 字段）：
+#   AICore 数：24；Cube：16×16×16 = 4096 MAC/AIC
+#   HBM2e BW：392 GB/s；L2：96 MB；L1：512 KB；L0A/B：64 KB；L0C：128 KB
+#   AIV：2/AIC，UB：192 KB/AIV，Vector lanes：128 FP16/AIV
+#
+# 经验估值字段（标注来源）：
+#   l1_l0_bw_gbs:     2048   <- DaVinci HC31 推算 + msprof bytes/aic_mte1_time 反推
+#   fixpipe_bw_gbs:   4096   <- HC31 推算 + msprof bytes_l0c/aic_fixpipe_time 反推
+#   ub_l1_bw_gbs:     2048   <- HC31 推算 + msprof aiv_mte2_time 反推
+#   pipe_overlap_factor: 0.6 <- 基于 9 配置 aic_bubble% 经验值（10-33%）
+#
+# 不修改：arch/ascend_910b4.yaml（locked）、arch/ascend_910b4_for_mapping.yaml（L#2）
+# 仅供 scripts/phase_j/sweep.py v3 使用，不进 timeloop manual mapping 路径
+
+architecture:
+  version: 2.0   # Phase N N6a 标识（与 sweep v3 一对一对应）
+
+# === 既有字段（baseline 910B4） ===
+n_cores: 24
+cube_m: 16
+cube_n: 16
+cube_k: 16
+hbm_bw_gbs: 784
+l2_mb: 96
+clock_ghz: 1.6
+fp16_tflops: 280
+tdp_w: 300
+
+# === Phase N N6a 新增字段（sweep-aware） ===
+# L0 缓存层（per AIC）
+l0a_kb: 64
+l0b_kb: 64
+l0c_kb: 128
+l0a_banks: 4
+l0b_banks: 4
+l0c_banks: 8
+
+# L1 缓存层（per AIC）
+l1_kb: 512
+
+# 片内总线带宽（pipe throughput）
+l1_l0_bw_gbs: 2048           # MTE1 throughput (L1 ↔ L0A/B)
+fixpipe_bw_gbs: 4096         # FixPipe throughput (L0C → L1/UB)
+
+# AIV / UB
+aiv_per_aic: 2
+ub_kb_per_aiv: 192
+ub_l1_bw_gbs: 2048           # AIV MTE2 throughput (UB ↔ L1)
+aiv_lanes_per_aiv: 128       # FP16 SIMD lanes per AIV
+aiv_mte3_bw_gbs: 1024        # AIV MTE3 throughput (UB → output)
+
+# Host runtime
+beta_host_gap_us_per_kernel: 41.6   # BERT b=1 实测均值；per-model 可覆盖
+
+# Pipe overlap (经验值)
+pipe_overlap_factor: 0.6     # 多 pipe 并行带来的 effective speedup（aic_bubble 经验）
+
+# === Sweep 维度（v3 新增） ===
+# 这些字段是 sweep 主驱动，每维独立加减
+# n_cores_variants:        [8, 12, 16, 24, 32, 48]
+# cube_kdim_variants:      [(8,8,16), (8,16,16), (16,16,16), (16,16,32), (32,32,16)]
+# l2_mb_variants:          [8, 16, 32, 96, 192, 384]
+# hbm_bw_gbs_variants:     [50, 100, 392, 800]   # LPDDR4X / LPDDR5X / HBM2e / HBM3
+# aiv_per_aic_variants:    [1, 2, 4]
+# tdp_w_variants:          [100, 150, 200, 300, 400]
+# l0a_kb_variants:         [32, 64, 128, 256]
+# l1_kb_variants:          [256, 512, 1024]
+# l1_l0_bw_gbs_variants:   [1024, 2048, 4096]
+# fixpipe_bw_gbs_variants: [2048, 4096, 8192]
+# ub_l1_fused_variants:    [false, true]   # UB+L1 融合（消除 ub_l1 流量）
+# beta_host_gap_us_per_kernel_variants: [10, 41.6, 100]

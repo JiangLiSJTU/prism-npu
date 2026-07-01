@@ -1,0 +1,26 @@
+# Qwen2.5-0.5B prefill — 24 层 GQA decoder（S=2048, d=896）
+# 数据来源：Qwen/Qwen2.5-0.5B config.json
+
+name: Qwen2.5-0.5B-prefill-S2048-b1
+arch: decoder
+layers: 24
+ops_b1: 2.06e12               # ~2.06 TFLOPs @ S=2048
+weight_mb: 980.0              # 490M params × 2 bytes (FP16)
+bytes_total: 8.84e8           # HBM overflow = (980-96) × 1e6 = 884 MB
+alpha_per_batch: null
+beta_layer_override: null
+note: |
+  S=2048 prefill, D=896, L=24, intermediate=4864, GQA 14Q/2KV heads d_head=64.
+  SwiGLU FFN, RoPE.
+  典型场景：边缘 LLM prefill.
+  预期 regime: 介于 compute-bound 和 memory-bound 之间，HBM overflow 显著.
+
+gemm_spec:
+  S: 2048
+  d_model: 896
+  d_ff: 4864
+  n_heads: 14
+  n_kv_heads: 2
+  d_head: 64
+  vocab: 151936
+  ffn_type: swiglu

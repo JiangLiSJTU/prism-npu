@@ -1,0 +1,831 @@
+{
+  "_meta": {
+    "hbm_bw_gbs": 392.0,
+    "fixpipe_bw_gbs": 4096.0,
+    "ub_l1_bw_gbs": 2048.0,
+    "method": "Prior-based 2-cluster: classify each op by implied bw (bytes/time) against threshold sqrt(hbm*onchip); gm_frac = byte fraction in GM cluster. Universal — bimodal configs split cleanly, unimodal collapse to '1cluster'. Per-cluster OLS slopes reported as sanity (gm_bw_eff_gbs / oc_bw_eff_gbs).",
+    "consumer": "prism.sweep.runner.scale_aic_pipes / scale_aiv_pipes",
+    "issue": "issue-7-fixpipe-mte3-destination-bw",
+    "date": "2026-05-21"
+  },
+  "aic_fixpipe": {
+    "Net-Transformer-S256-L1-b1": {
+      "gm_frac": 1.0,
+      "method": "1cluster",
+      "eff_bw_gbs": 392.0,
+      "n_gm": 144,
+      "n_oc": 0,
+      "gm_bw_eff_gbs": 568.1,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.958,
+      "confidence": "high",
+      "source": "measured:msprof_net_transformer_b1"
+    },
+    "Net-Transformer-S256-L1-b4": {
+      "gm_frac": 0.915,
+      "method": "2cluster",
+      "eff_bw_gbs": 424.8,
+      "n_gm": 132,
+      "n_oc": 12,
+      "gm_bw_eff_gbs": 524.2,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.929,
+      "confidence": "high",
+      "source": "measured:msprof_net_transformer_b4"
+    },
+    "Net-Transformer-S256-L1-b8": {
+      "gm_frac": 0.934,
+      "method": "2cluster",
+      "eff_bw_gbs": 417.1,
+      "n_gm": 121,
+      "n_oc": 23,
+      "gm_bw_eff_gbs": 574.2,
+      "oc_bw_eff_gbs": 1421.0,
+      "pooled_r2": 0.834,
+      "confidence": "high",
+      "source": "measured:msprof_net_transformer_b8"
+    },
+    "Net-Transformer-S256-L1-b16": {
+      "gm_frac": 1.0,
+      "method": "1cluster",
+      "eff_bw_gbs": 392.0,
+      "n_gm": 144,
+      "n_oc": 0,
+      "gm_bw_eff_gbs": 557.8,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.913,
+      "confidence": "high",
+      "source": "measured:msprof_net_transformer_b16"
+    },
+    "BERT-base-S128-b4": {
+      "gm_frac": 1.0,
+      "method": "1cluster",
+      "eff_bw_gbs": 392.0,
+      "n_gm": 1164,
+      "n_oc": 0,
+      "gm_bw_eff_gbs": 571.1,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.878,
+      "confidence": "high",
+      "source": "measured:msprof_bert_base_b4"
+    },
+    "BERT-base-S128-b8": {
+      "gm_frac": 0.86,
+      "method": "2cluster",
+      "eff_bw_gbs": 448.8,
+      "n_gm": 1043,
+      "n_oc": 121,
+      "gm_bw_eff_gbs": 562.3,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.733,
+      "confidence": "high",
+      "source": "measured:msprof_bert_base_b8"
+    },
+    "BERT-base-S128-b16": {
+      "gm_frac": 0.833,
+      "method": "2cluster",
+      "eff_bw_gbs": 461.6,
+      "n_gm": 1020,
+      "n_oc": 144,
+      "gm_bw_eff_gbs": 507.4,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.814,
+      "confidence": "high",
+      "source": "measured:msprof_bert_base_b16"
+    },
+    "GPT-2-S512-b4": {
+      "gm_frac": 0.659,
+      "method": "2cluster",
+      "eff_bw_gbs": 566.9,
+      "n_gm": 732,
+      "n_oc": 144,
+      "gm_bw_eff_gbs": 361.2,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.911,
+      "confidence": "high",
+      "source": "measured:msprof_gpt2_small_b4"
+    },
+    "GPT-2-S512-b8": {
+      "gm_frac": 0.713,
+      "method": "2cluster",
+      "eff_bw_gbs": 529.2,
+      "n_gm": 755,
+      "n_oc": 121,
+      "gm_bw_eff_gbs": 358.6,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.918,
+      "confidence": "high",
+      "source": "measured:msprof_gpt2_small_b8"
+    },
+    "GPT-2-S512-b16": {
+      "gm_frac": 1.0,
+      "method": "1cluster",
+      "eff_bw_gbs": 392.0,
+      "n_gm": 876,
+      "n_oc": 0,
+      "gm_bw_eff_gbs": 375.2,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.923,
+      "confidence": "high",
+      "source": "measured:msprof_gpt2_small_b16"
+    },
+    "HF-BERT-S128-b1": {
+      "gm_frac": 1.0,
+      "method": "1cluster",
+      "eff_bw_gbs": 392.0,
+      "n_gm": 396,
+      "n_oc": 0,
+      "gm_bw_eff_gbs": 663.9,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.168,
+      "confidence": "low",
+      "source": "measured:msprof_hf_bert_b1"
+    },
+    "HF-BERT-S128-b4": {
+      "gm_frac": 1.0,
+      "method": "1cluster",
+      "eff_bw_gbs": 392.0,
+      "n_gm": 396,
+      "n_oc": 0,
+      "gm_bw_eff_gbs": 840.8,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.355,
+      "confidence": "low",
+      "source": "measured:msprof_hf_bert_b4"
+    },
+    "HF-BERT-S128-b8": {
+      "gm_frac": 0.78,
+      "method": "2cluster",
+      "eff_bw_gbs": 489.5,
+      "n_gm": 359,
+      "n_oc": 37,
+      "gm_bw_eff_gbs": 820.2,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.323,
+      "confidence": "high",
+      "source": "measured:msprof_hf_bert_b8"
+    },
+    "HF-BERT-S128-b16": {
+      "gm_frac": 1.0,
+      "method": "1cluster",
+      "eff_bw_gbs": 392.0,
+      "n_gm": 396,
+      "n_oc": 0,
+      "gm_bw_eff_gbs": 719.1,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.855,
+      "confidence": "high",
+      "source": "measured:msprof_hf_bert_b16"
+    },
+    "ModernBERT-base-S4096-b1": {
+      "gm_frac": 1.0,
+      "method": "1cluster",
+      "eff_bw_gbs": 392.0,
+      "n_gm": 1584,
+      "n_oc": 0,
+      "gm_bw_eff_gbs": 317.5,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.998,
+      "confidence": "high",
+      "source": "measured:msprof_modernbert_S4096_b1"
+    },
+    "ModernBERT-base-S4096-b1-sdpa": {
+      "gm_frac": 1.0,
+      "method": "1cluster",
+      "eff_bw_gbs": 392.0,
+      "n_gm": 1584,
+      "n_oc": 0,
+      "gm_bw_eff_gbs": 699.3,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.995,
+      "confidence": "high",
+      "source": "measured:msprof_modernbert_base_prefill_S4096_b1_sdpa"
+    },
+    "Llama-3.2-1B-prefill-S2048-b1": {
+      "gm_frac": 1.0,
+      "method": "1cluster",
+      "eff_bw_gbs": 392.0,
+      "n_gm": 1740,
+      "n_oc": 0,
+      "gm_bw_eff_gbs": 797.1,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.918,
+      "confidence": "high",
+      "source": "measured:msprof_llama_3_2_1b_prefill_S2048_b1"
+    },
+    "Llama-3.2-1B-prefill-S2048-b1-sdpa": {
+      "gm_frac": 1.0,
+      "method": "1cluster",
+      "eff_bw_gbs": 392.0,
+      "n_gm": 1740,
+      "n_oc": 0,
+      "gm_bw_eff_gbs": 783.0,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.936,
+      "confidence": "high",
+      "source": "measured:msprof_llama_3_2_1b_prefill_S2048_b1_sdpa"
+    },
+    "Qwen2.5-0.5B-prefill-S2048-b1": {
+      "gm_frac": 0.423,
+      "method": "2cluster",
+      "eff_bw_gbs": 819.9,
+      "n_gm": 1749,
+      "n_oc": 855,
+      "gm_bw_eff_gbs": 248.4,
+      "oc_bw_eff_gbs": 1625.0,
+      "pooled_r2": 0.677,
+      "confidence": "high",
+      "source": "measured:msprof_qwen2_5_05b_prefill_S2048_b1"
+    },
+    "Qwen2.5-0.5B-prefill-S2048-b1-sdpa": {
+      "gm_frac": 0.7,
+      "method": "2cluster",
+      "eff_bw_gbs": 538.2,
+      "n_gm": 1884,
+      "n_oc": 720,
+      "gm_bw_eff_gbs": 301.1,
+      "oc_bw_eff_gbs": 1519.9,
+      "pooled_r2": 0.717,
+      "confidence": "high",
+      "source": "measured:msprof_qwen2_5_05b_prefill_S2048_b1_sdpa"
+    },
+    "SmolLM2-360M-prefill-S2048-b1": {
+      "gm_frac": 0.283,
+      "method": "2cluster",
+      "eff_bw_gbs": 1114.1,
+      "n_gm": 3093,
+      "n_oc": 375,
+      "gm_bw_eff_gbs": 661.9,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.786,
+      "confidence": "high",
+      "source": "measured:msprof_smollm2_360m_prefill_S2048_b1"
+    },
+    "SmolLM2-360M-prefill-S2048-b1-sdpa": {
+      "gm_frac": 1.0,
+      "method": "1cluster",
+      "eff_bw_gbs": 392.0,
+      "n_gm": 3468,
+      "n_oc": 0,
+      "gm_bw_eff_gbs": 1059.4,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.883,
+      "confidence": "high",
+      "source": "measured:msprof_smollm2_360m_prefill_S2048_b1_sdpa"
+    },
+    "Phi-3-mini-prefill-S2048-b1-sdpa": {
+      "gm_frac": 1.0,
+      "method": "1cluster",
+      "eff_bw_gbs": 392.0,
+      "n_gm": 3468,
+      "n_oc": 0,
+      "gm_bw_eff_gbs": 725.8,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.97,
+      "confidence": "high",
+      "source": "measured:msprof_phi3_mini_prefill_S2048_b1_sdpa"
+    },
+    "Qwen3-prefill-S4096-b1-sdpa": {
+      "gm_frac": 0.976,
+      "method": "2cluster",
+      "eff_bw_gbs": 400.7,
+      "n_gm": 2701,
+      "n_oc": 335,
+      "gm_bw_eff_gbs": 479.0,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.846,
+      "confidence": "high",
+      "source": "measured:msprof_qwen3_06b_prefill_S4096_b1_sdpa"
+    },
+    "Qwen3-prefill-S256-b1-sdpa": {
+      "gm_frac": 0.828,
+      "method": "2cluster",
+      "eff_bw_gbs": 464.0,
+      "n_gm": 1692,
+      "n_oc": 1344,
+      "gm_bw_eff_gbs": 237.1,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.994,
+      "confidence": "high",
+      "source": "measured:msprof_qwen3_06b_prefill_S256_b1_sdpa"
+    },
+    "Qwen3-prefill-S256-b4-sdpa": {
+      "gm_frac": 1.0,
+      "method": "1cluster",
+      "eff_bw_gbs": 392.0,
+      "n_gm": 3036,
+      "n_oc": 0,
+      "gm_bw_eff_gbs": 266.4,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.992,
+      "confidence": "high",
+      "source": "measured:msprof_qwen3_06b_prefill_S256_b4_sdpa"
+    },
+    "Qwen3-prefill-S256-b8-sdpa": {
+      "gm_frac": 0.828,
+      "method": "2cluster",
+      "eff_bw_gbs": 464.0,
+      "n_gm": 2700,
+      "n_oc": 336,
+      "gm_bw_eff_gbs": 252.1,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.991,
+      "confidence": "high",
+      "source": "measured:msprof_qwen3_06b_prefill_S256_b8_sdpa"
+    },
+    "Qwen3-prefill-S512-b4-sdpa": {
+      "gm_frac": 0.671,
+      "method": "2cluster",
+      "eff_bw_gbs": 558.4,
+      "n_gm": 2533,
+      "n_oc": 503,
+      "gm_bw_eff_gbs": 271.4,
+      "oc_bw_eff_gbs": 1429.9,
+      "pooled_r2": 0.961,
+      "confidence": "high",
+      "source": "measured:msprof_qwen3_06b_prefill_S512_b4_sdpa"
+    },
+    "Qwen3-prefill-S512-b8-sdpa": {
+      "gm_frac": 1.0,
+      "method": "1cluster",
+      "eff_bw_gbs": 392.0,
+      "n_gm": 3036,
+      "n_oc": 0,
+      "gm_bw_eff_gbs": 254.1,
+      "oc_bw_eff_gbs": null,
+      "pooled_r2": 0.978,
+      "confidence": "high",
+      "source": "measured:msprof_qwen3_06b_prefill_S512_b8_sdpa"
+    },
+    "BERT-base-S128-b1": {
+      "gm_frac": 1.0,
+      "eff_bw_gbs": 392.0,
+      "confidence": "high",
+      "source": "inherited:BERT-base-S128-b4"
+    },
+    "GPT-2-S512-b1": {
+      "gm_frac": 0.659,
+      "eff_bw_gbs": 566.9,
+      "confidence": "high",
+      "source": "inherited:GPT-2-S512-b4"
+    },
+    "Qwen3-prefill-S256-b1": {
+      "gm_frac": 0.828,
+      "eff_bw_gbs": 464.0,
+      "confidence": "high",
+      "source": "inherited:Qwen3-prefill-S256-b1-sdpa"
+    },
+    "Qwen3-prefill-S256-b4": {
+      "gm_frac": 1.0,
+      "eff_bw_gbs": 392.0,
+      "confidence": "high",
+      "source": "inherited:Qwen3-prefill-S256-b4-sdpa"
+    },
+    "Qwen3-prefill-S256-b8": {
+      "gm_frac": 0.828,
+      "eff_bw_gbs": 464.0,
+      "confidence": "high",
+      "source": "inherited:Qwen3-prefill-S256-b8-sdpa"
+    },
+    "Qwen3-prefill-S512-b4": {
+      "gm_frac": 0.671,
+      "eff_bw_gbs": 558.4,
+      "confidence": "high",
+      "source": "inherited:Qwen3-prefill-S512-b4-sdpa"
+    },
+    "Qwen3-prefill-S512-b8": {
+      "gm_frac": 1.0,
+      "eff_bw_gbs": 392.0,
+      "confidence": "high",
+      "source": "inherited:Qwen3-prefill-S512-b8-sdpa"
+    },
+    "Qwen3-prefill-S4096-b1": {
+      "gm_frac": 0.976,
+      "eff_bw_gbs": 400.7,
+      "confidence": "high",
+      "source": "inherited:Qwen3-prefill-S4096-b1-sdpa"
+    },
+    "Qwen3-Embedding-S4096-b1": {
+      "gm_frac": 0.976,
+      "eff_bw_gbs": 400.7,
+      "confidence": "high",
+      "source": "inherited:Qwen3-prefill-S4096-b1-sdpa"
+    },
+    "Qwen3-decode-Min4-Skv128-b1": {
+      "gm_frac": 0.0,
+      "eff_bw_gbs": null,
+      "confidence": "low",
+      "source": "assumed (decode S=1: tiny outputs, on-chip)"
+    }
+  },
+  "aiv_mte3": {
+    "Net-Transformer-S256-L1-b1": {
+      "gm_frac": 0.451,
+      "method": "2cluster",
+      "eff_bw_gbs": 705.2,
+      "n_gm": 178,
+      "n_oc": 122,
+      "gm_bw_eff_gbs": 745.0,
+      "oc_bw_eff_gbs": 1514.0,
+      "pooled_r2": 0.291,
+      "confidence": "high",
+      "source": "measured:msprof_net_transformer_b1"
+    },
+    "Net-Transformer-S256-L1-b4": {
+      "gm_frac": 0.072,
+      "method": "2cluster",
+      "eff_bw_gbs": 1567.9,
+      "n_gm": 95,
+      "n_oc": 205,
+      "gm_bw_eff_gbs": 604.2,
+      "oc_bw_eff_gbs": 3796.2,
+      "pooled_r2": 0.181,
+      "confidence": "low",
+      "source": "measured:msprof_net_transformer_b4"
+    },
+    "Net-Transformer-S256-L1-b8": {
+      "gm_frac": 0.056,
+      "method": "2cluster",
+      "eff_bw_gbs": 1653.6,
+      "n_gm": 84,
+      "n_oc": 216,
+      "gm_bw_eff_gbs": 701.6,
+      "oc_bw_eff_gbs": 3048.9,
+      "pooled_r2": 0.531,
+      "confidence": "high",
+      "source": "measured:msprof_net_transformer_b8"
+    },
+    "Net-Transformer-S256-L1-b16": {
+      "gm_frac": 0.011,
+      "method": "2cluster",
+      "eff_bw_gbs": 1959.5,
+      "n_gm": 63,
+      "n_oc": 237,
+      "gm_bw_eff_gbs": 720.5,
+      "oc_bw_eff_gbs": 2823.9,
+      "pooled_r2": 0.809,
+      "confidence": "high",
+      "source": "measured:msprof_net_transformer_b16"
+    },
+    "BERT-base-S128-b4": {
+      "gm_frac": 0.093,
+      "method": "2cluster",
+      "eff_bw_gbs": 1470.2,
+      "n_gm": 357,
+      "n_oc": 1959,
+      "gm_bw_eff_gbs": 755.1,
+      "oc_bw_eff_gbs": 2775.4,
+      "pooled_r2": 0.176,
+      "confidence": "low",
+      "source": "measured:msprof_bert_base_b4"
+    },
+    "BERT-base-S128-b8": {
+      "gm_frac": 0.02,
+      "method": "2cluster",
+      "eff_bw_gbs": 1890.5,
+      "n_gm": 147,
+      "n_oc": 2169,
+      "gm_bw_eff_gbs": 454.8,
+      "oc_bw_eff_gbs": 2911.0,
+      "pooled_r2": 0.284,
+      "confidence": "high",
+      "source": "measured:msprof_bert_base_b8"
+    },
+    "BERT-base-S128-b16": {
+      "gm_frac": 0.058,
+      "method": "2cluster",
+      "eff_bw_gbs": 1644.2,
+      "n_gm": 249,
+      "n_oc": 2067,
+      "gm_bw_eff_gbs": 507.2,
+      "oc_bw_eff_gbs": 3103.2,
+      "pooled_r2": 0.085,
+      "confidence": "low",
+      "source": "measured:msprof_bert_base_b16"
+    },
+    "GPT-2-S512-b4": {
+      "gm_frac": 0.396,
+      "method": "2cluster",
+      "eff_bw_gbs": 766.5,
+      "n_gm": 406,
+      "n_oc": 1802,
+      "gm_bw_eff_gbs": 430.3,
+      "oc_bw_eff_gbs": 1664.5,
+      "pooled_r2": 0.963,
+      "confidence": "high",
+      "source": "measured:msprof_gpt2_small_b4"
+    },
+    "GPT-2-S512-b8": {
+      "gm_frac": 0.385,
+      "method": "2cluster",
+      "eff_bw_gbs": 779.8,
+      "n_gm": 325,
+      "n_oc": 1883,
+      "gm_bw_eff_gbs": 423.2,
+      "oc_bw_eff_gbs": 1900.3,
+      "pooled_r2": 0.961,
+      "confidence": "high",
+      "source": "measured:msprof_gpt2_small_b8"
+    },
+    "GPT-2-S512-b16": {
+      "gm_frac": 0.555,
+      "method": "2cluster",
+      "eff_bw_gbs": 612.2,
+      "n_gm": 596,
+      "n_oc": 1612,
+      "gm_bw_eff_gbs": 427.7,
+      "oc_bw_eff_gbs": 2550.6,
+      "pooled_r2": 0.965,
+      "confidence": "high",
+      "source": "measured:msprof_gpt2_small_b16"
+    },
+    "HF-BERT-S128-b1": {
+      "gm_frac": 0.842,
+      "method": "2cluster",
+      "eff_bw_gbs": 449.4,
+      "n_gm": 1097,
+      "n_oc": 235,
+      "gm_bw_eff_gbs": 714.8,
+      "oc_bw_eff_gbs": 895.8,
+      "pooled_r2": 0.482,
+      "confidence": "high",
+      "source": "measured:msprof_hf_bert_b1"
+    },
+    "HF-BERT-S128-b4": {
+      "gm_frac": 0.208,
+      "method": "2cluster",
+      "eff_bw_gbs": 1088.9,
+      "n_gm": 614,
+      "n_oc": 718,
+      "gm_bw_eff_gbs": 336.6,
+      "oc_bw_eff_gbs": 3845.1,
+      "pooled_r2": 0.009,
+      "confidence": "low",
+      "source": "measured:msprof_hf_bert_b4"
+    },
+    "HF-BERT-S128-b8": {
+      "gm_frac": 0.114,
+      "method": "2cluster",
+      "eff_bw_gbs": 1382.5,
+      "n_gm": 365,
+      "n_oc": 967,
+      "gm_bw_eff_gbs": 606.0,
+      "oc_bw_eff_gbs": 2707.9,
+      "pooled_r2": 0.178,
+      "confidence": "high",
+      "source": "measured:msprof_hf_bert_b8"
+    },
+    "HF-BERT-S128-b16": {
+      "gm_frac": 0.053,
+      "method": "2cluster",
+      "eff_bw_gbs": 1675.8,
+      "n_gm": 201,
+      "n_oc": 999,
+      "gm_bw_eff_gbs": 363.2,
+      "oc_bw_eff_gbs": 2569.1,
+      "pooled_r2": 0.36,
+      "confidence": "high",
+      "source": "measured:msprof_hf_bert_b16"
+    },
+    "ModernBERT-base-S4096-b1": {
+      "gm_frac": 0.85,
+      "method": "2cluster",
+      "eff_bw_gbs": 446.0,
+      "n_gm": 2814,
+      "n_oc": 10386,
+      "gm_bw_eff_gbs": 528.2,
+      "oc_bw_eff_gbs": 3064.9,
+      "pooled_r2": 0.842,
+      "confidence": "high",
+      "source": "measured:msprof_modernbert_S4096_b1"
+    },
+    "ModernBERT-base-S4096-b1-sdpa": {
+      "gm_frac": 0.499,
+      "method": "2cluster",
+      "eff_bw_gbs": 659.3,
+      "n_gm": 2609,
+      "n_oc": 9511,
+      "gm_bw_eff_gbs": 492.8,
+      "oc_bw_eff_gbs": 951.9,
+      "pooled_r2": 0.742,
+      "confidence": "high",
+      "source": "measured:msprof_modernbert_base_prefill_S4096_b1_sdpa"
+    },
+    "Llama-3.2-1B-prefill-S2048-b1": {
+      "gm_frac": 0.81,
+      "method": "2cluster",
+      "eff_bw_gbs": 463.3,
+      "n_gm": 2019,
+      "n_oc": 6105,
+      "gm_bw_eff_gbs": 527.1,
+      "oc_bw_eff_gbs": 1323.2,
+      "pooled_r2": 0.895,
+      "confidence": "high",
+      "source": "measured:msprof_llama_3_2_1b_prefill_S2048_b1"
+    },
+    "Llama-3.2-1B-prefill-S2048-b1-sdpa": {
+      "gm_frac": 0.756,
+      "method": "2cluster",
+      "eff_bw_gbs": 488.2,
+      "n_gm": 1857,
+      "n_oc": 6015,
+      "gm_bw_eff_gbs": 544.8,
+      "oc_bw_eff_gbs": 1377.3,
+      "pooled_r2": 0.873,
+      "confidence": "high",
+      "source": "measured:msprof_llama_3_2_1b_prefill_S2048_b1_sdpa"
+    },
+    "Qwen2.5-0.5B-prefill-S2048-b1": {
+      "gm_frac": 0.791,
+      "method": "2cluster",
+      "eff_bw_gbs": 471.6,
+      "n_gm": 2903,
+      "n_oc": 9157,
+      "gm_bw_eff_gbs": 483.8,
+      "oc_bw_eff_gbs": 1911.1,
+      "pooled_r2": 0.865,
+      "confidence": "high",
+      "source": "measured:msprof_qwen2_5_05b_prefill_S2048_b1"
+    },
+    "Qwen2.5-0.5B-prefill-S2048-b1-sdpa": {
+      "gm_frac": 0.737,
+      "method": "2cluster",
+      "eff_bw_gbs": 497.8,
+      "n_gm": 2670,
+      "n_oc": 9042,
+      "gm_bw_eff_gbs": 484.2,
+      "oc_bw_eff_gbs": 2196.7,
+      "pooled_r2": 0.899,
+      "confidence": "high",
+      "source": "measured:msprof_qwen2_5_05b_prefill_S2048_b1_sdpa"
+    },
+    "SmolLM2-360M-prefill-S2048-b1": {
+      "gm_frac": 0.802,
+      "method": "2cluster",
+      "eff_bw_gbs": 466.7,
+      "n_gm": 3277,
+      "n_oc": 12719,
+      "gm_bw_eff_gbs": 472.3,
+      "oc_bw_eff_gbs": 1969.7,
+      "pooled_r2": 0.895,
+      "confidence": "high",
+      "source": "measured:msprof_smollm2_360m_prefill_S2048_b1"
+    },
+    "SmolLM2-360M-prefill-S2048-b1-sdpa": {
+      "gm_frac": 0.748,
+      "method": "2cluster",
+      "eff_bw_gbs": 492.2,
+      "n_gm": 3404,
+      "n_oc": 12148,
+      "gm_bw_eff_gbs": 428.1,
+      "oc_bw_eff_gbs": 1780.9,
+      "pooled_r2": 0.896,
+      "confidence": "high",
+      "source": "measured:msprof_smollm2_360m_prefill_S2048_b1_sdpa"
+    },
+    "Phi-3-mini-prefill-S2048-b1-sdpa": {
+      "gm_frac": 0.74,
+      "method": "2cluster",
+      "eff_bw_gbs": 496.6,
+      "n_gm": 4926,
+      "n_oc": 9090,
+      "gm_bw_eff_gbs": 551.4,
+      "oc_bw_eff_gbs": 1569.1,
+      "pooled_r2": 0.895,
+      "confidence": "high",
+      "source": "measured:msprof_phi3_mini_prefill_S2048_b1_sdpa"
+    },
+    "Qwen3-prefill-S4096-b1-sdpa": {
+      "gm_frac": 0.547,
+      "method": "2cluster",
+      "eff_bw_gbs": 618.8,
+      "n_gm": 5079,
+      "n_oc": 8529,
+      "gm_bw_eff_gbs": 485.1,
+      "oc_bw_eff_gbs": 966.7,
+      "pooled_r2": 0.779,
+      "confidence": "high",
+      "source": "measured:msprof_qwen3_06b_prefill_S4096_b1_sdpa"
+    },
+    "Qwen3-prefill-S256-b1-sdpa": {
+      "gm_frac": 0.227,
+      "method": "2cluster",
+      "eff_bw_gbs": 1045.7,
+      "n_gm": 3866,
+      "n_oc": 9742,
+      "gm_bw_eff_gbs": 566.9,
+      "oc_bw_eff_gbs": 2906.3,
+      "pooled_r2": 0.955,
+      "confidence": "low",
+      "source": "measured:msprof_qwen3_06b_prefill_S256_b1_sdpa"
+    },
+    "Qwen3-prefill-S256-b4-sdpa": {
+      "gm_frac": 0.228,
+      "method": "2cluster",
+      "eff_bw_gbs": 1043.4,
+      "n_gm": 3739,
+      "n_oc": 9869,
+      "gm_bw_eff_gbs": 445.8,
+      "oc_bw_eff_gbs": 2414.2,
+      "pooled_r2": 0.967,
+      "confidence": "high",
+      "source": "measured:msprof_qwen3_06b_prefill_S256_b4_sdpa"
+    },
+    "Qwen3-prefill-S256-b8-sdpa": {
+      "gm_frac": 0.238,
+      "method": "2cluster",
+      "eff_bw_gbs": 1021.3,
+      "n_gm": 3403,
+      "n_oc": 10205,
+      "gm_bw_eff_gbs": 436.6,
+      "oc_bw_eff_gbs": 2698.6,
+      "pooled_r2": 0.968,
+      "confidence": "high",
+      "source": "measured:msprof_qwen3_06b_prefill_S256_b8_sdpa"
+    },
+    "Qwen3-prefill-S512-b4-sdpa": {
+      "gm_frac": 0.182,
+      "method": "2cluster",
+      "eff_bw_gbs": 1158.8,
+      "n_gm": 3062,
+      "n_oc": 10546,
+      "gm_bw_eff_gbs": 433.0,
+      "oc_bw_eff_gbs": 1624.4,
+      "pooled_r2": 0.928,
+      "confidence": "high",
+      "source": "measured:msprof_qwen3_06b_prefill_S512_b4_sdpa"
+    },
+    "Qwen3-prefill-S512-b8-sdpa": {
+      "gm_frac": 0.571,
+      "method": "2cluster",
+      "eff_bw_gbs": 600.5,
+      "n_gm": 5781,
+      "n_oc": 7827,
+      "gm_bw_eff_gbs": 436.3,
+      "oc_bw_eff_gbs": 1560.2,
+      "pooled_r2": 0.951,
+      "confidence": "high",
+      "source": "measured:msprof_qwen3_06b_prefill_S512_b8_sdpa"
+    },
+    "BERT-base-S128-b1": {
+      "gm_frac": 0.093,
+      "eff_bw_gbs": 1470.2,
+      "confidence": "low",
+      "source": "inherited:BERT-base-S128-b4"
+    },
+    "GPT-2-S512-b1": {
+      "gm_frac": 0.396,
+      "eff_bw_gbs": 766.5,
+      "confidence": "high",
+      "source": "inherited:GPT-2-S512-b4"
+    },
+    "Qwen3-prefill-S256-b1": {
+      "gm_frac": 0.227,
+      "eff_bw_gbs": 1045.7,
+      "confidence": "low",
+      "source": "inherited:Qwen3-prefill-S256-b1-sdpa"
+    },
+    "Qwen3-prefill-S256-b4": {
+      "gm_frac": 0.228,
+      "eff_bw_gbs": 1043.4,
+      "confidence": "high",
+      "source": "inherited:Qwen3-prefill-S256-b4-sdpa"
+    },
+    "Qwen3-prefill-S256-b8": {
+      "gm_frac": 0.238,
+      "eff_bw_gbs": 1021.3,
+      "confidence": "high",
+      "source": "inherited:Qwen3-prefill-S256-b8-sdpa"
+    },
+    "Qwen3-prefill-S512-b4": {
+      "gm_frac": 0.182,
+      "eff_bw_gbs": 1158.8,
+      "confidence": "high",
+      "source": "inherited:Qwen3-prefill-S512-b4-sdpa"
+    },
+    "Qwen3-prefill-S512-b8": {
+      "gm_frac": 0.571,
+      "eff_bw_gbs": 600.5,
+      "confidence": "high",
+      "source": "inherited:Qwen3-prefill-S512-b8-sdpa"
+    },
+    "Qwen3-prefill-S4096-b1": {
+      "gm_frac": 0.547,
+      "eff_bw_gbs": 618.8,
+      "confidence": "high",
+      "source": "inherited:Qwen3-prefill-S4096-b1-sdpa"
+    },
+    "Qwen3-Embedding-S4096-b1": {
+      "gm_frac": 0.547,
+      "eff_bw_gbs": 618.8,
+      "confidence": "high",
+      "source": "inherited:Qwen3-prefill-S4096-b1-sdpa"
+    },
+    "Qwen3-decode-Min4-Skv128-b1": {
+      "gm_frac": 0.0,
+      "eff_bw_gbs": null,
+      "confidence": "low",
+      "source": "assumed (decode S=1: tiny outputs, on-chip)"
+    }
+  }
+}

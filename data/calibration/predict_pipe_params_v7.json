@@ -1,0 +1,47 @@
+{
+  "K0_us_per_kernel": 1.8557901133663446,
+  "H_prefill_us": 13424.349999999999,
+  "H_decode_us": 204.2,
+  "aiv_C_kernel_us": 16.0,
+  "aiv_C_data_us": 3.0,
+  "v_model": "v7",
+  "v7_AIC_DECODE_amp_aic": 0.7125268428147311,
+  "v7_AIC_DECODE_amp_aiv": 1.7705332896480321,
+  "v7_AIC_DECODE_nk_mult": 3.1448057371868936,
+  "v7_AIV_BOUND_amp_aic": 2.4963683537148964,
+  "v7_AIV_BOUND_amp_aiv": 3.0694859554616714,
+  "v7_AIV_BOUND_nk_mult": 11.983839104194642,
+  "v7_BALANCED_amp_aic": 0.6549835751061842,
+  "v7_BALANCED_amp_aiv": 1.0544374147486202,
+  "v7_BALANCED_nk_mult": 7.1003551547206625,
+  "fit_summary": {
+    "per_bucket_fit": {
+      "AIC_DECODE": {
+        "amp_aic": 0.7125,
+        "amp_aiv": 1.7705,
+        "nk_mult": 3.1448
+      },
+      "AIV_BOUND": {
+        "amp_aic": 2.4964,
+        "amp_aiv": 3.0695,
+        "nk_mult": 11.9838
+      },
+      "BALANCED": {
+        "amp_aic": 0.655,
+        "amp_aiv": 1.0544,
+        "nk_mult": 7.1004
+      }
+    },
+    "train_mae_pct": 11.28,
+    "train_max_pct": 50.04,
+    "val_size_mae_pct": 15.69,
+    "val_size_max_pct": 23.02,
+    "val_sdpa_long_s_err_pct": 24.49,
+    "val_sdpa_batch_mae_pct": 6.68,
+    "val_sdpa_batch_max_pct": 9.61,
+    "n_train": 7,
+    "n_val_size": 3,
+    "n_val_sdpa_long_s": 1,
+    "n_val_sdpa_batch": 2
+  }
+}

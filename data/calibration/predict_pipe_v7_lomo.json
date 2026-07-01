@@ -1,0 +1,115 @@
+{
+  "results": [
+    {
+      "config": "BERT-base-S128-b1",
+      "bucket": "BALANCED",
+      "n_remaining_in_bucket": 1,
+      "wall_pred_us": 15624.576912597033,
+      "wall_meas_us": 16210,
+      "wall_err_pct": 3.61
+    },
+    {
+      "config": "GPT-2-S512-b1",
+      "bucket": "BALANCED",
+      "n_remaining_in_bucket": 1,
+      "wall_pred_us": 18008.896207290683,
+      "wall_meas_us": 17280,
+      "wall_err_pct": 4.22
+    },
+    {
+      "config": "Qwen3-decode-Min4-Skv128-b1",
+      "bucket": "AIC_DECODE",
+      "n_remaining_in_bucket": 0,
+      "wall_pred_us": 8353.84594429215,
+      "wall_meas_us": 7690,
+      "wall_err_pct": 8.63
+    },
+    {
+      "config": "ModernBERT-base-S4096-b1",
+      "bucket": "AIV_BOUND",
+      "n_remaining_in_bucket": 9,
+      "wall_pred_us": 370047.40293281677,
+      "wall_meas_us": 323232.0,
+      "wall_err_pct": 14.48
+    },
+    {
+      "config": "Qwen3-prefill-S256-b1-sdpa",
+      "bucket": "AIV_BOUND",
+      "n_remaining_in_bucket": 9,
+      "wall_pred_us": 41142.031129022216,
+      "wall_meas_us": 82385,
+      "wall_err_pct": 50.06
+    },
+    {
+      "config": "Qwen3-prefill-S256-b4-sdpa",
+      "bucket": "AIV_BOUND",
+      "n_remaining_in_bucket": 9,
+      "wall_pred_us": 63750.87420456255,
+      "wall_meas_us": 94930,
+      "wall_err_pct": 32.84
+    },
+    {
+      "config": "Qwen3-prefill-S512-b4-sdpa",
+      "bucket": "AIV_BOUND",
+      "n_remaining_in_bucket": 9,
+      "wall_pred_us": 109943.22986446673,
+      "wall_meas_us": 118198,
+      "wall_err_pct": 6.98
+    },
+    {
+      "config": "Llama-3.2-1B-prefill-S2048-b1",
+      "bucket": "AIV_BOUND",
+      "n_remaining_in_bucket": 9,
+      "wall_pred_us": 242844.79089611128,
+      "wall_meas_us": 197401.0,
+      "wall_err_pct": 23.02
+    },
+    {
+      "config": "Qwen2.5-0.5B-prefill-S2048-b1",
+      "bucket": "AIV_BOUND",
+      "n_remaining_in_bucket": 9,
+      "wall_pred_us": 143752.8315378475,
+      "wall_meas_us": 162255.0,
+      "wall_err_pct": 11.4
+    },
+    {
+      "config": "SmolLM2-360M-prefill-S2048-b1",
+      "bucket": "AIV_BOUND",
+      "n_remaining_in_bucket": 9,
+      "wall_pred_us": 183807.45164459708,
+      "wall_meas_us": 210617.0,
+      "wall_err_pct": 12.73
+    },
+    {
+      "config": "Qwen3-prefill-S4096-b1-sdpa",
+      "bucket": "AIV_BOUND",
+      "n_remaining_in_bucket": 9,
+      "wall_pred_us": 643840.8153768417,
+      "wall_meas_us": 452736,
+      "wall_err_pct": 42.21
+    },
+    {
+      "config": "Qwen3-prefill-S256-b8-sdpa",
+      "bucket": "AIV_BOUND",
+      "n_remaining_in_bucket": 9,
+      "wall_pred_us": 97672.72767807852,
+      "wall_meas_us": 110971,
+      "wall_err_pct": 11.98
+    },
+    {
+      "config": "Qwen3-prefill-S512-b8-sdpa",
+      "bucket": "AIV_BOUND",
+      "n_remaining_in_bucket": 9,
+      "wall_pred_us": 208331.55153713943,
+      "wall_meas_us": 189944,
+      "wall_err_pct": 9.68
+    }
+  ],
+  "overall_mae_pct": 17.83,
+  "per_bucket_mae_pct": {
+    "BALANCED": 3.92,
+    "AIC_DECODE": 8.63,
+    "AIV_BOUND": 21.54
+  },
+  "n_configs": 13
+}

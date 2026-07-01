@@ -1,0 +1,56 @@
+# Large profiling data (3.5 GB) — kept on NPU server, retrievable via rsync
+msprof_data/
+
+# Historical timeloop sweep outputs (50 MB) — Phase F-J intermediate runs
+timeloop_results/
+
+# Misc local artifacts
+test_result_for_calibration/
+.claude/scheduled_tasks.lock
+
+# ONNX / compiled model binaries (re-generatable, too large for git)
+models/*.onnx
+*.onnx
+*.om
+*.db
+
+# Python / IDE
+*.pyc
+__pycache__/
+.venv/
+venv/
+.ipynb_checkpoints/
+*.egg-info/
+
+# Large sweep / intermediate extraction results (re-generatable by scripts)
+data/phase_j_sweep*.json
+data/regime_matrix*.json
+data/cube_util_extracted.json
+data/optimization_ceiling.json
+data/pipe_baseline_per_model.json
+data/pipe_decomposition_*.json
+data/dry_run_diff.txt
+
+# Logs / tmp
+*.log
+*.tmp
+
+# macOS Finder metadata (already-tracked .DS_Store files remain tracked;
+# this prevents new ones from appearing in subdirectories)
+.DS_Store
+
+# Internal content — kept locally for archival, not published
+legacy/
+reports/historical/
+REVIEW_CONTEXT.md
+
+# Graphify / GitNexus 本地代码图产物（与 data/*.json 同性质：regenerable artifact，
+# 重跑 graphify 即可重生）。整目录 ignore，cache/ 自然包含。
+graphify-out/
+
+
+# Agent/dev scaffolding — excluded from public release
+.sisyphus/
+.agents/
+.claude/
+.DS_Store

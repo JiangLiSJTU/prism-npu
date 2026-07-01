@@ -1,0 +1,32 @@
+# 昇腾 310P — Roofline regime gate 输入
+# 用途：scripts/microarch_exploration/regime_gate.py
+# 数据来源：scripts/perf_estimation/multi_model_roofline.py
+#   HW dict (lines 30-36): cube_tops=140 (INT8), bw_gbs=204.8, l2_mb=16
+#   ALPHA = 0.842, BETA = 26.3 μs (Net-Transformer @ 310P 实测校准, 2026-04-29)
+#
+# 注：310P 仅有 Net-Transformer 一点实测校准；其它模型均为理论 Roofline 预测。
+#     本 yaml 的 calib 字段仅 beta_device 直接对应 310P 实测 (26.3 μs)；
+#     beta_layer_* 暂沿用 910B4 v2 估算（用于跨平台 regime 对比的相对量级，
+#     非绝对预测精度依据）。Phase F+ 学生若上 310P 实测可回填覆盖。
+
+name: ascend_310p_with_calib
+chip:
+  fp16_tflops:  70.0       # FP16 ≈ INT8 140 TOPS / 2 (Cube)
+  hbm_bw_gbs:  204.8       # LPDDR4X 384-bit
+  l2_mb:        16.0
+  tdp_w:        67.0       # 310P 标准 TDP (Atlas 300I Pro typical)
+calib:
+  beta_device_us:                 26.3   # 310P Net-Transformer 实测 (multi_model_roofline.py BETA)
+  beta_layer_enc_us:             133.6   # 沿用 910B4 v2 OLS 综合（待 310P 实测覆盖）
+  beta_layer_enc_d768_us:        138.1
+  beta_layer_enc_d256_us:         93.2
+  beta_layer_dec_S256_d384_us:    80.4
+  beta_layer_dec_S512_d768_us:   355.6
+  beta_layer_dec_S512_d1024_us:  560.4
+  eta_compute:                     0.842  # 310P 实测 ALPHA (Net-Transformer)
+note: |
+  Roofline-side abstraction of 310P. INT8 140 TOPS halved to FP16 70 TFLOPS so
+  the same predict_910b4_v2() pipeline is reusable.
+  beta_device=26.3μs is 310P-specific (net_trans calibration).
+  beta_layer_* are 910B4-v2 placeholders pending 310P empirical refit.
+  eta_compute reuses ALPHA=0.842 from multi_model_roofline.py.

@@ -1,0 +1,116 @@
+# 手写 mapping — BERT-base ffn_linear1 在 910B4 上 24 核 spatial
+#
+# 工作负载：M=128 (S), N=3072 (d_ff), K=768 (d_model)
+# 目标：用 L2_Buffer spatial M=4 N=6 K=1 = 24 核 全占用（vs auto-mapper 仅用 8 核）
+#
+# 维度分解：
+#   M=128 = 16(Cube spatial) × 2(L0B temporal) × 4(L2 spatial)
+#   N=3072 = 16(Cube spatial) × 2(L0A temporal) × 16(L0C temporal) × 6(L2 spatial)
+#   K=768 = 768(Cube_Reg temporal full reduce)
+#
+# 容量检查（per core）：
+#   L0A (Inputs FP16):  M_inner=16 × K_inner=768 × 2 byte = 24 KB ≤ 64 KB ✓
+#   L0B (Weights FP16): K_inner=768 × N_inner=16 × 2 byte = 24 KB ≤ 64 KB ✓
+#   L0C (Outputs FP32): M_inner=16 × N_inner=16 × 4 byte = 1 KB ≤ 128 KB ✓
+#   L1: 输入双缓冲 ~50 KB ≤ 512 KB ✓
+#   L2 (per chip 96 MB): 全部权重 6 MB + 全部输入 0.4 MB + 全部输出 1.6 MB = 8 MB ≤ 96 MB ✓
+
+mapping:
+
+  # ── Datatype keep/bypass 沿用 auto-mapper 选择 ─────────────────────
+  - target: Cube_Reg
+    type: datatype
+    keep: []
+    bypass: [Weights, Inputs, Outputs]
+
+  - target: L0C_Buffer
+    type: datatype
+    keep: []
+    bypass: [Weights, Inputs, Outputs]
+
+  - target: L0A_Buffer
+    type: datatype
+    keep: [Inputs]
+    bypass: [Weights, Outputs]
+
+  - target: L0B_Buffer
+    type: datatype
+    keep: [Weights]
+    bypass: [Inputs, Outputs]
+
+  - target: L1_Buffer
+    type: datatype
+    keep: [Inputs]
+    bypass: [Weights, Outputs]
+
+  - target: L2_Buffer
+    type: datatype
+    keep: [Weights]
+    bypass: [Inputs, Outputs]
+
+  - target: DRAM
+    type: datatype
+    keep: [Weights, Inputs, Outputs]
+    bypass: []
+
+  # ── 时空映射（从内到外）──────────────────────────────────────────
+
+  # Cube 阵列：16×16 spatial M N + K=768 temporal full reduce
+  - target: Cube_Reg
+    type: spatial
+    factors: M16 N16 K1
+    permutation: MNK
+    split: 1   # M→Y, N→X
+
+  - target: Cube_Reg
+    type: temporal
+    factors: M1 N1 K768
+    permutation: KMN
+
+  # L0A: 输入（M, K 维），N 在 L0A 这层做小循环
+  - target: L0A_Buffer
+    type: temporal
+    factors: M1 N2 K1
+    permutation: NMK
+
+  # L0B: 权重（K, N 维），M 在这层
+  - target: L0B_Buffer
+    type: temporal
+    factors: M2 N1 K1
+    permutation: MNK
+
+  # L0C: 输出累加，N 在此循环 16 次
+  - target: L0C_Buffer
+    type: spatial
+    factors: M1 N1 K1
+    permutation: MNK
+    split: 1
+
+  - target: L0C_Buffer
+    type: temporal
+    factors: M1 N16 K1
+    permutation: NMK
+
+  # L1: 单核内缓冲，无额外切片
+  - target: L1_Buffer
+    type: temporal
+    factors: M1 N1 K1
+    permutation: MNK
+
+  # L2: 24 核 spatial M=4 N=6 K=1（关键改动）
+  - target: L2_Buffer
+    type: spatial
+    factors: M4 N6 K1
+    permutation: MNK
+    split: 1   # M→Y, N→X
+
+  - target: L2_Buffer
+    type: temporal
+    factors: M1 N1 K1
+    permutation: MNK
+
+  # DRAM: 整体 1 次（全部 ffn_linear1 在一个 batch 内）
+  - target: DRAM
+    type: temporal
+    factors: M1 N1 K1
+    permutation: MNK

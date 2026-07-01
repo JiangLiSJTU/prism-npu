@@ -1,0 +1,100 @@
+# 昇腾 310P 架构描述（Timeloop，仅架构，不含 problem）
+# 拆分自 timeloop_310p_baseline.yaml
+# 更新日期：2026-04-28
+#
+# 关键规格：
+#   INT8 算力：140 TOPS（8 核 × 17.5 TOPS/核）
+#   内存带宽：204.8 GB/s（LPDDR4X 384-bit）
+#   L2 共享：16 MB
+#   UB_SIZE：256 KB/核
+#   Roofline 拐点：140T / 204.8G ≈ 683 OPs/Byte
+
+architecture:
+  version: 0.4
+  subtree:
+    - name: System
+      subtree:
+        - name: Chip
+          subtree:
+
+            - name: DaVinci_Core[0..7]
+              local:
+                - name: L1_Buffer
+                  class: SRAM
+                  attributes:
+                    depth: 131072        # 1 MB/核
+                    width: 8
+                    word-bits: 8
+                    n_banks: 16
+                    bandwidth: 307200    # ~300 GB/s 片上总线
+
+                - name: L0B_Buffer
+                  class: regfile
+                  attributes:
+                    depth: 2048
+                    width: 8
+                    word-bits: 8
+                    bandwidth: 1048576
+
+                - name: L0A_Buffer
+                  class: regfile
+                  attributes:
+                    depth: 2048
+                    width: 8
+                    word-bits: 8
+                    bandwidth: 1048576
+
+                - name: L0C_Buffer
+                  class: regfile
+                  attributes:
+                    depth: 4096
+                    width: 8
+                    word-bits: 8
+                    bandwidth: 1048576
+
+                - name: UB_Buffer
+                  class: SRAM
+                  attributes:
+                    depth: 32768         # 256 KB/核
+                    width: 8
+                    word-bits: 8
+                    n_banks: 8
+                    bandwidth: 524288
+                    alignment: 32
+
+              subtree:
+                - name: Cube_MAC[0..4095]   # 16×16×16 脉动阵列，INT8 17.5 TOPS/核
+                  local:
+                    - name: Cube_Reg
+                      class: regfile
+                      attributes: {depth: 1, width: 8, word-bits: 8}
+                    - name: Cube_ALU
+                      class: intmac
+                      attributes: {datawidth: 8}
+
+                - name: Vector_Unit[0..127]  # 128 FP16 OP/cycle ≈ 141 GOPS/核
+                  local:
+                    - name: Vector_Reg
+                      class: regfile
+                      attributes: {depth: 1, width: 8, word-bits: 16}
+                    - name: Vector_ALU
+                      class: fpmac
+                      attributes: {datawidth: 16}
+
+            - name: L2_Buffer
+              class: SRAM
+              attributes:
+                depth: 2097152           # 16 MB 共享
+                width: 8
+                word-bits: 8
+                n_banks: 32
+                bandwidth: 163840        # ~160 GB/s
+
+        - name: DRAM
+          class: DRAM
+          attributes:
+            type: LPDDR4X
+            width: 384
+            bandwidth: 204800            # 204.8 GB/s
+            word-bits: 8
+            block-size: 64

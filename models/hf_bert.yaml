@@ -1,0 +1,234 @@
+# HF BERT（4层蒸馏版）算子描述（Timeloop models 库）
+# 来源：学生提供的 ONNX 文件（hf_bert_batch_*.onnx），2026-04-29 实测提取
+# 更新日期：2026-04-29
+#
+# 模型规格（从 ONNX 提取，非估算）：
+#   seq_len (S)  = 128
+#   d_model      = 256
+#   d_ff         = 1024（= 4 × d_model）
+#   num_layers   = 4
+#   vocab_size   = 30522（标准 BERT 词表）
+#   参数量        = 11.16M（INT8 = 11.16 MB，FP32 = 44.63 MB）
+#
+# ⚠️ 注意：这不是标准 BERT-base（768dim/12层/110M参数）
+#   这是 HuggingFace 上的 4 层蒸馏版本（如 google/bert_uncased_L-4_H-256_A-4）
+#
+# 算子汇总（batch=1, seq=128）：
+# ┌──────────────────┬──────┬──────┬──────┬──────────┐
+# │ 算子             │  M   │  N   │  K   │ OPs(M)   │
+# ├──────────────────┼──────┼──────┼──────┼──────────┤
+# │ Q 投影           │  128 │  256 │  256 │   16.8   │
+# │ K 投影           │  128 │  256 │  256 │   16.8   │
+# │ V 投影           │  128 │  256 │  256 │   16.8   │
+# │ QK^T (per head)  │  128 │  128 │   64 │    2.1   │ ×4 heads
+# │ AV   (per head)  │  128 │   64 │  128 │    2.1   │ ×4 heads
+# │ 输出投影         │  128 │  256 │  256 │   16.8   │
+# │ FFN Linear1      │  128 │ 1024 │  256 │   67.1   │ 最大 GEMM
+# │ FFN Linear2      │  128 │  256 │ 1024 │   67.1   │
+# ├──────────────────┼──────┼──────┼──────┼──────────┤
+# │ 单层合计         │      │      │      │  201.3   │
+# │ 全模型（×4层）   │      │      │      │  805.3   │
+# │ Pooler（Gemm）   │      │      │      │   16.8   │
+# │ 全模型合计       │      │      │      │  822.1   │
+# └──────────────────┴──────┴──────┴──────┴──────────┘
+#
+# 算术强度估算（INT8，权重不常驻）：
+#   总 OPs ≈ 822M
+#   权重 Bytes（INT8）≈ 11.16 MB
+#   激活 Bytes（FP16）≈ 4层 × 128 × 256 × 2 × 2 ≈ 0.52 MB
+#   算术强度 batch=1 ≈ 822M / 11.68M ≈ 70 OPs/Byte  → 内存瓶颈（910B 拐点 1429）
+#   算术强度 batch=8 ≈ 822M×8 / (11.16M + 4.16M) ≈ 430 OPs/Byte → 仍内存瓶颈
+#
+# 910B L2 = 192 MB >> 权重 11.16 MB → 权重可完整常驻 L2
+# 权重常驻后算术强度 batch=1 ≈ 822M / 0.52M ≈ 1581 OPs/Byte → 接近算力瓶颈
+
+problems:
+
+  # ── 算子 1：Q 投影 ──────────────────────────────────────────────
+  - name: q_projection
+    note: "Q 投影，M=S=128, N=d_model=256, K=d_model=256"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 128
+      N: 256
+      K: 256
+
+  # ── 算子 2：K 投影 ──────────────────────────────────────────────
+  - name: k_projection
+    note: "K 投影，M=128, N=256, K=256"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 128
+      N: 256
+      K: 256
+
+  # ── 算子 3：V 投影 ──────────────────────────────────────────────
+  - name: v_projection
+    note: "V 投影，M=128, N=256, K=256"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 128
+      N: 256
+      K: 256
+
+  # ── 算子 4：QK^T（注意力分数）──────────────────────────────────
+  - name: attention_qkt
+    note: |
+      QK^T: [H,S,d_head] × [H,d_head,S]
+      K=d_head=64，4 个 16×16 分块，Cube 利用率偏低
+      H=4 通过 batch 维度建模（num_heads 推测为 4，d_head=64）
+    shape:
+      name: GEMM
+      dimensions: [M, N, K, H]
+      data-spaces:
+        - name: Q_matrix
+          projection: [[H], [M], [K]]
+        - name: K_matrix
+          projection: [[H], [K], [N]]
+        - name: Attn_scores
+          projection: [[H], [M], [N]]
+          read-write: true
+    instance:
+      M: 128   # S
+      N: 128   # S
+      K: 64    # d_head = d_model / num_heads = 256 / 4
+      H: 4     # num_heads
+
+  # ── 算子 5：AV（注意力加权求和）────────────────────────────────
+  - name: attention_av
+    note: "AV: [H,S,S] × [H,S,d_head]，N=d_head=64"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K, H]
+      data-spaces:
+        - name: Attn_weights
+          projection: [[H], [M], [K]]
+        - name: V_matrix
+          projection: [[H], [K], [N]]
+        - name: Attn_output
+          projection: [[H], [M], [N]]
+          read-write: true
+    instance:
+      M: 128   # S
+      N: 64    # d_head
+      K: 128   # S
+      H: 4     # num_heads
+
+  # ── 算子 6：输出投影 ─────────────────────────────────────────────
+  - name: output_projection
+    note: "Attention 输出投影，M=128, N=256, K=256"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 128
+      N: 256
+      K: 256
+
+  # ── 算子 7：FFN Linear1 ─────────────────────────────────────────
+  - name: ffn_linear1
+    note: "FFN 扩展层，最大 GEMM，M=128, N=1024, K=256"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 128
+      N: 1024
+      K: 256
+
+  # ── 算子 8：FFN Linear2 ─────────────────────────────────────────
+  - name: ffn_linear2
+    note: "FFN 收缩层，M=128, N=256, K=1024"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 128
+      N: 256
+      K: 1024
+
+  # ── 算子 9：Pooler（Gemm，batch=1 时 M=1）────────────────────────
+  - name: pooler
+    note: "Pooler 层，取 [CLS] token 做线性变换，M=batch, N=256, K=256"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 1     # batch（CLS token，每 batch 一个）
+      N: 256
+      K: 256
+
+# ── Vector 算子（roofline 脚本中建模）──────────────────────────
+# Softmax：[batch, H=4, S=128, S=128]
+#   FLOPs = 5 × batch × 4 × 128 × 128 = 327,680 × batch
+#   OI ≈ 1.25 OPs/Byte → 内存瓶颈
+#
+# LayerNorm：[batch, S=128, d_model=256] × 2/层
+#   FLOPs = 5 × batch × 128 × 256 = 163,840 × batch per instance
+#   OI ≈ 1.25 OPs/Byte → 内存瓶颈
+#
+# GELU：[batch, S=128, d_ff=1024]
+#   FLOPs = batch × 128 × 1024 = 131,072 × batch
+#   OI ≈ 0.25 OPs/Byte → 严重内存瓶颈

@@ -1,0 +1,23 @@
+# 昇腾 910B4 + Cube ×2 微架构变体
+# 用途：scripts/microarch_exploration/regime_gate.py
+# 与 ascend_910b4_with_calib.yaml 唯一不同：fp16_tflops 翻倍
+# (Cube 利用率仍由 eta_compute=0.70 控制；翻倍仅放大计算上限，调度参数不变)
+
+name: ascend_910b4_cm2
+chip:
+  fp16_tflops: 560.0       # 280 × 2 — Cube ×2
+  hbm_bw_gbs:  392.0
+  l2_mb:        96.0
+  tdp_w:       300.0
+calib:
+  beta_device_us:                119.0
+  beta_layer_enc_us:             133.6
+  beta_layer_enc_d768_us:        138.1
+  beta_layer_enc_d256_us:         93.2
+  beta_layer_dec_S256_d384_us:    80.4
+  beta_layer_dec_S512_d768_us:   355.6
+  beta_layer_dec_S512_d1024_us:  560.4
+  eta_compute:                     0.70
+note: |
+  Variant: Cube ×2. Only fp16_tflops doubled vs ascend_910b4_with_calib.
+  Calibration constants kept at 910B4 values (Phase C does not re-calibrate β).

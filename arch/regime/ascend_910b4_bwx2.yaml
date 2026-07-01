@@ -1,0 +1,22 @@
+# 昇腾 910B4 + HBM 带宽 ×2 微架构变体
+# 用途：scripts/microarch_exploration/regime_gate.py
+# 与 ascend_910b4_with_calib.yaml 唯一不同：hbm_bw_gbs ×2 = 784 GB/s
+
+name: ascend_910b4_bwx2
+chip:
+  fp16_tflops: 280.0
+  hbm_bw_gbs:  784.0       # 392 × 2 — BW ×2
+  l2_mb:        96.0
+  tdp_w:       300.0
+calib:
+  beta_device_us:                119.0
+  beta_layer_enc_us:             133.6
+  beta_layer_enc_d768_us:        138.1
+  beta_layer_enc_d256_us:         93.2
+  beta_layer_dec_S256_d384_us:    80.4
+  beta_layer_dec_S512_d768_us:   355.6
+  beta_layer_dec_S512_d1024_us:  560.4
+  eta_compute:                     0.70
+note: |
+  Variant: HBM bandwidth ×2. Calibration constants unchanged.
+  T_memory will halve for memory-bound workloads.

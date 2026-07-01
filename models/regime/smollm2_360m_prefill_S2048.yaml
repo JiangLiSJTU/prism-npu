@@ -1,0 +1,27 @@
+# SmolLM2-360M prefill — 32 层 GQA decoder（S=2048, d=960）
+# 数据来源：HuggingFaceTB/SmolLM2-360M config.json
+# 比 SmolLM2-135M-decode 大、更深；用于检验层数 scaling 与 GQA 比例的影响
+
+name: SmolLM2-360M-prefill-S2048-b1
+arch: decoder
+layers: 32
+ops_b1: 1.78e12               # ~1.78 TFLOPs @ S=2048
+weight_mb: 720.0              # 360M params × 2 bytes (FP16)
+bytes_total: 6.24e8           # HBM overflow = (720-96) × 1e6 = 624 MB
+alpha_per_batch: null
+beta_layer_override: null
+note: |
+  S=2048 prefill, D=960, L=32, intermediate=2560, GQA 15Q/5KV heads d_head=64.
+  SwiGLU FFN, RoPE.
+  深层 + 中宽度 + 中等 KV 共享比 (3:1)，作为 GQA 比例的 sanity check.
+  预期 regime: balanced (32 层会显著放大 host_gap × kernel 数).
+
+gemm_spec:
+  S: 2048
+  d_model: 960
+  d_ff: 2560
+  n_heads: 15
+  n_kv_heads: 5
+  d_head: 64
+  vocab: 49152
+  ffn_type: swiglu

@@ -1,0 +1,195 @@
+# BERT-base（标准版）算子描述（Timeloop models 库）
+# 创建日期：2026-05-06
+# 数据来源：msprof Phase B 实测校准（β_layer=139.6 μs/层，L=12，S=128）
+#
+# 模型规格（标准 BERT-base，HuggingFace bert-base-uncased）：
+#   seq_len (S)  = 128（ais_bench 默认输入长度）
+#   d_model      = 768
+#   d_ff         = 3072（= 4 × d_model）
+#   num_layers   = 12
+#   num_heads    = 12
+#   d_head       = 64（= d_model / num_heads）
+#   参数量        ≈ 110M（FP16 ≈ 220 MB）
+#
+# ⚠️ 区别于 hf_bert.yaml（4层蒸馏版，d=256）
+#   本文件是标准 110M 参数版本，用于 Phase F msprof 实测校准
+#
+# 每层 GEMM 算子汇总（batch=1, S=128）：
+# ┌──────────────────┬──────┬──────┬──────┬──────────┐
+# │ 算子             │  M   │  N   │  K   │ GFLOPs   │
+# ├──────────────────┼──────┼──────┼──────┼──────────┤
+# │ Q 投影           │  128 │  768 │  768 │   0.025  │
+# │ K 投影           │  128 │  768 │  768 │   0.025  │
+# │ V 投影           │  128 │  768 │  768 │   0.025  │
+# │ QK^T (H=12 heads)│  128 │  128 │   64 │   0.025  │ ×12
+# │ AV   (H=12 heads)│  128 │   64 │  128 │   0.025  │ ×12
+# │ 输出投影         │  128 │  768 │  768 │   0.025  │
+# │ FFN Linear1      │  128 │ 3072 │  768 │   0.101  │
+# │ FFN Linear2      │  128 │  768 │ 3072 │   0.101  │
+# ├──────────────────┼──────┼──────┼──────┼──────────┤
+# │ 单层合计         │      │      │      │   0.605  │ GFLOPs
+# │ 全模型（×12层）  │      │      │      │   7.264  │ GFLOPs
+# └──────────────────┴──────┴──────┴──────┴──────────┘
+#
+# Timeloop 校准目标（Phase F1）：
+#   msprof NPU op time = 1.826 ms（含全部 12层 × 8 GEMM + vector ops）
+#   扣除 vector ops（LayerNorm/Softmax/GELU ≈ 15%）→ GEMM ≈ 106-130 μs/层
+#   Timeloop 预测应在 [100, 160] μs/层 内（±25% 容差）
+
+problems:
+
+  # ── 算子 1：Q 投影 ─────────────────────────────────────────────
+  - name: q_projection
+    note: "Q 投影，M=S=128, N=d_model=768, K=d_model=768"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 128
+      N: 768
+      K: 768
+
+  # ── 算子 2：K 投影 ─────────────────────────────────────────────
+  - name: k_projection
+    note: "K 投影，M=128, N=768, K=768"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 128
+      N: 768
+      K: 768
+
+  # ── 算子 3：V 投影 ─────────────────────────────────────────────
+  - name: v_projection
+    note: "V 投影，M=128, N=768, K=768"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 128
+      N: 768
+      K: 768
+
+  # ── 算子 4：QK^T（注意力分数）────────────────────────────────
+  - name: attention_qkt
+    note: |
+      QK^T: [H=12, S=128, d_head=64] × [H=12, d_head=64, S=128]
+      K=d_head=64，每个 16×16 Cube 块需 4 次迭代，H=12 通过 batch 维度建模
+    shape:
+      name: GEMM
+      dimensions: [M, N, K, H]
+      data-spaces:
+        - name: Q_matrix
+          projection: [[H], [M], [K]]
+        - name: K_matrix
+          projection: [[H], [K], [N]]
+        - name: Attn_scores
+          projection: [[H], [M], [N]]
+          read-write: true
+    instance:
+      M: 128    # S
+      N: 128    # S
+      K: 64     # d_head = 768 / 12
+      H: 12     # num_heads
+
+  # ── 算子 5：AV（注意力加权求和）──────────────────────────────
+  - name: attention_av
+    note: "AV: [H=12, S=128, S=128] × [H=12, S=128, d_head=64]"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K, H]
+      data-spaces:
+        - name: Attn_weights
+          projection: [[H], [M], [K]]
+        - name: V_matrix
+          projection: [[H], [K], [N]]
+        - name: Attn_output
+          projection: [[H], [M], [N]]
+          read-write: true
+    instance:
+      M: 128    # S
+      N: 64     # d_head
+      K: 128    # S
+      H: 12     # num_heads
+
+  # ── 算子 6：输出投影 ──────────────────────────────────────────
+  - name: output_projection
+    note: "Attention 输出投影，M=128, N=768, K=768"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 128
+      N: 768
+      K: 768
+
+  # ── 算子 7：FFN Linear1 ──────────────────────────────────────
+  - name: ffn_linear1
+    note: "FFN 扩展层（最大 GEMM），M=128, N=3072, K=768"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 128
+      N: 3072
+      K: 768
+
+  # ── 算子 8：FFN Linear2 ──────────────────────────────────────
+  - name: ffn_linear2
+    note: "FFN 收缩层，M=128, N=768, K=3072"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 128
+      N: 768
+      K: 3072

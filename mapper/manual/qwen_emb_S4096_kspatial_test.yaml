@@ -1,0 +1,73 @@
+# Qwen3-Emb S=4096 ffn_gate (M=4096 N=3072 K=1024) with full Cube K=16 spatial
+# 维度：M = 4(L2sp) × 16(Cubesp) × 16(L0A_temp) × 4(L1_temp) = 4096
+#       N = 6(L2sp) × 16(Cubesp) × 32(L0C_temp) = 3072
+#       K = 16(Cubesp K) × 8(Cube_Reg_temp) × 8(DRAM K) = 1024
+
+mapping:
+  - target: Cube_Reg
+    type: datatype
+    keep: []
+    bypass: [Weights, Inputs, Outputs]
+  - target: L0C_Buffer
+    type: datatype
+    keep: [Outputs]
+    bypass: [Weights, Inputs]
+  - target: L0A_Buffer
+    type: datatype
+    keep: [Inputs]
+    bypass: [Weights, Outputs]
+  - target: L0B_Buffer
+    type: datatype
+    keep: [Weights]
+    bypass: [Inputs, Outputs]
+  - target: L1_Buffer
+    type: datatype
+    keep: [Inputs]
+    bypass: [Weights, Outputs]
+  - target: L2_Buffer
+    type: datatype
+    keep: [Weights]
+    bypass: [Inputs, Outputs]
+  - target: DRAM
+    type: datatype
+    keep: [Weights, Inputs, Outputs]
+    bypass: []
+
+  - target: Cube_Reg
+    type: temporal
+    factors: M1 N1 K8
+    permutation: KMN
+  - target: L0A_Buffer
+    type: temporal
+    factors: M16 N1 K1
+    permutation: MNK
+  - target: L0B_Buffer
+    type: temporal
+    factors: M1 N1 K1
+    permutation: MNK
+  - target: L0C_Buffer
+    type: spatial
+    factors: M16 N16 K16
+    permutation: MNK
+    split: 3
+  - target: L0C_Buffer
+    type: temporal
+    factors: M1 N32 K1
+    permutation: NMK
+  - target: L1_Buffer
+    type: temporal
+    factors: M4 N1 K1
+    permutation: MNK
+  - target: L2_Buffer
+    type: spatial
+    factors: M4 N6 K1
+    permutation: MNK
+    split: 3
+  - target: L2_Buffer
+    type: temporal
+    factors: M1 N1 K1
+    permutation: MNK
+  - target: DRAM
+    type: temporal
+    factors: M1 N1 K8
+    permutation: KMN

@@ -1,0 +1,18 @@
+# MalConv2 — CNN 大输入（1 MB 字节流）
+# 用途：scripts/microarch_exploration/regime_gate.py
+# 数据来源：roofline_910b4_calibrated_v2.py KNOWN_MODELS_V2["MalConv2"]
+
+name: MalConv2
+arch: cnn
+layers: 0
+ops_b1: 5.0e+9                # 5 G OPs（卷积）
+weight_mb: 40.0
+bytes_total: 8.0e+9           # 1MB 输入 + conv 激活（内存受限，单独处理）
+alpha_per_batch: null         # 单点，无 batch 拟合
+beta_layer_override: null     # L=0，无 transformer 层
+measured:
+  1: 52376.1
+note: |
+  内存受限 + random-access penalty；属独立 regime，不参与 β_layer 拟合。
+  bytes_total 远超 L2=96MB，且 HBM 访问模式为 random-access，
+  实际 effective BW 远低于峰值；timeloop_needed=True（非 β 主导）。

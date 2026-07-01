@@ -1,0 +1,58 @@
+# Timeloop Mapper 配置（910B4 DaVinci Cube 路径）
+# 创建日期：2026-05-05
+# 用途：搜索 DaVinci Cube 核的 GEMM 最优 Loop Tiling + Dataflow
+#
+# 搜索空间说明：
+#   - 在 Cube_MAC 层：枚举 spatial 并行度（列向量 N/M 方向）
+#   - 在 L0A/L0B/L0C 层：枚举 temporal tiling（分块大小）
+#   - 在 L1 层：枚举 L1 tiling（L0 级别分块的上级缓存）
+#   - 在 L2 层：枚举 L2 tiling（跨核共享，权重常驻策略）
+#   - 在 DRAM 层：不做 tiling（外层循环）
+#
+# Dataflow 候选：
+#   - WS（Weight Stationary）：权重常驻 L0B，输入和输出流动
+#   - OS（Output Stationary）：部分和常驻 L0C，权重和输入流动
+#   - IS（Input Stationary）：输入常驻 L0A，权重和输出流动
+#
+# 使用方法（Timeloop binary 可用时）：
+#   timeloop-mapper arch/ascend_910b4.yaml mapper/timeloop_mapper.yaml \
+#       mapper/timeloop_constraints_910b4.yaml models/hf_bert.yaml \
+#       -o timeloop_results/hf_bert_opt/
+
+mapper:
+  id-config: exhaustive           # 穷举搜索（小搜索空间时）
+  search-size: 100000             # 最大评估配置数
+  num-threads: 8                  # 并行搜索线程数
+  timeout: 3600                   # 单次搜索超时 (秒)
+  victory-condition: 100          # 连续 100 次无改善即停止
+
+  # 优化目标：最小化 DRAM 访问次数（代理目标：降低延迟）
+  # 可选：energy（最小化能耗），cycles（最小化计算周期）
+  optimization-metric: [energy, delay]
+
+  # 搜索算法：random-pruned（带约束剪枝的随机搜索）
+  algorithm: random-pruned
+
+  # 随机种子（用于可重复性）
+  random-seed: 42
+
+  # 输出配置
+  out-prefix: timeloop-mapper
+
+  # 搜索粒度：live-status 在此 Timeloop binary 版本中不支持（已移除）
+
+  # Tiling 候选因子（标准 GEMM 维度 M, N, K）
+  # 在 constraints 文件中用 factors 进一步限制
+  mapspace:
+    template: uber               # 通用搜索模板（不预设 dataflow）
+    # uber 模板下，每层循环的 tiling 因子和 dataflow 均被枚举
+
+    # 是否允许绕过（bypass）存储层次
+    # bypass 表示某 tensor 不在该层缓存，直接透传到下层
+    split-permutations: true
+
+    # 全局 tiling 因子限制（实例中由 constraints 覆盖）
+    global:
+      # M/N 方向的最大并行因子（受 Cube 阵列尺寸限制 16×16）
+      # K 方向为 reduction，不并行
+      max-parallelism-per-dim: 16

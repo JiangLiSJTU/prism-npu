@@ -1,0 +1,21 @@
+# GPT-2-small — 12 层因果 decoder（S=512, d=768, MHA）
+# 用途：scripts/microarch_exploration/regime_gate.py
+# 数据来源：roofline_910b4_calibrated_v2.py KNOWN_MODELS_V2["GPT-2-small"]
+
+name: GPT-2-small
+arch: decoder
+layers: 12
+ops_b1: 96.6e+9               # 96.6 G OPs（12 × 8.05 G/层）
+weight_mb: 234.0
+bytes_total: 2.13e+8          # 138 MB weight overflow + 75 MB attn acts = 213 MB
+alpha_per_batch: null         # OLS 从实测数据拟合（regime_gate 计算）
+beta_layer_override: 355.6    # 实测反算 (4385.7 - 119) / 12 = 355.6 μs/层 (S=512 d=768)
+measured:
+  1: 4385.7
+  4: 12672.8
+  8: 24464.7
+  16: 53410.4
+note: |
+  S=512, D=768, L=12, MHA；与 BERT-base 同 L=12 → enc vs dec 对照。
+  β_layer_dec(S=512,d=768) 基准点。
+  bytes_total = (234-96)×1e6 + 75e6 = 213 MB。

@@ -1,0 +1,20 @@
+# Net-Transformer — 单层 GQA decoder
+# 用途：scripts/microarch_exploration/regime_gate.py
+# 数据来源：roofline_910b4_calibrated_v2.py KNOWN_MODELS_V2["Net-Transformer"]
+
+name: net_transformer
+arch: decoder
+layers: 1
+ops_b1: 913.4e+6            # 913 M OPs
+weight_mb: 9.0
+bytes_total: 0.0            # 权重 (9MB) + 激活 (~0.5MB/样本) 在 B≤16 全部 < L2=96MB
+alpha_per_batch: null       # OLS 从实测数据拟合（regime_gate 计算）
+beta_layer_override: 80.4   # 实测反算 (199.4 - 119) / 1 = 80.4 μs/层 (S=256 d=384)
+measured:
+  1: 199.4
+  4: 220.7
+  8: 269.8
+  16: 335.4
+note: |
+  S=256, D=384, GQA(g=3), L=1；β_layer_dec @ S=256 基准点。
+  bytes_total 设为 0：避免 B=16 时 weight×B 错误触发 memory regime。

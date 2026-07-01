@@ -1,0 +1,19 @@
+# Kitsune — 极小 MLP（β_device 基线）
+# 用途：scripts/microarch_exploration/regime_gate.py
+# 数据来源：roofline_910b4_calibrated_v2.py KNOWN_MODELS_V2["Kitsune"]
+# 引用：NDSS'18 arXiv:1802.09089
+
+name: kitsune
+arch: mlp
+layers: 0
+ops_b1: 4.0e+6              # 4 M OPs (1958 params × ~2k MACs)
+weight_mb: 0.004
+bytes_total: 4.0e+3         # 极小（约 4 KB），全 L2 命中
+alpha_per_batch: 0.53       # 实测：(152.3 - 119) / 63
+beta_layer_override: null   # L=0，无 transformer 层
+measured:
+  1: 119.0                  # μs
+  64: 152.3                 # μs
+note: |
+  β_device 基线模型；1958 params, 100-d 输入，无 transformer 层。
+  L=0 → β_layer 不参与；alpha_per_batch 直接从两点拟合。

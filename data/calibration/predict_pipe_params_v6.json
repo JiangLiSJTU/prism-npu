@@ -1,0 +1,69 @@
+{
+  "K0_us_per_kernel": 1.8557901133663446,
+  "H_prefill_us": 13424.349999999999,
+  "H_decode_us": 204.2,
+  "aiv_C_kernel_us": 16.0,
+  "aiv_C_data_us": 3.0,
+  "v_model": "v6",
+  "v6_AIC_DECODE_amp_aic": 1.4750004258200378,
+  "v6_AIC_DECODE_amp_aiv": 0.6774139097899186,
+  "v6_AIC_DECODE_nk_mult": 3.06321024088754,
+  "v6_AIC_DECODE_amp_aic_S_alpha": 0.0003962669763220607,
+  "v6_AIC_DECODE_amp_aiv_S_alpha": 0.000566429772192888,
+  "v6_AIC_QWEN3_amp_aic": 7.964052766193984,
+  "v6_AIC_QWEN3_amp_aiv": 6.356336903069279,
+  "v6_AIC_QWEN3_nk_mult": 31.395216394571403,
+  "v6_AIC_QWEN3_amp_aic_S_alpha": 0.6969412592553286,
+  "v6_AIC_QWEN3_amp_aiv_S_alpha": 0.60892101778936,
+  "v6_AIV_BOUND_amp_aic": 1.7049363446992787,
+  "v6_AIV_BOUND_amp_aiv": 3.8361226494513305,
+  "v6_AIV_BOUND_nk_mult": 5.424840655116409,
+  "v6_AIV_BOUND_amp_aic_S_alpha": 0.0006505060691659503,
+  "v6_AIV_BOUND_amp_aiv_S_alpha": 0.0007499856978452528,
+  "v6_BALANCED_amp_aic": 1.0000018201788807,
+  "v6_BALANCED_amp_aiv": 1.0000057208855035,
+  "v6_BALANCED_nk_mult": 6.373775756640072,
+  "v6_BALANCED_amp_aic_S_alpha": 0.0007237363527565414,
+  "v6_BALANCED_amp_aiv_S_alpha": 0.0005868538608677404,
+  "fit_summary": {
+    "per_bucket_fit": {
+      "AIC_DECODE": {
+        "amp_aic": 1.475,
+        "amp_aiv": 0.6774,
+        "nk_mult": 3.0632,
+        "amp_aic_S_alpha": 0.0004,
+        "amp_aiv_S_alpha": 0.0006
+      },
+      "AIC_QWEN3": {
+        "amp_aic": 7.9641,
+        "amp_aiv": 6.3563,
+        "nk_mult": 31.3952,
+        "amp_aic_S_alpha": 0.6969,
+        "amp_aiv_S_alpha": 0.6089
+      },
+      "AIV_BOUND": {
+        "amp_aic": 1.7049,
+        "amp_aiv": 3.8361,
+        "nk_mult": 5.4248,
+        "amp_aic_S_alpha": 0.0007,
+        "amp_aiv_S_alpha": 0.0007
+      },
+      "BALANCED": {
+        "amp_aic": 1.0,
+        "amp_aiv": 1.0,
+        "nk_mult": 6.3738,
+        "amp_aic_S_alpha": 0.0007,
+        "amp_aiv_S_alpha": 0.0006
+      }
+    },
+    "train_mae_pct": 0.2,
+    "train_max_pct": 1.39,
+    "val_batch_mae_pct": 8.88,
+    "val_batch_max_pct": 13.12,
+    "val_size_mae_pct": 13.52,
+    "val_size_max_pct": 14.08,
+    "n_train": 7,
+    "n_val_batch": 3,
+    "n_val_size": 3
+  }
+}

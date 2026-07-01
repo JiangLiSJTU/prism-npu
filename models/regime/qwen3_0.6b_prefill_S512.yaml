@@ -1,0 +1,19 @@
+# Qwen3-0.6B prefill 模式 S=512（标准 LLM prefill）
+# 派生自 qwen3_0.6b.yaml + S 扫描
+#
+# per_layer @ S=512 = 31.45e6 × 512 + 8192 × 512² = 16.1G + 2.15G = 18.25G ops
+# total @ 28 layers = 511 G ops
+# bytes activation @ S=512 ≈ 57 MB → bytes_total ≈ 1.16 GB
+
+name: Qwen3-0.6B-prefill-S512
+arch: decoder
+layers: 28
+ops_b1: 5.11e+11            # 511 G ops @ S=512
+weight_mb: 1200.0
+bytes_total: 1.16e+9        # ≈ 1.16 GB
+alpha_per_batch: null
+beta_layer_override: 560.4
+measured: {}
+note: |
+  Qwen3-0.6B prefill mode @ S=512（标准 prompt 长度）。
+  Attention ops 占 12%；linear 项仍主导但 attention 二次项开始抬头。

@@ -1,0 +1,32 @@
+# BERT-base — 12 层标准 encoder（S=128, d=768）
+# 用途：scripts/microarch_exploration/regime_gate.py
+# 数据来源：roofline_910b4_calibrated_v2.py KNOWN_MODELS_V2["BERT-base"]
+
+name: BERT-base
+arch: encoder
+layers: 12
+ops_b1: 22.3e+9               # 22.3 G OPs（12 × 1.862 G/层）
+weight_mb: 220.0
+bytes_total: 1.24e+8          # HBM overflow = (220-96) × 1e6 = 124 MB（v2 L2=96 MB 修正）
+alpha_per_batch: null         # OLS 从实测数据拟合（regime_gate 计算）
+beta_layer_override: 138.1    # 实测反算 (1776.7 - 119) / 12 = 138.1 μs/层 (S=128 d=768)
+measured:
+  1: 1776.7
+  4: 2368.8
+  8: 3820.6
+  16: 4944.0
+note: |
+  S=128, D=768, L=12；β_layer_enc_d768 主校准点；调度受限。
+  HBM overflow = max(0, weight_mb - L2) × 1e6 = (220-96)×1e6 = 124 MB。
+
+# GEMM-level spec for prism-predict-pipe. Config name maps to baseline key
+# "BERT-base-S128-b1" in data/calibration/pipe_baseline_per_model.json.
+gemm_spec:
+  S: 128
+  d_model: 768
+  d_ff: 3072
+  n_heads: 12
+  n_kv_heads: 0
+  d_head: 64
+  vocab: 30522
+  ffn_type: standard

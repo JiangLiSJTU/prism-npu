@@ -1,0 +1,38 @@
+# ET-BERT — 加密流量分类（AI-DPI），BERT-base 拓扑 + 字节级 vocab=256
+# 来源：github.com/linwhitehat/ET-BERT，bert_base_config.json
+# 拓扑与 models/regime/bert_base.yaml 的 12 层 encoder 逐字节相同，
+# 唯一区别：vocab 256（vs 30522）→ embedding/分类头访存极小。
+#
+# ⚠️ 实测数据：910B 上尚无 ET-BERT 直接实测（ais_bench/msprof）。
+#    其 12 层 transmformer 与已实测的 BERT-base-S128 相同，可用
+#    data/calibration/pipe_baseline_per_model.json 的 BERT-base-S128-b* 作代理。
+#    要补 ET-BERT 直接实测，见：
+#      benchmark/run_etbert_int8_msprof.sh       （INT8 vs FP16 跨精度）
+#      benchmark/run_etbert_llc_ddr_msprof.sh    （LLC 命中率 / DDR 带宽利用率）
+
+name: ET-BERT
+arch: encoder
+layers: 12
+
+# ── roofline 字段（prism-regime 用）────────────────────────────────────
+ops_b1: 22.35e+9             # 12 × 1.862 G/层（与 BERT-base transformer 相同）
+weight_mb: 170.3            # FP16；每层 14.16 MB × 12 + embed 0.39 MB
+bytes_total: 7.43e+7        # HBM overflow = max(0, 170.3 - 96) × 1e6 = 74.3 MB
+alpha_per_batch: null        # OLS 从实测拟合（无 ET-BERT 实测时用 BERT-base 代理）
+beta_layer_override: 138.1   # 借用 BERT-base 实测反算（S=128 d=768 encoder，逐层等价）
+note: |
+  ET-BERT = BERT-base 12 层 encoder + vocab=256（字节级 token）。
+  逐层 GEMM/pipe 行为与 BERT-base-S128 等价；vocab 极小使其更偏算力/host 受限、
+  更不偏 embedding 访存。无独立实测，β_layer/measured 借用 BERT-base 代理。
+  单层权重工作集 FP16 = 14.16 MB（INT8 7.08 / FP4 3.54）— Cache 关键数。
+
+# ── GEMM-level spec（prism-predict-pipe 用）────────────────────────────
+gemm_spec:
+  S: 128
+  d_model: 768
+  d_ff: 3072
+  n_heads: 12
+  n_kv_heads: 0
+  d_head: 64
+  vocab: 256              # 字节级 token（ET-BERT 的标志性差异）
+  ffn_type: standard

@@ -1,0 +1,171 @@
+{
+  "K0_us_per_kernel": 1.8557901133663446,
+  "H_prefill_us": 13424.349999999999,
+  "H_decode_us": 204.2,
+  "training": {
+    "host_gap_mae_pct": 8.431502632920804,
+    "kernel_gap_mae_pct": 11.898365027650213,
+    "n_configs": 9
+  },
+  "loo_cv": {
+    "BERT-base": {
+      "fit_H_prefill_us": 13424.349999999999,
+      "fit_H_decode_us": 204.2,
+      "fit_K0_us_per_kernel": 1.8559530957810615,
+      "train_host_gap_mae_pct": 9.376242788217638,
+      "train_kernel_gap_mae_pct": 11.956312738075617,
+      "test_configs": [
+        {
+          "config": "BERT-base-S128-b1",
+          "host_gap_pred_us": 13424.349999999999,
+          "host_gap_actual_us": 14079.4,
+          "host_gap_err_pct": 4.652542011733463,
+          "kernel_gap_pred_us": 627.3121463739988,
+          "kernel_gap_actual_us": 561.9,
+          "kernel_gap_err_pct": 11.641243348282396
+        }
+      ]
+    },
+    "GPT-2-small": {
+      "fit_H_prefill_us": 13424.349999999999,
+      "fit_H_decode_us": 204.2,
+      "fit_K0_us_per_kernel": 1.8558247081063393,
+      "train_host_gap_mae_pct": 6.625785121335459,
+      "train_kernel_gap_mae_pct": 13.776248318997744,
+      "test_configs": [
+        {
+          "config": "GPT-2-S512-b1",
+          "host_gap_pred_us": 13424.349999999999,
+          "host_gap_actual_us": 11607.3,
+          "host_gap_err_pct": 15.654372679262183,
+          "kernel_gap_pred_us": 595.7197313021348,
+          "kernel_gap_actual_us": 581.1,
+          "kernel_gap_err_pct": 2.515871846865397
+        }
+      ]
+    },
+    "Net-Transformer": {
+      "fit_H_prefill_us": 13424.349999999999,
+      "fit_H_decode_us": 204.2,
+      "fit_K0_us_per_kernel": 1.855816598737024,
+      "train_host_gap_mae_pct": 8.431502632920804,
+      "train_kernel_gap_mae_pct": 14.279098110694667,
+      "test_configs": [
+        {
+          "config": "Net-Transformer-S256-L1-b1",
+          "host_gap_pred_us": 13424.349999999999,
+          "host_gap_actual_us": 0.0,
+          "host_gap_err_pct": 0.0,
+          "kernel_gap_pred_us": 81.65593034442907,
+          "kernel_gap_actual_us": 0.0,
+          "kernel_gap_err_pct": 0.0
+        }
+      ]
+    },
+    "Qwen3-0.6B": {
+      "fit_H_prefill_us": 13000.0,
+      "fit_H_decode_us": 204.2,
+      "fit_K0_us_per_kernel": 1.6327278245575807,
+      "train_host_gap_mae_pct": 6.5550011976481395,
+      "train_kernel_gap_mae_pct": 3.065789898571891,
+      "test_configs": [
+        {
+          "config": "Qwen3-prefill-S512-b4",
+          "host_gap_pred_us": 13000.0,
+          "host_gap_actual_us": 14873.9,
+          "host_gap_err_pct": 12.598578718426234,
+          "kernel_gap_pred_us": 14743.532255754953,
+          "kernel_gap_actual_us": 19267.5,
+          "kernel_gap_err_pct": 23.479785879045263
+        },
+        {
+          "config": "Qwen3-prefill-S256-b1",
+          "host_gap_pred_us": 13000.0,
+          "host_gap_actual_us": 11974.8,
+          "host_gap_err_pct": 8.561312088719651,
+          "kernel_gap_pred_us": 11794.825804603963,
+          "kernel_gap_actual_us": 10328.6,
+          "kernel_gap_err_pct": 14.195784565226289
+        }
+      ]
+    },
+    "Qwen3-0.6B-decode": {
+      "fit_H_prefill_us": 13424.349999999999,
+      "fit_H_decode_us": 200.0,
+      "fit_K0_us_per_kernel": 1.8587731969925232,
+      "train_host_gap_mae_pct": 10.539378291151005,
+      "train_kernel_gap_mae_pct": 11.476249410662927,
+      "test_configs": [
+        {
+          "config": "Qwen3-decode-Min4-Skv128-b1",
+          "host_gap_pred_us": 200.0,
+          "host_gap_actual_us": 204.2,
+          "host_gap_err_pct": 2.056807051909887,
+          "kernel_gap_pred_us": 2429.416568469228,
+          "kernel_gap_actual_us": 2119.8,
+          "kernel_gap_err_pct": 14.605933034683826
+        }
+      ]
+    }
+  },
+  "aiv_C_kernel_us": 16.0,
+  "aiv_C_data_us": 3.0,
+  "aiv_amp_a0": -0.2,
+  "aiv_amp_a1": 4.0,
+  "aiv_amp_a2": 14.0,
+  "aiv_amp_decode": 1.5,
+  "aiv_training": {
+    "mae_pct": 4.9,
+    "n_configs": 6,
+    "per_config": [
+      {
+        "config": "BERT-base-S128-b1",
+        "aiv_pred_us": 911.8,
+        "aiv_meas_us": 918.1,
+        "aiv_err_pct": 0.7,
+        "attn_frac": 0.242,
+        "amp_computed": 1.488
+      },
+      {
+        "config": "GPT-2-S512-b1",
+        "aiv_pred_us": 3600.9,
+        "aiv_meas_us": 3375.6,
+        "aiv_err_pct": 6.7,
+        "attn_frac": 0.561,
+        "amp_computed": 2.764
+      },
+      {
+        "config": "Qwen3-prefill-S512-b4",
+        "aiv_pred_us": 127006.3,
+        "aiv_meas_us": 129458.0,
+        "aiv_err_pct": 1.9,
+        "attn_frac": 0.593,
+        "amp_computed": 10.329
+      },
+      {
+        "config": "Qwen3-prefill-S256-b1",
+        "aiv_pred_us": 34912.6,
+        "aiv_meas_us": 34057.6,
+        "aiv_err_pct": 2.5,
+        "attn_frac": 0.421,
+        "amp_computed": 9.642
+      },
+      {
+        "config": "Qwen3-decode-Min4-Skv128-b1",
+        "aiv_pred_us": 3122.8,
+        "aiv_meas_us": 2877.1,
+        "aiv_err_pct": 8.5,
+        "attn_frac": 0.0,
+        "amp_computed": 1.5
+      },
+      {
+        "config": "Net-Transformer-S256-L1-b1",
+        "aiv_pred_us": 103.6,
+        "aiv_meas_us": 114.3,
+        "aiv_err_pct": 9.4,
+        "attn_frac": 0.39,
+        "amp_computed": 1.361
+      }
+    ]
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "msprof_source": "msprof_qwen3_prefill_S256_b1_ArithmeticUtilization",
+  "arch_yaml": "arch/ascend_910b4_for_mapping.yaml",
+  "clock_mhz": 1600,
+  "shapes": [
+    {
+      "M": 256,
+      "N": 3072,
+      "K": 1024,
+      "count": 3360,
+      "aicore_time_us": 59400.819,
+      "cube_util_pct": 65.276,
+      "timeloop_cycles": 8192,
+      "wall_clock_theoretical_us": 5.12,
+      "aicore_time_per_op_us": 17.67881517857143,
+      "eta_inferred_pct": 28.96121684786871,
+      "eta_msprof_pct": 65.276,
+      "consistency_ratio": 0.443673277282136
+    },
+    {
+      "M": 256,
+      "N": 1024,
+      "K": 3072,
+      "count": 1680,
+      "aicore_time_us": 33795.501,
+      "cube_util_pct": 47.617,
+      "timeloop_cycles": 12288,
+      "wall_clock_theoretical_us": 7.68,
+      "aicore_time_per_op_us": 20.11636964285714,
+      "eta_inferred_pct": 38.177862787120695,
+      "eta_msprof_pct": 47.617,
+      "consistency_ratio": 0.8017695946221033
+    },
+    {
+      "M": 256,
+      "N": 1024,
+      "K": 1024,
+      "count": 3360,
+      "aicore_time_us": 26021.234,
+      "cube_util_pct": 40.949,
+      "timeloop_cycles": 4096,
+      "wall_clock_theoretical_us": 2.56,
+      "aicore_time_per_op_us": 7.744414880952381,
+      "eta_inferred_pct": 33.05608027659257,
+      "eta_msprof_pct": 40.949,
+      "consistency_ratio": 0.8072500006494071
+    },
+    {
+      "M": 256,
+      "N": 1024,
+      "K": 2048,
+      "count": 1680,
+      "aicore_time_us": 23491.643,
+      "cube_util_pct": 45.684,
+      "timeloop_cycles": 8192,
+      "wall_clock_theoretical_us": 5.12,
+      "aicore_time_per_op_us": 13.983120833333333,
+      "eta_inferred_pct": 36.61557431295887,
+      "eta_msprof_pct": 45.684,
+      "consistency_ratio": 0.8014966796462409
+    },
+    {
+      "M": 256,
+      "N": 2048,
+      "K": 1024,
+      "count": 1680,
+      "aicore_time_us": 16944.358,
+      "cube_util_pct": 57.254,
+      "timeloop_cycles": 8192,
+      "wall_clock_theoretical_us": 5.12,
+      "aicore_time_per_op_us": 10.08592738095238,
+      "eta_inferred_pct": 50.76379996220572,
+      "eta_msprof_pct": 57.254,
+      "consistency_ratio": 0.8866419806861655
+    }
+  ]
+}

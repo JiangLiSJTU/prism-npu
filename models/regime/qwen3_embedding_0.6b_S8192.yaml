@@ -1,0 +1,58 @@
+# Qwen3-Embedding-0.6B prefill (S=8192, B=1) — 28 层 GQA decoder + SwiGLU
+# 用途：scripts/microarch_exploration/regime_gate.py
+# 数据来源：
+#   - HuggingFace Qwen/Qwen3-Embedding-0.6B/config.json（人工核对，2026-05-07）
+#   - model.safetensors 文件大小 1,191,586,416 B（curl HEAD 实测，BF16 → 595.79M params）
+#   - ops/bytes 推导见 docs（手工，python 验算）
+# 与 S=4096 变体关系：算子结构完全相同，仅 S 维度翻倍 → linear GEMM OPs ×2，
+#   attn_qkt/attn_av OPs ×4（S² 项），KV cache + 激活 ×2
+
+name: Qwen3-Embedding-0.6B-S8192
+arch: decoder
+layers: 28
+ops_b1: 22.608708e+12              # 22.609 T OPs（28 层 × 807.454 G/层）
+weight_mb: 1191.59
+bytes_total: 2.9914e+9             # 2.991 GB（weight overflow 1095.59 + KV 939.52 + 激活 939.52 + 输入 16.78）
+alpha_per_batch: null
+beta_layer_override: null
+measured: {}
+note: |
+  Qwen3-Embedding-0.6B prefill, S=8192, B=1
+  Backbone：Qwen3ForCausalLM；config.json 同 S=4096 变体（vocab=151669, hidden=1024,
+            layers=28, attn_heads=16, kv_heads=8, head_dim=128, intermediate=3072,
+            hidden_act=silu, max_position_embeddings=32768, tie_word_embeddings=true）
+
+  ops_b1 推导（每层 B=1 prefill, S=8192）：
+    q_proj   = 2·8192·1024·2048    =  34.360 G
+    k_proj   = 2·8192·1024·1024    =  17.180 G
+    v_proj   = 2·8192·1024·1024    =  17.180 G
+    o_proj   = 2·8192·2048·1024    =  34.360 G
+    attn_qkt = 2·8192·8192·128·16  = 274.878 G   ← S² 项，相比 S=4096 增长 4×
+    attn_av  = 2·8192·128·8192·16  = 274.878 G   ← S² 项
+    ffn_gate = 2·8192·1024·3072    =  51.540 G
+    ffn_up   = 2·8192·1024·3072    =  51.540 G
+    ffn_down = 2·8192·3072·1024    =  51.540 G
+    per-layer total                =  807.454 G
+    × 28 layers                    = 22608.708 G = 22.609 T
+
+  bytes_total 推导：
+    weight_mb (BF16/FP16):        1191.59 MB
+    weight overflow:              1095.59 MB → 1.0956 GB
+    KV cache (K+V, FP16) 单层：    2·S·H_kv·d_head·2 = 33.55 MB; ×28 = 939.52 MB
+    输入 embedding lookup:         S·hidden·2 = 16.78 MB
+    per-layer activation traffic： 2·S·hidden·2 = 33.55 MB; ×28 = 939.52 MB
+    bytes_total = 1095.59 + 939.52 + 16.78 + 939.52 = 2991.4 MB ≈ 2.991 GB
+
+  预期 regime（手工 Roofline 三-regime 预览，β_layer=355.6 默认）：
+    T_compute  = ops_b1 / (280 TFLOPS · 0.70) ≈ 115,351 μs (115 ms)
+    T_memory   = bytes_total / (392 GB/s)     ≈   7,631 μs (7.6 ms)
+    T_overhead = 119 + 355.6 × 28             ≈  10,076 μs (10.1 ms)
+    → T_compute 主导（远超 T_memory 与 T_overhead）→ 计算受限
+
+  架构假设：
+    1. SwiGLU 三路 FFN（hidden_act=silu）
+    2. GQA: 16 Q heads, 8 KV heads
+    3. 因果 attention（mask 在 T_compute 中已计入完整 S² 矩阵）
+    4. 池化与 L2-normalize 不在 regime YAML 范围内
+    5. Flash Attention 假设：attention scores 不持续驻留 HBM
+       若 scores 走 HBM 上界：28·16·8192²·2·2 ≈ 120 GB → 严重内存受限（这是寻优重点关注点）

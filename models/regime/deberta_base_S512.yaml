@@ -1,0 +1,29 @@
+# DeBERTa-base — 12 层 encoder with disentangled attention（S=512, d=768）
+# 数据来源：microsoft/deberta-base config.json
+# 典型场景：分类 / NLU 任务
+
+name: DeBERTa-base-S512-b1
+arch: encoder
+layers: 12
+ops_b1: 50.0e9                # ~50 GFLOPs @ S=512 (disentangled attn slightly heavier)
+weight_mb: 280.0              # 140M params × 2 bytes (FP16)
+bytes_total: 1.84e8           # HBM overflow = (280-96) × 1e6 = 184 MB
+alpha_per_batch: null
+beta_layer_override: null
+note: |
+  S=512, D=768, L=12, intermediate=3072, MHA 12 heads d_head=64.
+  Encoder with disentangled attention (content+position projections).
+  Standard GeLU FFN.
+  注：predict_pipe 忽略 disentangled attention 的额外位置流量（量级 < 10%），
+  prediction 可能略低估 aic_mte2.
+  预期 regime: 平衡（compute + memory 均显著，HBM overflow 184 MB）.
+
+gemm_spec:
+  S: 512
+  d_model: 768
+  d_ff: 3072
+  n_heads: 12
+  n_kv_heads: 0
+  d_head: 64
+  vocab: 50265
+  ffn_type: standard

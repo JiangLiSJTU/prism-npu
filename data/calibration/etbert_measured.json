@@ -1,0 +1,215 @@
+{
+  "source": "msprof_910B4_measured",
+  "model": "ET-BERT (vocab=256, L=12 d=768 S=128)",
+  "configs": [
+    {
+      "precision": "fp16",
+      "batch": 1,
+      "cube_util_fp16_pct": 32.24,
+      "cube_util_int8_pct": 0.0,
+      "aic_pipes_us_per_inf": {
+        "mac": 189.2,
+        "mte1": 220.5,
+        "mte2": 508.1,
+        "fixpipe": 74.5
+      },
+      "aic_dominant_pipe": "mte2",
+      "hbm_active_rd_gbs": 1.45,
+      "hbm_active_wr_gbs": 0.09,
+      "ddr_util_pct": 0.39,
+      "hbm_sustained_rd_mbs": 393.724,
+      "hbm_sustained_wr_mbs": 44.886,
+      "llc_read_hit_pct": 45.977,
+      "npu_compute_ms_clean": 1.758
+    },
+    {
+      "precision": "fp16",
+      "batch": 4,
+      "cube_util_fp16_pct": 63.89,
+      "cube_util_int8_pct": 0.0,
+      "aic_pipes_us_per_inf": {
+        "mac": 626.5,
+        "mte1": 481.3,
+        "mte2": 852.0,
+        "fixpipe": 284.1
+      },
+      "aic_dominant_pipe": "mte2",
+      "hbm_active_rd_gbs": 1.26,
+      "hbm_active_wr_gbs": 0.13,
+      "ddr_util_pct": 0.35,
+      "hbm_sustained_rd_mbs": 388.054,
+      "hbm_sustained_wr_mbs": 48.594,
+      "llc_read_hit_pct": 44.379,
+      "npu_compute_ms_clean": 2.364
+    },
+    {
+      "precision": "fp16",
+      "batch": 8,
+      "cube_util_fp16_pct": 50.54,
+      "cube_util_int8_pct": 0.0,
+      "aic_pipes_us_per_inf": {
+        "mac": 1060.7,
+        "mte1": 1144.7,
+        "mte2": 1693.6,
+        "fixpipe": 518.2
+      },
+      "aic_dominant_pipe": "mte2",
+      "hbm_active_rd_gbs": 1.37,
+      "hbm_active_wr_gbs": 0.1,
+      "ddr_util_pct": 0.38,
+      "hbm_sustained_rd_mbs": 371.506,
+      "hbm_sustained_wr_mbs": 52.541,
+      "llc_read_hit_pct": 47.127,
+      "npu_compute_ms_clean": 3.768
+    },
+    {
+      "precision": "fp16",
+      "batch": 16,
+      "cube_util_fp16_pct": 74.52,
+      "cube_util_int8_pct": 0.0,
+      "aic_pipes_us_per_inf": {
+        "mac": 2055.3,
+        "mte1": 1659.5,
+        "mte2": 2403.4,
+        "fixpipe": 925.5
+      },
+      "aic_dominant_pipe": "mte2",
+      "hbm_active_rd_gbs": 1.51,
+      "hbm_active_wr_gbs": 0.17,
+      "ddr_util_pct": 0.43,
+      "hbm_sustained_rd_mbs": 261.285,
+      "hbm_sustained_wr_mbs": 69.285,
+      "llc_read_hit_pct": 47.01,
+      "npu_compute_ms_clean": 4.93
+    },
+    {
+      "precision": "int8",
+      "batch": 1,
+      "cube_util_fp16_pct": 0.04,
+      "cube_util_int8_pct": 14.28,
+      "aic_pipes_us_per_inf": {
+        "mac": 84.1,
+        "mte1": 99.5,
+        "mte2": 343.8,
+        "fixpipe": 195.7
+      },
+      "aic_dominant_pipe": "mte2",
+      "hbm_active_rd_gbs": 1.11,
+      "hbm_active_wr_gbs": 0.15,
+      "ddr_util_pct": 0.32,
+      "hbm_sustained_rd_mbs": 165.328,
+      "hbm_sustained_wr_mbs": 29.703,
+      "llc_read_hit_pct": 46.384,
+      "npu_compute_ms_clean": 2.208
+    },
+    {
+      "precision": "int8",
+      "batch": 4,
+      "cube_util_fp16_pct": 0.02,
+      "cube_util_int8_pct": 22.01,
+      "aic_pipes_us_per_inf": {
+        "mac": 240.9,
+        "mte1": 191.0,
+        "mte2": 564.1,
+        "fixpipe": 412.3
+      },
+      "aic_dominant_pipe": "mte2",
+      "hbm_active_rd_gbs": 1.35,
+      "hbm_active_wr_gbs": 0.29,
+      "ddr_util_pct": 0.42,
+      "hbm_sustained_rd_mbs": 25.556,
+      "hbm_sustained_wr_mbs": 28.602,
+      "llc_read_hit_pct": 45.851,
+      "npu_compute_ms_clean": 3.0
+    },
+    {
+      "precision": "int8",
+      "batch": 8,
+      "cube_util_fp16_pct": 0.01,
+      "cube_util_int8_pct": 33.42,
+      "aic_pipes_us_per_inf": {
+        "mac": 459.1,
+        "mte1": 374.9,
+        "mte2": 1079.8,
+        "fixpipe": 551.6
+      },
+      "aic_dominant_pipe": "mte2",
+      "hbm_active_rd_gbs": 1.21,
+      "hbm_active_wr_gbs": 0.37,
+      "ddr_util_pct": 0.4,
+      "hbm_sustained_rd_mbs": 133.726,
+      "hbm_sustained_wr_mbs": 38.682,
+      "llc_read_hit_pct": 46.237,
+      "npu_compute_ms_clean": 3.859
+    },
+    {
+      "precision": "int8",
+      "batch": 16,
+      "cube_util_fp16_pct": 0.01,
+      "cube_util_int8_pct": 45.53,
+      "aic_pipes_us_per_inf": {
+        "mac": 891.9,
+        "mte1": 622.2,
+        "mte2": 1470.5,
+        "fixpipe": 1152.2
+      },
+      "aic_dominant_pipe": "mte2",
+      "hbm_active_rd_gbs": 1.69,
+      "hbm_active_wr_gbs": 0.37,
+      "ddr_util_pct": 0.52,
+      "hbm_sustained_rd_mbs": 129.005,
+      "hbm_sustained_wr_mbs": 52.678,
+      "llc_read_hit_pct": 44.602,
+      "npu_compute_ms_clean": 5.353
+    }
+  ],
+  "measurement_env": "Ascend 910B4 server, CANN+ais_bench, msprof; loop=20/10 warmup=3/2; ET-BERT ONNX->ATC->OM; INT8 via AMCT PTQ (amct_onnx 0.23.2)",
+  "om_size_mb": {
+    "fp16": 165,
+    "int8": 85
+  },
+  "nextgen_fixpipe_extrapolation": {
+    "hypothesis": "下一代 fixpipe 吸收量化/反量化开销; 用真机 per-op OP-Type 分解剥离量化税后重聚合",
+    "quant_tax_pct_of_wall": {
+      "fp16_b1": 5,
+      "int8_b1": 19,
+      "int8_b1_incl_fused_dequant": 35,
+      "int8_b16": 12,
+      "int8_b16_incl_fused_dequant": 32
+    },
+    "l2_read_hit_pct_per_op": {
+      "fp16": {
+        "1": 73.9,
+        "4": 83.1,
+        "8": 94.8,
+        "16": 96.1
+      },
+      "int8": {
+        "1": 99.8,
+        "4": 95.6,
+        "8": 97.2,
+        "16": 97.6
+      }
+    },
+    "ddr_util_unchanged_by_removing_quant": true,
+    "ideal_latency_ms": {
+      "int8_b1": {
+        "measured": 2.208,
+        "remove_quant": 1.795,
+        "remove_quant_and_dequant": 1.433,
+        "fp16_ref": 1.758
+      },
+      "int8_b16": {
+        "measured": 5.353,
+        "remove_quant": 4.708,
+        "remove_quant_and_dequant": 3.654,
+        "fp16_ref": 4.93
+      }
+    },
+    "conclusions": [
+      "量化税是计算/流水开销不碰DDR(带宽需求不变)",
+      "低精度权重更小->L2命中更高(INT8 95-99.8% vs FP16 74-96%)->带宽更省",
+      "下一代fixpipe使INT8 b1 1.43ms<FP16 1.76ms(快~18%),b16快~26%; 但仍受host/L1约束,加速远不到2x"
+    ]
+  }
+}

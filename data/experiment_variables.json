@@ -1,0 +1,236 @@
+{
+  "schema_version": "1.1",
+  "last_updated": "2026-05-08",
+  "calibration": {
+    "k_calib_910b4": 140,
+    "k_calib_310p": 52.5,
+    "L2_mb": 96.0,
+    "MAE_roofline_v3": 0.57
+  },
+  "eta_real_fit_v5": {
+    "method": "physics-informed (η_pipeline · η_tile · batch)",
+    "alpha_MN_coupling": 14.5977,
+    "beta_MK_coupling": 2.5051,
+    "gamma_NK_coupling": 1.7484,
+    "delta_linear_edge": 0.0,
+    "gamma_B_batch": 0.0102,
+    "training_n_shapes": 56,
+    "training_mae_pp": 11.98,
+    "training_rmse_pp": 16.33,
+    "validation_bert_n_shapes": 16,
+    "validation_bert_mae_pp": 14.33,
+    "validation_bert_rmse_pp": 18.93,
+    "validation_gpt2_n_shapes": 16,
+    "validation_gpt2_mae_pp": 12.07,
+    "validation_gpt2_rmse_pp": 17.69,
+    "hard_gate_threshold_pp": 15.0,
+    "gate_passed": true
+  },
+  "phase_j_sweep": {
+    "version": "v2_L3a_vector",
+    "anchor": "910B4 baseline",
+    "n_variants": 29,
+    "n_dimensions": 6,
+    "n_test_models": 5,
+    "models_overhead_dominated": ["BERT-base-S128-L12", "GPT-2-small-S512-L12", "Net-Transformer-S256-L1"],
+    "models_compute_sensitive": ["Qwen3-0.6B-prefill-S4096-L28", "Qwen3-Embedding-S4096-L28"],
+    "n_variants_ratio_1_across_fixed_network": 17,
+    "cliff_edge_cube8x8x16_ratio": 3.43,
+    "cliff_edge_n_cores_8_ratio": 3.00,
+    "cliff_edge_aiv_per_aic_1_ratio": 1.171,
+    "cliff_edge_TDP100W_ratio": 1.44,
+    "additive_aiv_per_aic_4_ratio": 0.915,
+    "additive_n_cores_32_ratio": 0.843,
+    "additive_TDP400W_ratio": 0.909,
+    "tco_baseline_score": 266.1,
+    "tco_lpddr5x_path_score": 163.5,
+    "tco_lpddr5x_savings_pct": 38.6,
+    "tco_910b4_mini_score_estimate": 120.0,
+    "tco_910b4_mini_savings_pct": 55.0,
+    "sweet_spot_910b4_mini": {
+      "n_cores": 16,
+      "cube_spatial": "16x16x16",
+      "aiv_per_aic": 1,
+      "l2_mb": 32,
+      "memory": "LPDDR5X 100 GB/s",
+      "tdp_w": 200,
+      "comment": "for固定网络 only — AIV halved zero loss"
+    },
+    "sweet_spot_910b4_balanced": {
+      "n_cores": 16,
+      "cube_spatial": "16x16x16",
+      "aiv_per_aic": 2,
+      "l2_mb": 32,
+      "memory": "LPDDR5X 100 GB/s",
+      "tdp_w": 200,
+      "comment": "for固定网络 + Qwen3 prefill — AIV保留baseline"
+    }
+  },
+  "phase_l_fixes": {
+    "L1_cube_k_spatial": {
+      "status": "completed",
+      "date": "2026-05-07",
+      "effect": "BERT FFN cycles 49152→3072 (16x reduction), util 6.25→100%"
+    },
+    "L2_l2_capacity_yaml": {
+      "status": "completed_audit",
+      "date": "2026-05-08",
+      "effect": "yaml 反映 96 MB 真实容量；timeloop-model cycles 不变（manual mapping 路径 L2 非约束）",
+      "audit_doc": "docs/timeloop_l2_capacity_audit.md"
+    },
+    "L3a_vector_analytical": {
+      "status": "completed",
+      "date": "2026-05-08",
+      "effect": "aiv_per_aic 维度真实敏感; Qwen3 prefill 进入 compute-bound regime; 加法方向出现正 ROI",
+      "vector_throughput_baseline_TFLOPS": 9.83,
+      "vector_lanes_per_aiv": 128,
+      "T_vector_qwen3_prefill_us": 3201.7,
+      "T_vector_bert_us": 2.9,
+      "T_vector_gpt2_us": 23.0
+    },
+    "L3b_vector_timeloop_arch_yaml": {
+      "status": "deferred",
+      "blocker": "Timeloop classic 不建模非-MAC 算子（LN/Softmax/GeLU），即使绕开 ParseTreeSpecs:1085 单元素断言（把 AIV 写成独立顶层 yaml）也算不出 Vector cycles",
+      "surface_blocker_only": "ParseTreeSpecs:1085 assert(subTrees.getLength() == 1) — 阻挡 AIV 作为 DaVinci_Core 并列 subtree，但即使绕过此断言，根本问题（不建模非-MAC 算子）依然存在",
+      "reason_for_deferral": "L#3a analytical 路径数学等价（Cube/AIV 单层物理 serial，T_cube+T_vector 简单加法成立），L#3b 即使技术上可行也无信息增量"
+    }
+  },
+  "phase_n_decomposition": {
+    "version": "v3_pipe_aware",
+    "date": "2026-05-09",
+    "n_pipeutil_configs_measured": 9,
+    "n_sweep_dimensions": 12,
+    "n_sweep_variants": 49,
+    "baseline_validation_max_err_pct": 6.7,
+    "key_pipe_findings": {
+      "aic_mte2_dominant_in_8of9_configs": true,
+      "aic_mac_pct_min_decode": 6.6,
+      "aic_mte2_pct_max_qwen3_prefill_S256_b8": 91.8,
+      "aiv_vec_pct_range": "7.3-36.3",
+      "aiv_mte2_pct_max_qwen3_prefill_S4096_b1": 73.2,
+      "qwen3_prefill_S4096_dominant_pipe": "fixpipe",
+      "qwen3_decode_dominant_pipe": "mte2"
+    },
+    "v3_unlocked_sensitivities": {
+      "bert_lpddr4x_ratio": 1.22,
+      "gpt2_lpddr4x_ratio": 1.46,
+      "nettrans_lpddr4x_ratio": 1.26,
+      "qwen3_prefill_S4096_lpddr4x_ratio": 2.61,
+      "qwen3_decode_lpddr4x_ratio": 2.88,
+      "qwen3_decode_hbm3_ratio": 0.86,
+      "qwen3_prefill_S4096_fixpipe_half_ratio": 1.24,
+      "qwen3_prefill_S4096_ub_l1_fused_ratio": 0.80,
+      "qwen3_decode_ub_l1_fused_ratio": 0.93,
+      "aiv_per_aic_1_loss_pct": "0% (BERT/NetT) to 7% (GPT-2 b=1)"
+    },
+    "fixed_network_arch_recommendation": {
+      "name": "910B4-mini-v3",
+      "n_cores": 16,
+      "cube_spatial": "16x16x16",
+      "l2_mb": 32,
+      "memory": "LPDDR5X 100 GB/s",
+      "aiv_per_aic": 1,
+      "tdp_w": 200,
+      "host_runtime_target_per_kernel_us": 10,
+      "estimated_perf_loss_vs_910b4_pct": "0-19 (host_gap optimization required)",
+      "tco_savings_pct_estimate": 55
+    },
+    "llm_friendly_arch_recommendation": {
+      "n_cores": "16-24",
+      "cube_spatial": "16x16x16",
+      "memory": "HBM3 800 GB/s",
+      "aiv_per_aic": 2,
+      "fixpipe_bw_gbs": 8192,
+      "ub_l1_fused": true,
+      "expected_long_prefill_speedup_pct": 20,
+      "expected_decode_speedup_pct": 14
+    },
+    "optimization_ceiling_5scenarios": {
+      "tool": "scripts/calibration/predict_optimization_ceiling.py",
+      "host_gap_target_per_kernel_us": 10,
+      "ub_l1_fused_residual": 0.05,
+      "hbm3_bw_gbs": 800,
+      "fixed_network_findings": {
+        "bert_b1_S1_software_only_pct": 8.6,
+        "bert_b1_S2_with_runtime_pct": 74.6,
+        "bert_b1_S3_with_ub_l1_extra_pct": 0.6,
+        "gpt2_b1_S1_software_only_pct": 19.1,
+        "gpt2_b1_S2_with_runtime_pct": 67.7,
+        "nettrans_S1_software_only_pct": 3.0,
+        "nettrans_S2_with_runtime_pct": 87.1,
+        "interpretation": "固定网络业务 vector 瓶颈不是 algorithmic；host_gap (CANN runtime) 是真正杠杆；UB+L1 融合无收益"
+      },
+      "llm_findings": {
+        "qwen3_prefill_S4096_S1_software_only_pct": 35.6,
+        "qwen3_prefill_S4096_S2_with_runtime_pct": 35.6,
+        "qwen3_prefill_S4096_S3_with_ub_l1_pct": 56.1,
+        "qwen3_prefill_S4096_S3_extra_over_S1_pct": 20.5,
+        "interpretation": "长上下文 prefill 上算子优化 35.6% 已接近天花板；UB+L1 融合追加 20% 是硬件必经"
+      },
+      "decode_findings": {
+        "qwen3_decode_S1_software_only_pct": 59.5,
+        "qwen3_decode_S3_with_ub_l1_pct": 66.2,
+        "qwen3_decode_S4_with_hbm3_pct": 80.2,
+        "interpretation": "decode 软件可优化 60% (aiv_idle dominant)；HBM3 是首要硬件投资"
+      }
+    }
+  },
+  "roofline_v2_betas": {
+    "beta_device_us": 119.0,
+    "beta_layer_enc_us": 133.6,
+    "beta_layer_enc_d768_us": 138.1,
+    "beta_layer_enc_d256_us": 93.2,
+    "beta_layer_dec_S256_d384_us": 80.4,
+    "beta_layer_dec_S512_d768_us": 355.6,
+    "beta_layer_dec_S512_d1024_us": 560.4,
+    "eta_compute": 0.70
+  },
+  "timeloop_results_910b4": {
+    "T_timeloop_1layer_us": 18110,
+    "ffn_linear1_cycles": 25165824,
+    "attention_qkt_cycles": 786432,
+    "spatial_utilization_cores": 3,
+    "mapper_cube_utilization_pct": 9.38,
+    "ffn_linear1_cm2_cycles": 37748736,
+    "ffn_linear1_cm4_cycles": 37748736,
+    "total_cycles_cm1_baseline": 26954240,
+    "total_cycles_cm2": 40550400,
+    "total_cycles_cm4": 40132608
+  },
+  "timeloop_results_310p": {
+    "T_310p_us_1layer": 27165,
+    "T_310p_cycles": 26746880,
+    "T_real_310p_estimate_us": 517,
+    "npu_compute_bert_ms": 7.3,
+    "npu_compute_gpt2_ms": 18,
+    "npu_compute_qwen3_ms": 55
+  },
+  "msprof_910b4": {
+    "wall_clock_bert_ms": 16.21,
+    "T_npu_bert_ms": 1.83,
+    "T_host_bert_ms": 14.38,
+    "wall_clock_gpt2_ms": 17.28,
+    "T_npu_gpt2_ms": 4.39,
+    "T_host_gpt2_ms": 12.89,
+    "wall_clock_qwen3_ms": 75.47,
+    "T_npu_qwen3_ms": 15.81,
+    "T_host_qwen3_ms": 59.66,
+    "beta_layer_bert_us": 139.6,
+    "beta_layer_gpt2_us": 378.2,
+    "beta_layer_qwen3_us": 494.1,
+    "mte2_fraction_bert_pct": 79.4,
+    "mte2_fraction_gpt2_pct": 67.2,
+    "mte2_fraction_qwen3_pct": 74.8,
+    "hbm_bw_utilized_bert_gbs": 1.3,
+    "hbm_bw_util_fraction_bert_pct": 0.3
+  },
+  "wall_clock_predictions_v3": {
+    "bert_predicted_ms": 15.95,
+    "gpt2_predicted_ms": 17.29,
+    "qwen3_predicted_ms": 75.51
+  },
+  "cm_scale_results": {
+    "cm_2_ratio_vs_baseline": 1.504,
+    "cm_mac_scale_improvement_4x_pct": 9.0
+  }
+}

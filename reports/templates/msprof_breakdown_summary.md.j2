@@ -1,0 +1,249 @@
+# Phase B msprof 分解报告（综合）
+
+> **生成时间**：2026-05-05
+> **数据源**：`msprof_data/all_results.json`（10 组 msprof 产物）
+> **方法**：CANN 8.5.0 msprof, 4 个 aic-metrics group（PipeUtilization / L2Cache / Memory / ArithmeticUtilization）
+> **覆盖**：BERT-base/GPT-2-small/Qwen3-0.6B × b=1（4/2/2 metric） + BERT b=16, GPT-2 b=16
+
+---
+
+## 0. 执行摘要 — 三条颠覆性发现
+
+### 发现 1：Phase A 测的 `latency_ms` 不是 wall-clock，是 NPU compute time
+
+ais_bench 报告的 "NPU_compute_time" = **NPU 上算子执行时间总和**（per-iteration sum of op_summary `Task Duration(us)`）。但端到端 wall-clock latency（`step_trace Iteration Time`）远大于此：
+
+| 模型 | B | NPU_compute_time (Phase A) | Wall-clock (msprof step_trace) | host_overhead | host 占比 |
+|------|---|--------------------------|-----------------------------|--------------|---------|
+| BERT-base | 1 | 1.78 ms | **{{ wall_clock_bert_ms }} ms** | **14.39 ms** | **88.7%** |
+| GPT-2-small | 1 | {{ T_npu_gpt2_ms }} ms | {{ wall_clock_gpt2_ms }} ms | 12.74 ms | 73.7% |
+| Qwen3-0.6B | 1 | {{ T_npu_qwen3_ms }} ms | **{{ wall_clock_qwen3_ms }} ms** | **59.38 ms** | **78.7%** |
+| BERT-base | 16 | 4.94 ms | 19.37 ms | {{ T_host_bert_ms }} ms | 74.2% |
+| GPT-2-small | 16 | 53.41 ms | 65.38 ms | 12.77 ms | 19.5% |
+
+**含义**：Phase C v2 校准报告的 MAE=3.2% 仅在"NPU compute time"维度成立，与真实部署延迟无关。所有 β 值都是 NPU 算子时间的拟合，不包含 host 端。
+
+### 发现 2：host overhead ≈ 常数（与 batch 几乎无关）
+
+对 BERT-base：B=1 host=14.39ms，B=16 host=14.38ms（差 0.01ms）。说明 **host overhead 是一次性 acl runtime 启动 + dispatch 路径成本，与计算量无关**。
+
+含义：
+- Roofline 模型里的 α(B-1) 项是**虚假的拟合伪迹**（用来匹配 NPU 算子时间的 batch scaling），不对应物理量
+- 真正的 host overhead 在 wall-clock 上几乎不随 batch 变化
+
+### 发现 3：Cube 利用率不是 0%——MTE2 才是 NPU 内瓶颈
+
+| 模型 | cube_util_weighted (%) | mac_compute_fraction | **mte2_fraction** |
+|------|----------------------|---------------------|------------------|
+| BERT-base | 18.3% | 29.5% | **{{ mte2_fraction_bert_pct }}%** |
+| GPT-2-small | 28.7% | 43.5% | **{{ mte2_fraction_gpt2_pct }}%** |
+| Qwen3-0.6B | 30.3% | 55.7% | **{{ mte2_fraction_qwen3_pct }}%** |
+
+MTE2 = GM↔L1 数据搬运管线。即使在 Cube 计算时间里，**67-79% 的时间都在做 NPU 内部的数据搬运**（HBM↔L1 而非 HBM↔Host）。
+
+含义：
+- v2 报告说"Cube 利用率 <2%"是错的——是基于 wall-clock 算的（误把 host overhead 当 NPU 时间）
+- 实测 NPU 真实算力利用率 18-30%，**MTE2（数据搬运管线）才是瓶颈**
+- D-3 推荐"扩大 L2 到 192MB"的物理依据**反而被强化**：L2 越大，MTE2 stall 越少
+
+---
+
+## 1. 各模型详细分解
+
+### 1.1 BERT-base b=1（编码器，d=768，S=128，L=12）
+
+#### Wall-clock 拆解
+| 组件 | 时间 (μs) | 占比 |
+|-----|----------|------|
+| 总 Wall-clock | 16215 | 100% |
+| ↳ NPU op 总和 | 1826 | 11.3% |
+| ↳ Host overhead | 14389 | 88.7% |
+| ⤷ aclmdlExecute (sync 包装层) | 16254 | — |
+| ⤷ H2D + D2H | 871 | — |
+
+#### NPU 内部分布（aicore time = 558μs/iter）
+| 组件 | 时间 (μs) | 占比 |
+|------|----------|------|
+| AICore 总时间 | 558 | 100% |
+| ↳ MAC 计算 | 165 | 29.5% |
+| ↳ MTE2 数据搬运 | 443 | **{{ mte2_fraction_bert_pct }}%** |
+
+#### β_layer 实测（按 NPU op 分层）
+- 每层 NPU op 时间均值：**{{ beta_layer_bert_us }} μs/层**（v2 假设 138.1，误差 +1.1%）
+- attention_path：1484 μs/iter（83% of NPU 时间）
+- ffn_path：116 μs/iter
+
+#### 算子 Top 5
+| Op Type | Count | Total/iter (μs) |
+|--------|-------|----------------|
+| BatchMatMulV2 | 3360 | 644 |
+| Transpose | 1680 | 355 |
+| Add | 1260 | 171 |
+| LayerNorm | 875 | 163 |
+| Mul | 840 | 154 |
+
+> 注：count 是 30 次 iter 的累计；attention 路径 BatchMatMulV2 是 QK^T 和 AV，非 QKV 投影（投影是 MatMul 不是 BatchMatMul）。
+
+### 1.2 GPT-2-small b=1（解码器，d=768，S=512，L=12）
+
+#### Wall-clock 拆解
+| 组件 | 时间 (μs) | 占比 |
+|-----|----------|------|
+| Wall-clock | 17280 | 100% |
+| NPU op | 4538 | 26.3% |
+| Host overhead | 12741 | 73.7% |
+| H2D + D2H | 4034 | — |
+
+#### NPU 内部
+| 组件 | 时间 (μs) |
+|------|----------|
+| AICore | 1373 |
+| MAC | 597 (43.5%) |
+| MTE2 | 923 ({{ mte2_fraction_gpt2_pct }}%) |
+
+#### β_layer = {{ beta_layer_gpt2_us }} μs/层（v2 假设 355.6，误差 +6.4%）
+- attention_path = 1191 μs/iter（**比 BERT-base 1484 还少！**）
+- ffn_path = 621 μs/iter（是 BERT-base 116 的 5.4×）
+
+#### Top 5
+| Op Type | Count | Total/iter (μs) |
+|--------|-------|----------------|
+| AutomaticBufferFusionOp | 300 | 1148 |
+| MatMulV2 | 1200 | 981 |
+| BatchMatMulV2 | 625 | 491 |
+| Transpose | 1200 | 436 |
+| SoftmaxV2 | 300 | 334 |
+
+### 1.3 Qwen3-0.6B b=1（解码器，d=1024，S=512，L=28，GQA + SwiGLU）
+
+#### Wall-clock 拆解
+| 组件 | 时间 (μs) | 占比 |
+|-----|----------|------|
+| Wall-clock | 75471 | 100% |
+| NPU op | 16095 | 21.3% |
+| Host overhead | **59377** | **78.7%** |
+| H2D + D2H | 26307 | — |
+
+> Qwen3 host overhead 4× 高于 BERT-base，主因是 1.5GB 模型的 H2D（26.3ms）和 ModelExecute 包装（75.5ms）。
+
+#### β_layer = {{ beta_layer_qwen3_us }} μs/层（v2 假设 560.4，误差 -11.8% — 修订）
+
+- attention_path = 9160 μs/iter
+- ffn_path = 2132 μs/iter
+
+#### NPU 内部
+| 组件 | 时间 (μs) |
+|------|----------|
+| AICore | 5533 |
+| MAC | 3082 (55.7%) |
+| MTE2 | 4139 ({{ mte2_fraction_qwen3_pct }}%) |
+
+---
+
+## 2. 三模型对比（核心证据表）
+
+| 指标 | BERT-base b1 | GPT-2-small b1 | Qwen3-0.6B b1 |
+|------|--------------|----------------|---------------|
+| **Wall-clock (ms)** | {{ wall_clock_bert_ms }} | {{ wall_clock_gpt2_ms }} | {{ wall_clock_qwen3_ms }} |
+| **NPU op_sum (ms)** | {{ T_npu_bert_ms }} | 4.54 | 16.10 |
+| **Host overhead (ms)** | **14.39** | **12.74** | **59.38** |
+| Host 占比 | 88.7% | 73.7% | 78.7% |
+| H2D/D2H (μs/iter) | 871 | 4034 | 26307 |
+| β_layer 实测 (μs/层) | {{ beta_layer_bert_us }} | {{ beta_layer_gpt2_us }} | {{ beta_layer_qwen3_us }} |
+| β_layer v2 假设 | 138.1 | 355.6 | 560.4 |
+| β_layer 误差 | +1.1% | +6.4% | -11.8% |
+| Cube 利用率 (NPU 内) | 18.3% | 28.7% | 30.3% |
+| MAC compute fraction | 29.5% | 43.5% | 55.7% |
+| **MTE2 fraction** | **{{ mte2_fraction_bert_pct }}%** | **{{ mte2_fraction_gpt2_pct }}%** | **{{ mte2_fraction_qwen3_pct }}%** |
+| Attention path (μs/iter) | 1484 | 1191 | 9160 |
+| FFN path (μs/iter) | 116 | 621 | 2132 |
+| HBM 实测 BW (GB/s) | {{ hbm_bw_utilized_bert_gbs }} | 1.2 (b16) | 1.6 |
+| HBM 利用率 vs 392 | **{{ hbm_bw_util_fraction_bert_pct }}%** | **0.4%** | **0.4%** |
+
+---
+
+## 3. 修订矩阵填表
+
+> 三档：🟢 保留 / 🟡 修订 / 🔴 推翻
+
+### Phase C 修订矩阵
+
+| # | 原结论 | msprof 实测 | 判定 |
+|---|--------|------------|------|
+| **C-1** | β_device = 119μs 是 host-device sync 总和 | 实际 host overhead = **14400~59400μs**（120-500× 大）；v2 模型把 NPU compute time 当 wall-clock 来拟合 | 🔴 **推翻** |
+| **C-2** | β_layer_enc_d768 = 138.1 μs/层（BERT-base） | 实测 139.6 μs/层（误差 +1.1%）— 但这是 NPU 算子时间，不含 host | 🟢 **保留**（仅作为 NPU op 时间的字面值） |
+| **C-3** | β_layer_dec_S512_d768 = 355.6 μs/层（GPT-2） | 实测 378.2 μs/层（误差 +6.4%） | 🟢 保留 |
+| **C-4** | β_layer_dec_S512_d1024 = 560.4 μs/层（Qwen3） | 实测 494.1 μs/层（误差 -11.8%） | 🟡 **修订** 到 494 μs/层 |
+| **C-5** | "encoder vs decoder β_layer 差 4× 因 S² attention map 溢出 L2" | GPT-2 attention_path **1191μs < BERT-base 1484μs**（反而更小）；GPT-2 ffn_path 621μs 是 BERT-base 116μs 的 5.4×。差异主因是 **S=512 让 FFN GEMM M 维 4×**，与 attention 无关 | 🔴 **推翻**（attention 假说错误） |
+| **C-6** | "100% T_overhead 主导，硬件 0% 影响" | NPU 内部 MTE2 fraction 67-79%，cube 利用率 18-30%；wall-clock 上 host overhead 占 73-89%。**两个层级都有真瓶颈，但都不在 Roofline 模型里** | 🔴 **推翻**：v2 把 host overhead 误标为"调度受限" |
+| **C-7** | β_layer 内 "kernel launch ~13 μs/kernel" | aclmdlExecute 单次包整个 inference（16ms），不是 per-kernel；per-op launch overhead 无法从 ais_bench 测出 | 🟡 修订为"未测；NPU 上 dispatch 时间已含在 op duration" |
+| **C-8** | "η_FP16 = 0.70" | 实测 mac_compute_fraction = 29.5%/43.5%/55.7%，**远低于 0.70**；但 MTE2 占用了大部分 aic_time | 🟡 修订：η 应为 0.30~0.55，但需区分 cube 流水线和数据搬运管线 |
+
+### Phase D 修订矩阵
+
+| # | 原结论 | msprof 实测 | 判定 |
+|---|--------|------------|------|
+| **D-1** | "三维参数零效果区"（Cube/L2/HBM 0% 影响） | NPU 内 MTE2 占 67-79%（数据搬运瓶颈，对应 L1/L2 容量与带宽）；Cube 利用率 18-30%（尚未饱和但 GPT-2/Qwen3 接近 30%） | 🟡 **修订**：硬件参数对 wall-clock 仍 ~0% 影响（host 主导），但**对 NPU 内部时间确有影响**（增大 L2/L1 可降低 MTE2 stall） |
+| **D-2** | "β_scale=0.5 软件优化潜力 38-50%" | 实测 NPU op 占 wall-clock 11-26%。即使 NPU op 完全消除，wall-clock 改善仅上限 11-26%，与 50% 假设不符 | 🔴 **推翻**：软件优化天花板被 host overhead 锁死，需 host 端 CANN 优化（PCIe sync 减少）才能突破 |
+| **D-3** | "推荐 L2=192MB" | L2Cache.csv `Hit Rate` 字段全为空（CANN 8.5.0 未导出该字段），但 MTE2 fraction 高 → 间接证据支持扩大 L2 | 🟡 **保留**（但加"间接证据"标签，无 L2 命中率直接验证） |
+| **D-4** | "推荐 HBM-BW=256GB/s（持平/可降）" | 实测 HBM 利用率 **0.3-0.4%**（远低于 65% 阈值） | 🟢 **保留**（甚至可降至 200 GB/s） |
+| **D-5** | "推荐核数 12-16" | Cube 利用率 18-30%，远低于 50%；BatchMatMulV2 主导 | 🟡 修订：核数可从 20 减到 8-12（Qwen3 是上限） |
+| **D-6** | "kernel dispatch ~20 μs/kernel" | 同 C-7 | 🟡 同 C-7 |
+| **D-7（新增）** | "fixed network 模型在 910B4 上的真实瓶颈" | **wall-clock 主导是 host CANN runtime（73-89%）**；NPU 内部主导是 MTE2 数据搬运（67-79%）；HBM 流量极低（0.3-0.4%） | 🟢 新结论：**"双瓶颈"**（host runtime + NPU MTE2） |
+
+### Phase E 修订矩阵
+
+- **E-1** 执行摘要 "硬件参数 0% 影响" → 改写为 "Wall-clock 由 host CANN runtime 主导（73-89%），NPU 内 MTE2 数据搬运是次瓶颈；硬件参数变更不影响 wall-clock 但可能改善 NPU op 时间的 30-80%"
+- **E-2** 行动建议优先级 1（β 软件优化 50% 潜力）→ **完全替换**为 "host runtime 优化（aclmdlExecute 简化、ModelLoad 缓存、CANN dispatch 异步化）"
+- **E-3** 行动建议优先级 2（L2 192MB / HBM 256GB/s / 核数 12-16）→ 保留 L2 推荐（间接证据），保留 HBM 降低（实测利用率 <0.5%），核数可降至 8-12
+- **E-4** "避免方向" 中的"算力扩展无效"→ **保留**，但加 "在 NPU 内部 cube 利用率仅 18-30% 的前提下"
+
+---
+
+## 4. 关键解读：v2 模型为什么 MAE=3.2% 但物理推断错误？
+
+v2 公式：`T = max(T_compute, T_memory, T_overhead)` 其中 `T_overhead = β_device + β_layer×L + α(B-1)`
+
+| v2 拟合参数 | 物理对应 | 真实物理量 |
+|------------|---------|----------|
+| β_device = 119μs | 假设是 host-device sync | **实际是 ais_bench 测 NPU compute time 时的初始化** |
+| β_layer = 80~560μs/层 | 假设是 layer-boundary sync | **实际是 NPU 上每层算子时间总和（cube + vector + mte）** |
+| α = 20~300μs × L per batch | 假设是 batch 边际成本 | **实际是 NPU 算子时间的 batch 线性扩展** |
+
+v2 模型整体拟合 NPU compute time（ais_bench 测的 latency_ms），所以 MAE=3.2% 只在 NPU compute 维度成立。
+
+**真正的 wall-clock = NPU compute + host overhead (~14ms 常数)** — 但这一项在 v2 里完全没建模。
+
+---
+
+## 5. 后续工作
+
+| 项目 | 优先级 | 说明 |
+|-----|------|------|
+| host overhead 来源进一步分解 | 高 | 区分 ModelLoad 一次性成本 vs per-iter 的 dispatch；当前数据是 7-35 iter 平均，不能区分 |
+| L2 命中率字段恢复 | 中 | CANN 8.5.0 L2Cache.csv `Hit Rate` 字段空；试 CANN 8.6 或 mssanitizer 替代 |
+| 多核 BlockDim 利用率 | 中 | op_summary 含 Block Dim 字段但本报告未聚合 |
+| 真正的 wall-clock Roofline 拟合 | 中 | 用 step_trace 数据重新拟合三-regime（β_device~14ms 常数，β_layer~140μs/层，α≈0）|
+| 与 BERT-base b16 wall-clock 对比 | 中 | b16 host overhead 仅+0.01ms，确认 host 与 batch 无关 |
+
+---
+
+## 附录：原始数据位置
+
+```
+msprof_data/
+├── all_results.json                                 ← 所有解析后数据
+├── msprof_bert_base_b1_PipeUtilization/             ← op_summary, l2_cache, api_statistic
+├── msprof_bert_base_b1_L2Cache/
+├── msprof_bert_base_b1_Memory/
+├── msprof_bert_base_b1_ArithmeticUtilization/
+├── msprof_gpt2_small_b1_PipeUtilization/
+├── msprof_gpt2_small_b1_L2Cache/
+├── msprof_qwen3_06b_b1_PipeUtilization/
+├── msprof_qwen3_06b_b1_Memory/
+├── msprof_bert_base_b16_Memory/
+└── msprof_gpt2_small_b16_Memory/
+```
+
+每个目录含 `PROF_*/mindstudio_profiler_output/` 8 个 CSV：
+`op_summary, op_statistic, fusion_op, api_statistic, task_time, step_trace, l2_cache, msprof.json`

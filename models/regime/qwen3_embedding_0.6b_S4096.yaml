@@ -1,0 +1,63 @@
+# Qwen3-Embedding-0.6B prefill (S=4096, B=1) — 28 层 GQA decoder + SwiGLU
+# 用途：scripts/microarch_exploration/regime_gate.py
+# 数据来源：
+#   - HuggingFace Qwen/Qwen3-Embedding-0.6B/config.json（人工核对，2026-05-07）
+#   - model.safetensors 文件大小 1,191,586,416 B（curl HEAD 实测，BF16 → 595.79M params）
+#   - ops/bytes 推导见 docs（手工，python 验算）
+# 与 models/regime/qwen3_0.6b.yaml 关系：同 backbone（Qwen3ForCausalLM），区别仅在
+#   推理模式：LLM 是 decode 单步 S=1；Embedding 是 prefill 一次性 S=4096
+# 业务对标：Agent Guard / LLM 安全审计前置过滤（短文本→1024-dim 句向量）
+
+name: Qwen3-Embedding-0.6B-S4096
+arch: decoder                      # Qwen3ForCausalLM backbone，因果 attention（regime_gate 走 dec β 分支）
+layers: 28
+ops_b1: 7.456063e+12               # 7.456 T OPs（28 层 × 266.288 G/层）
+weight_mb: 1191.59                 # safetensors BF16 文件大小，FP16 推理同尺寸
+bytes_total: 2.0435e+9             # 2.043 GB（weight overflow 1095.59 MB + KV 469.76 + 激活 469.76 + 输入 8.39）
+alpha_per_batch: null              # 待 910B4 实测后回填
+beta_layer_override: null          # 留空让 regime_gate 用默认 decoder β（355.6 μs/层）；S=4K 实测后再校准
+measured: {}                       # 待 910B4 实测后回填
+note: |
+  Qwen3-Embedding-0.6B prefill, S=4096, B=1
+  Backbone：Qwen3ForCausalLM（与 qwen3_0.6b.yaml 同），但推理模式是 prefill 而非 LLM decode
+
+  config.json 权威参数（vocab=151669, hidden=1024, layers=28, attn_heads=16, kv_heads=8,
+                       head_dim=128, intermediate=3072, hidden_act=silu→SwiGLU 三路,
+                       max_position_embeddings=32768, tie_word_embeddings=true,
+                       torch_dtype=bfloat16）
+
+  ops_b1 推导（每层 B=1 prefill）：
+    q_proj   = 2·S·hidden·(H_q·d_head)  = 2·4096·1024·2048    =  17.180 G
+    k_proj   = 2·S·hidden·(H_kv·d_head) = 2·4096·1024·1024    =   8.590 G
+    v_proj   = 2·S·hidden·(H_kv·d_head) = 2·4096·1024·1024    =   8.590 G
+    o_proj   = 2·S·(H_q·d_head)·hidden  = 2·4096·2048·1024    =  17.180 G
+    attn_qkt = 2·S·S·d_head·H_q (16 heads) = 2·4096·4096·128·16 =  68.719 G
+    attn_av  = 2·S·d_head·S·H_q (16 heads) = 2·4096·128·4096·16 =  68.719 G
+    ffn_gate = 2·S·hidden·intermediate  = 2·4096·1024·3072    =  25.770 G
+    ffn_up   = 2·S·hidden·intermediate                          =  25.770 G
+    ffn_down = 2·S·intermediate·hidden                          =  25.770 G
+    per-layer total                                              = 266.288 G
+    × 28 layers                                                  = 7456.063 G = 7.456 T
+
+  bytes_total 推导（HBM 流量）：
+    weight_mb (BF16/FP16):       1191.59 MB
+    L2 cache (910B4):              96.00 MB
+    weight overflow:             1095.59 MB → 1.0956 GB
+    KV cache (K+V, FP16) 单层：  2·S·H_kv·d_head·2 = 16.78 MB; ×28 = 469.76 MB
+    输入 embedding lookup:       S·hidden·2 = 8.39 MB
+    per-layer activation traffic（hidden state read+write）: 2·S·hidden·2 = 16.78 MB; ×28 = 469.76 MB
+    bytes_total = 1095.59 + 469.76 + 8.39 + 469.76 = 2043.5 MB ≈ 2.043 GB
+
+  预期 regime（手工 Roofline 三-regime 预览，β_layer=355.6 默认）：
+    T_compute  = ops_b1 / (280 TFLOPS · 0.70) ≈ 38,041 μs (38 ms)
+    T_memory   = bytes_total / (392 GB/s)     ≈  5,213 μs (5.2 ms)
+    T_overhead = 119 + 355.6 × 28             ≈ 10,076 μs (10.1 ms)
+    → T_compute 主导 → 计算受限（与 LLM decode 时 Qwen3-0.6B 的"调度受限"形成鲜明对比）
+
+  架构假设：
+    1. SwiGLU 三路 FFN（hidden_act=silu，与现有 qwen3_0.6b.yaml 一致）
+    2. GQA: 16 Q heads, 8 KV heads，attention 计算时 K/V 复制到 16 heads 参与 GEMM
+    3. 因果 attention（用 Qwen3ForCausalLM 的 mask；embedding 用法是取最后 token hidden state）
+    4. 池化与 L2-normalize 不在 regime YAML 范围内（OPs 占比 < 0.1%）
+    5. Flash Attention 假设：attention scores 矩阵 [H, S, S] 不持续驻留 HBM（保守估算未计入）
+       若实测发现 scores 走 HBM，bytes_total 需加 28·H·S²·2 = 28·16·4096²·2·2 ≈ 30 GB

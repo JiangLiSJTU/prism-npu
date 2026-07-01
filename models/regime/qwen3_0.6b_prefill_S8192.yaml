@@ -1,0 +1,20 @@
+# Qwen3-0.6B prefill 模式 S=8192（超长上下文 / 长文档安全审计）
+# 派生自 qwen3_0.6b.yaml + S 扫描
+#
+# per_layer @ S=8192 = 31.45e6 × 8192 + 8192 × 8192² = 257.6G + 549.8G = 807.4G ops
+# total @ 28 layers = 22.6 T ops（attention 项主导 68%）
+# bytes activation @ S=8192 ≈ 920 MB → bytes_total ≈ 2.02 GB
+
+name: Qwen3-0.6B-prefill-S8192
+arch: decoder
+layers: 28
+ops_b1: 2.260e+13           # 22.6 T ops @ S=8192（attention 项主导）
+weight_mb: 1200.0
+bytes_total: 2.02e+9        # ≈ 2.0 GB
+alpha_per_batch: null
+beta_layer_override: 560.4
+measured: {}
+note: |
+  Qwen3-0.6B prefill mode @ S=8192（超长上下文 / 32K-document chunked embedding 上限）。
+  attention 项 549.8G/层 主导 68%；这是 quadratic-in-S 真正爆发的场景。
+  预期 compute-bound 强烈触发，且加 cm 倍率有真实杠杆。

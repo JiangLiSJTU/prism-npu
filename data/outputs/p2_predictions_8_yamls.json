@@ -1,0 +1,236 @@
+{
+  "bge_small_en_v15_S512": {
+    "spec_yaml": "models/regime/bge_small_en_v15_S512.yaml",
+    "spec_summary": {
+      "arch": "encoder",
+      "layers": 12,
+      "S": 512,
+      "d_model": 384,
+      "d_ff": 1536,
+      "n_heads": 12,
+      "n_kv_heads": 0,
+      "ffn_type": "standard",
+      "weight_proxy_mb": 56.6,
+      "archetype_amp": 1.15,
+      "aiv_archetype": "bert_style",
+      "aiv_alpha": 0.94
+    },
+    "predicted": {
+      "aic_time_us": 801.0038204081633,
+      "aiv_time_us": 752.9435911836734,
+      "wall_clock_us": 15590.716889175053,
+      "n_kernels": 330,
+      "kernel_gap_us": 612.4194775832179,
+      "host_gap_us": 13424.349999999999
+    },
+    "confidence": "low (encoder: only BERT-S128 in training set)"
+  },
+  "deberta_base_S512": {
+    "spec_yaml": "models/regime/deberta_base_S512.yaml",
+    "spec_summary": {
+      "arch": "encoder",
+      "layers": 12,
+      "S": 512,
+      "d_model": 768,
+      "d_ff": 3072,
+      "n_heads": 12,
+      "n_kv_heads": 0,
+      "ffn_type": "standard",
+      "weight_proxy_mb": 226.5,
+      "archetype_amp": 1.15,
+      "aiv_archetype": "gpt2_style",
+      "aiv_alpha": 2.06
+    },
+    "predicted": {
+      "aic_time_us": 1581.6624979591836,
+      "aiv_time_us": 3258.224745795919,
+      "wall_clock_us": 18876.656721338317,
+      "n_kernels": 330,
+      "kernel_gap_us": 612.4194775832179,
+      "host_gap_us": 13424.349999999999
+    },
+    "confidence": "low (encoder: only BERT-S128 in training set)"
+  },
+  "flan_t5_base_encoder_S512": {
+    "spec_yaml": "models/regime/flan_t5_base_encoder_S512.yaml",
+    "spec_summary": {
+      "arch": "encoder",
+      "layers": 12,
+      "S": 512,
+      "d_model": 768,
+      "d_ff": 2048,
+      "n_heads": 12,
+      "n_kv_heads": 0,
+      "ffn_type": "glu",
+      "weight_proxy_mb": 169.9,
+      "archetype_amp": 1.15,
+      "aiv_archetype": "bert_style",
+      "aiv_alpha": 0.94
+    },
+    "predicted": {
+      "aic_time_us": 1490.7064163265304,
+      "aiv_time_us": 1401.2640313469385,
+      "wall_clock_us": 16928.739925256687,
+      "n_kernels": 330,
+      "kernel_gap_us": 612.4194775832179,
+      "host_gap_us": 13424.349999999999
+    },
+    "confidence": "low (encoder: only BERT-S128 in training set)"
+  },
+  "llama_3_2_1b_prefill_S2048": {
+    "spec_yaml": "models/regime/llama_3_2_1b_prefill_S2048.yaml",
+    "spec_summary": {
+      "arch": "decoder",
+      "layers": 16,
+      "S": 2048,
+      "d_model": 2048,
+      "d_ff": 8192,
+      "n_heads": 32,
+      "n_kv_heads": 8,
+      "ffn_type": "swiglu",
+      "weight_proxy_mb": 2147.5,
+      "archetype_amp": 5.5,
+      "aiv_archetype": "large",
+      "aiv_alpha": 1.17
+    },
+    "predicted": {
+      "aic_time_us": 280312.6857142857,
+      "aiv_time_us": 327965.8422857142,
+      "wall_clock_us": 630016.9363623417,
+      "n_kernels": 4480,
+      "kernel_gap_us": 8314.058362341868,
+      "host_gap_us": 13424.349999999999
+    },
+    "confidence": "medium (large decoder prefill, weight_proxy≈2147MB: relies on heuristic 5.5× archetype amplification calibrated on Qwen3 only)"
+  },
+  "modernbert_base_prefill_S4096": {
+    "spec_yaml": "models/regime/modernbert_base_prefill_S4096.yaml",
+    "spec_summary": {
+      "arch": "encoder",
+      "layers": 22,
+      "S": 4096,
+      "d_model": 768,
+      "d_ff": 1152,
+      "n_heads": 12,
+      "n_kv_heads": 0,
+      "ffn_type": "glu",
+      "weight_proxy_mb": 220.6,
+      "archetype_amp": 1.15,
+      "aiv_archetype": "gpt2_style",
+      "aiv_alpha": 2.06
+    },
+    "predicted": {
+      "aic_time_us": 59464.67539591836,
+      "aiv_time_us": 122497.23131559181,
+      "wall_clock_us": 196509.02575374607,
+      "n_kernels": 605,
+      "kernel_gap_us": 1122.7690422358996,
+      "host_gap_us": 13424.349999999999
+    },
+    "confidence": "low (encoder: only BERT-S128 in training set)"
+  },
+  "qwen2_5_0_5b_prefill_S2048": {
+    "spec_yaml": "models/regime/qwen2_5_0_5b_prefill_S2048.yaml",
+    "spec_summary": {
+      "arch": "decoder",
+      "layers": 24,
+      "S": 2048,
+      "d_model": 896,
+      "d_ff": 4864,
+      "n_heads": 14,
+      "n_kv_heads": 2,
+      "ffn_type": "swiglu",
+      "weight_proxy_mb": 781.7,
+      "archetype_amp": 5.5,
+      "aiv_archetype": "gpt2_style",
+      "aiv_alpha": 2.06
+    },
+    "predicted": {
+      "aic_time_us": 119093.33333333334,
+      "aiv_time_us": 245332.2666666667,
+      "wall_clock_us": 390321.0375435128,
+      "n_kernels": 6720,
+      "kernel_gap_us": 12471.087543512802,
+      "host_gap_us": 13424.349999999999
+    },
+    "confidence": "medium (large decoder prefill, weight_proxy≈782MB: relies on heuristic 5.5× archetype amplification calibrated on Qwen3 only)"
+  },
+  "smollm2_360m_prefill_S2048": {
+    "spec_yaml": "models/regime/smollm2_360m_prefill_S2048.yaml",
+    "spec_summary": {
+      "arch": "decoder",
+      "layers": 32,
+      "S": 2048,
+      "d_model": 960,
+      "d_ff": 2560,
+      "n_heads": 15,
+      "n_kv_heads": 5,
+      "ffn_type": "swiglu",
+      "weight_proxy_mb": 707.8,
+      "archetype_amp": 5.5,
+      "aiv_archetype": "gpt2_style",
+      "aiv_alpha": 2.06
+    },
+    "predicted": {
+      "aic_time_us": 151572.56489795918,
+      "aiv_time_us": 312239.4836897959,
+      "wall_clock_us": 493864.5153124388,
+      "n_kernels": 8960,
+      "kernel_gap_us": 16628.116724683736,
+      "host_gap_us": 13424.349999999999
+    },
+    "confidence": "medium (large decoder prefill, weight_proxy≈708MB: relies on heuristic 5.5× archetype amplification calibrated on Qwen3 only)"
+  },
+  "t5_small_encoder_S512": {
+    "spec_yaml": "models/regime/t5_small_encoder_S512.yaml",
+    "spec_summary": {
+      "arch": "encoder",
+      "layers": 6,
+      "S": 512,
+      "d_model": 512,
+      "d_ff": 2048,
+      "n_heads": 8,
+      "n_kv_heads": 0,
+      "ffn_type": "standard",
+      "weight_proxy_mb": 50.3,
+      "archetype_amp": 1.15,
+      "aiv_archetype": "bert_style",
+      "aiv_alpha": 0.94
+    },
+    "predicted": {
+      "aic_time_us": 436.53812244897955,
+      "aiv_time_us": 410.3458351020408,
+      "wall_clock_us": 14577.443696342627,
+      "n_kernels": 165,
+      "kernel_gap_us": 306.20973879160897,
+      "host_gap_us": 13424.349999999999
+    },
+    "confidence": "low (encoder: only BERT-S128 in training set)"
+  },
+  "smollm2_135m_decode": {
+    "spec_yaml": "models/regime/smollm2_135m_decode.yaml",
+    "spec_summary": {
+      "arch": "decoder",
+      "layers": 30,
+      "S": 1,
+      "d_model": 576,
+      "d_ff": 1536,
+      "n_heads": 9,
+      "n_kv_heads": 3,
+      "ffn_type": "swiglu",
+      "weight_proxy_mb": 238.9,
+      "archetype_amp": 0.85,
+      "aiv_archetype": "decode",
+      "aiv_alpha": 1.16
+    },
+    "predicted": {
+      "aic_time_us": 583.2035265306123,
+      "aiv_time_us": 676.5160907755102,
+      "wall_clock_us": 2855.7820663588905,
+      "n_kernels": 750,
+      "kernel_gap_us": 1391.8624490527682,
+      "host_gap_us": 204.2
+    },
+    "confidence": "medium (decoder decode: 1 config in training; host_gap well-determined)"
+  }
+}

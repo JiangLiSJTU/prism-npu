@@ -1,0 +1,125 @@
+# 手写 mapping（generate_manual_mapping.py v0.2 自动生成）
+# ──────────────────────────────────────────────────────────────────────────
+# 工作负载: M=128 N=3072 K=768
+# 架构: ascend_910b4 (24 AIC × 4096 MAC/AIC)
+#
+# Spatial 分解:
+#   L2_Buffer  spatial: M=4 N=6 K=1  (24/24 cores)
+#   L0C_Buffer spatial: M=16 N=16 K=1  (256/4096 MACs/AIC)
+#
+# Temporal 分解:
+#   Cube_Reg   temporal: K=128        (L0 K reduce; cube 内时序)
+#   L0A_Buffer temporal: M=2 (L1 内 M iter)
+#   L0B_Buffer temporal: (1)                (Weights 不在 L0B 时序)
+#   L0C_Buffer temporal: N=32  (L1 内 N iter, 输出累加)
+#   L1_Buffer  temporal: M=1      (L2→L1 M 切片 iter)
+#   L2_Buffer  temporal: (1)                (K_outer 放 DRAM 让 L2 只持 K_inner slice)
+#   DRAM       temporal: K=6        (DRAM→L2 K_outer 次重载 weight tile)
+#
+# 维度乘积:
+#   M = 4 × 16 × 2 × 1 = 128 (target 128) ✓
+#   N = 6 × 16 × 32 = 3072 (target 3072) ✓
+#   K = 6 × 128 = 768 (target 768) ✓
+#
+# Capacity check (Timeloop view):
+#   L0A:   65536 bytes (100.0% of 64 KB)
+#   L0B:   65536 bytes (100.0% of 64 KB)
+#   L0C:    1024 bytes (  0.8% of 128 KB)
+#   L1:   131072 bytes ( 12.5% of 1 MB Timeloop view)
+#   L2:   786432 bytes ( 37.5% of 2 MB Timeloop view)
+
+mapping:
+
+  # ── Datatype keep/bypass（架构-correct dataflow）─────────────────────
+  - target: Cube_Reg
+    type: datatype
+    keep: []
+    bypass: [Weights, Inputs, Outputs]
+
+  - target: L0C_Buffer
+    type: datatype
+    keep: [Outputs]
+    bypass: [Weights, Inputs]
+
+  - target: L0A_Buffer
+    type: datatype
+    keep: [Inputs]
+    bypass: [Weights, Outputs]
+
+  - target: L0B_Buffer
+    type: datatype
+    keep: [Weights]
+    bypass: [Inputs, Outputs]
+
+  - target: L1_Buffer
+    type: datatype
+    keep: [Inputs]
+    bypass: [Weights, Outputs]
+
+  - target: L2_Buffer
+    type: datatype
+    keep: [Weights]
+    bypass: [Inputs, Outputs]
+
+  - target: DRAM
+    type: datatype
+    keep: [Weights, Inputs, Outputs]
+    bypass: []
+
+  # ── 时空映射（innermost → outermost）──────────────────────────────────
+
+  # Cube_Reg: 内层 K reduce（k_inner cycles）
+  - target: Cube_Reg
+    type: temporal
+    factors: M1 N1 K128
+    permutation: KMN
+
+  # L0A: M temporal 切片（per-core M_per_l1_inner 循环）
+  - target: L0A_Buffer
+    type: temporal
+    factors: M2 N1 K1
+    permutation: MNK
+
+  # L0B: 不切片（每次 L2→L0B 重载 K_inner × N_inner tile）
+  - target: L0B_Buffer
+    type: temporal
+    factors: M1 N1 K1
+    permutation: MNK
+
+  # L0C spatial: 16×16 Cube fanout（split=3，1D arch）
+  - target: L0C_Buffer
+    type: spatial
+    factors: M16 N16 K1
+    permutation: MNK
+    split: 3
+
+  # L0C temporal: N 时序累加（输出 partial sum 在 L0C）
+  - target: L0C_Buffer
+    type: temporal
+    factors: M1 N32 K1
+    permutation: NMK
+
+  # L1: M_l1 切片 iter（L2 → L1 加载新 M tile）
+  - target: L1_Buffer
+    type: temporal
+    factors: M1 N1 K1
+    permutation: MNK
+
+  # L2 spatial: 24-core fanout（split=3）
+  - target: L2_Buffer
+    type: spatial
+    factors: M4 N6 K1
+    permutation: MNK
+    split: 3
+
+  # L2 temporal: 不切片（K_outer 放 DRAM 让 L2 只持 K_inner slice）
+  - target: L2_Buffer
+    type: temporal
+    factors: M1 N1 K1
+    permutation: MNK
+
+  # DRAM temporal: K_outer 重载 weight tile 到 L2
+  - target: DRAM
+    type: temporal
+    factors: M1 N1 K6
+    permutation: KMN

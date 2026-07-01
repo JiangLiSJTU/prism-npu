@@ -1,0 +1,102 @@
+# DARA DQN 算子描述（Timeloop models 库）
+# 来源：arXiv:2202.03997v2，Queirós et al., INESC TEC / Universidade do Porto, 2022
+# 论文标题：Wi-Fi Rate Adaptation using a Simple Deep Reinforcement Learning Approach
+# 更新日期：2026-04-30
+#
+# 模型规格（论文原文 §III-B，Table I）：
+#   架构：DQN（Deep Q-Network），全连接网络
+#   输入：1维 state（平均 SNR 值，单个浮点数）
+#   隐层：2层全连接，每层 32 units，ReLU 激活
+#   输出：8个 Q 值（对应 MCS 0~7，IEEE 802.11n SISO）
+#   参数量：1,384（精确计算，见下）
+#   INT8 大小：~1.35 KB
+#   推理延迟：< 0.5 ms（LibTorch C++ 实现，论文实测）
+#
+# 参数量计算（来自架构，非估算）：
+#   Layer 1 (1→32):  1×32 + 32 = 64
+#   Layer 2 (32→32): 32×32 + 32 = 1,056
+#   Output (32→8):   32×8 + 8 = 264
+#   合计：64 + 1,056 + 264 = 1,384 params
+#
+# ⚠️ 原脚本标注 [估算] 30K params 严重偏高（实际 1,384，差 20×）
+#    已从论文原文精确计算，标注应改为有来源的精确值
+#
+# 场景：WiFi 链路自适应（MCS 选择）
+# SLA：< 10 ms（硬实时）
+# 结论：模型极小（1.35 KB），310P 固定开销主导，MCU/DSP 更合适
+#
+# 算子汇总（batch=1）：
+# ┌──────────────────┬──────┬──────┬──────┬──────────┐
+# │ 算子             │  M   │  N   │  K   │ OPs      │
+# ├──────────────────┼──────┼──────┼──────┼──────────┤
+# │ FC Layer 1       │   1  │  32  │   1  │    64    │
+# │ FC Layer 2       │   1  │  32  │  32  │  2,048   │
+# │ FC Output        │   1  │   8  │  32  │    512   │
+# ├──────────────────┼──────┼──────┼──────┼──────────┤
+# │ 全模型合计       │      │      │      │  2,624   │
+# └──────────────────┴──────┴──────┴──────┴──────────┘
+# 注：OPs 极小（2,624），远低于 310P 固定开销，算力完全不是瓶颈
+
+problems:
+
+  # ── FC Layer 1：input(1) → hidden(32) ──────────────────────
+  - name: fc_layer1
+    note: "输入层→隐层1，M=batch=1, N=32 units, K=input_dim=1"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 1
+      N: 32
+      K: 1
+
+  # ── FC Layer 2：hidden(32) → hidden(32) ────────────────────
+  - name: fc_layer2
+    note: "隐层1→隐层2，M=1, N=32, K=32"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 1
+      N: 32
+      K: 32
+
+  # ── Output Layer：hidden(32) → Q-values(8) ─────────────────
+  - name: fc_output
+    note: "隐层2→输出层，M=1, N=8（MCS 0~7），K=32"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 1
+      N: 8
+      K: 32
+
+# ── Vector 算子（ReLU，roofline 脚本中建模）──────────────────
+# ReLU Layer 1：[1, 32] = 32 elements，FLOPs = 32
+# ReLU Layer 2：[1, 32] = 32 elements，FLOPs = 32
+# 合计 Vector OPs = 64（可忽略不计）

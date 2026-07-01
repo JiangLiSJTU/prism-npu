@@ -1,0 +1,23 @@
+# 昇腾 910B4 + L2 ×4 微架构变体
+# 用途：scripts/microarch_exploration/regime_gate.py
+# 与 ascend_910b4_with_calib.yaml 唯一不同：l2_mb ×4 = 384 MB
+
+name: ascend_910b4_l2x4
+chip:
+  fp16_tflops: 280.0
+  hbm_bw_gbs:  392.0
+  l2_mb:       384.0       # 96 × 4 — L2 ×4
+  tdp_w:       300.0
+calib:
+  beta_device_us:                119.0
+  beta_layer_enc_us:             133.6
+  beta_layer_enc_d768_us:        138.1
+  beta_layer_enc_d256_us:         93.2
+  beta_layer_dec_S256_d384_us:    80.4
+  beta_layer_dec_S512_d768_us:   355.6
+  beta_layer_dec_S512_d1024_us:  560.4
+  eta_compute:                     0.70
+note: |
+  Variant: L2 capacity ×4 (96 → 384 MB). Calibration constants unchanged.
+  Note: Roofline does not directly model L2 hit rate; this variant changes
+  only the bytes_total computed at runtime via L2 spill model when applicable.

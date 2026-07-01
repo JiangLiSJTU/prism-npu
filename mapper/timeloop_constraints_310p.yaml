@@ -1,0 +1,112 @@
+# Timeloop 约束配置（昇腾 310P DaVinci Lite Cube 路径）
+# 更新日期：2026-05-06（修正版，对齐 910B4 约束格式）
+# 数据来源：arch/ascend_310p_timeloop.yaml（Atlas 300I Pro 权威参数）
+#
+# 310P 与 910B4 约束的关键差异：
+#   L2：8 MB（vs 910B4 的 192 MB）→ 权重无法常驻 L2（BERT-base 权重 220MB >> 8MB）
+#   L1：1 MB/核（vs 910B4 的 512KB）→ 更大的 L1 分块，可减少 L2/DDR 访问
+#   L0A/L0B：4 KB（vs 910B4 的 64 KB）→ 最内层分块约束紧 16×
+#   L0C：64 KB（vs 910B4 的 128 KB）→ 输出部分和分块紧 2×
+#   核数：8（vs 910B4 的 24）→ L2_Buffer spatial 并行度 ≤ 8
+#   Cube 粒度：16×16×16（FP16，与 910B4 相同）
+#
+# 修正项（相比旧版）：
+#   1. Cube_Reg temporal: M==16 N==16 K>=1 → K>=1（消除 M=128 时的不可行性）
+#   2. Cube_Reg spatial split: 4095 → 1（M→X方向，N→Y方向，与 910B4 一致）
+#   3. 新增 L0C_Buffer spatial K==1（防止 K 被用作 spatial reduce 维度）
+
+constraints:
+  targets:
+
+    # ── DRAM 层：外层循环，DDR 带宽受限 ────────────────────────────────
+    - target: DRAM
+      type: temporal
+      # 310P 用 LPDDR4X，204.8 GB/s 整卡
+      # 不施加强制约束，期望 Mapper 尽量减少 DRAM 访问次数
+
+    # ── L2_Buffer（8 MB 共享，极小）：权重无法常驻 ──────────────────────
+    - target: L2_Buffer
+      type: temporal
+      factors: M>=1 N>=1 K>=1
+      permutation: [K, N, M]   # K（reduction）优先：尝试最大化权重重用
+      # 310P L2 = 8 MB << BERT-base 权重 220 MB → 频繁 DDR 访问
+      # FFN Linear1 权重 768×3072 FP16 = 4.7 MB > 每核 L2 份额 1 MB
+
+    - target: L2_Buffer
+      type: dataspace
+      keep: [Inputs, Outputs]  # 310P 优先缓存激活（vs 910B4 优先 keep Weights）
+      bypass: []
+
+    # ── L1_Buffer（1 MB/核，大于 910B4）：大分块减少 L2 访问 ────────────
+    - target: L1_Buffer
+      type: temporal
+      # L1 = 1 MB = 524288 × 16-bit elements（vs 910B4 的 262144）
+      # 大分块：M=128, N=256, K=256 → 128×256×2+256×256×2+128×256×2=262144B < 1MB ✓
+      factors: M>=1 N>=1 K>=1
+
+    - target: L1_Buffer
+      type: dataspace
+      keep: [Inputs, Weights, Outputs]
+      bypass: []
+
+    # ── L0C_Buffer（64 KB/核）：输出部分和累积 ──────────────────────────
+    - target: L0C_Buffer
+      type: temporal
+      # L0C = 64 KB = 32768 × 16-bit elements
+      # M_L0 × N_L0 ≤ 16384（FP32 累加）→ 如 M=64, N=256 时 = 16384 ✓
+      factors: M<=(64) N<=(256) K>=1
+
+    - target: L0C_Buffer
+      type: spatial
+      factors: K==1              # K 是 reduce 维度，禁止作为 spatial（与 910B4 相同）
+
+    - target: L0C_Buffer
+      type: dataspace
+      keep: [Outputs]            # L0C 仅存输出（部分和）
+      bypass: [Inputs, Weights]
+
+    # ── L0A_Buffer（4 KB/核）：输入激活分块（紧约束！）─────────────────
+    - target: L0A_Buffer
+      type: temporal
+      # L0A = 4 KB = 2048 × 16-bit elements（vs 910B4 的 32768）
+      # Cube 最小块：16×16=256，最大 M_L0=16, K_L0=128 → 2048 ✓
+      # vs 910B4：M<=(128) K<=(256)  → 310P 约束紧 8-16×
+      factors: M<=(16) K<=(128) N==1
+
+    - target: L0A_Buffer
+      type: dataspace
+      keep: [Inputs]
+      bypass: [Weights, Outputs]
+
+    # ── L0B_Buffer（4 KB/核）：权重分块（紧约束！）──────────────────────
+    - target: L0B_Buffer
+      type: temporal
+      # L0B = 4 KB = 2048 × 16-bit elements（vs 910B4 的 32768）
+      # K_L0 × N_L0 ≤ 2048（如 K=128, N=16 → 2048 ✓）
+      # vs 910B4：N<=(64) K<=(512)  → 310P 约束紧 16×
+      factors: N<=(16) K<=(128) M==1
+
+    - target: L0B_Buffer
+      type: dataspace
+      keep: [Weights]
+      bypass: [Inputs, Outputs]
+
+    # ── Cube_Reg（寄存器）：最内层，Cube 阵列直接操作 ───────────────────
+    - target: Cube_Reg
+      type: temporal
+      # Cube 阵列：16×16×16（FP16），与 910B4 相同
+      # M==16 N==16 temporal 不可行（M_spatial×M_temporal=256>M_total=128）
+      # 修正：仅约束 K>=1，M/N 由 spatial/上层处理
+      factors: K>=1
+
+    - target: Cube_Reg
+      type: spatial
+      # 310P 同 910B4：16×16 Cube 阵列并行（每核 4096 MACs）
+      # split: 1 → M→X 方向（16 实例），N→Y 方向（16 实例）
+      factors: M==16 N==16
+      split: 1                   # M→X方向，N→Y方向（修正：原值 4095 错误）
+
+    - target: Cube_Reg
+      type: dataspace
+      keep: [Outputs]
+      bypass: [Inputs, Weights]

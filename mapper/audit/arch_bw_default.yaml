@@ -1,0 +1,94 @@
+# G2 DRAM 模型审计 — 默认带宽变体（基线）
+# 来源：复制自 arch/ascend_910b4.yaml，DRAM bandwidth = 392000 MB/s = 392 GB/s（HBM2e 实际值）
+
+architecture:
+  version: 0.4
+  subtree:
+    - name: System
+      attributes:
+        global_cycle_seconds: 1e-9
+        technology: 40
+      local:
+
+        - name: DRAM
+          class: DRAM
+          attributes:
+            type: "HBM2"
+            width: 64
+            datawidth: 16
+            bandwidth: 392000   # 392 GB/s（HBM2e 实际，基线）
+
+        - name: L2_Buffer
+          class: smartbuffer_SRAM
+          attributes:
+            depth: 524288
+            width: 64
+            n_banks: 16
+            datawidth: 16
+            read_bandwidth: 6400
+            write_bandwidth: 6400
+
+      subtree:
+
+        - name: DaVinci_Core[0..23]
+          local:
+
+            - name: L1_Buffer
+              class: smartbuffer_SRAM
+              attributes:
+                depth: 262144
+                width: 64
+                n_banks: 16
+                datawidth: 16
+                read_bandwidth: 600
+                write_bandwidth: 600
+
+            - name: L0B_Buffer
+              class: smartbuffer_SRAM
+              attributes:
+                depth: 32768
+                width: 64
+                n_banks: 4
+                datawidth: 16
+                read_bandwidth: 2048
+                write_bandwidth: 2048
+
+            - name: L0A_Buffer
+              class: smartbuffer_SRAM
+              attributes:
+                depth: 32768
+                width: 64
+                n_banks: 4
+                datawidth: 16
+                read_bandwidth: 2048
+                write_bandwidth: 2048
+
+            - name: L0C_Buffer
+              class: smartbuffer_SRAM
+              attributes:
+                depth: 65536
+                width: 64
+                n_banks: 8
+                datawidth: 16
+                read_bandwidth: 2048
+                write_bandwidth: 2048
+
+          subtree:
+
+            - name: Cube_MAC[0..4095]
+              local:
+
+                - name: Cube_Reg
+                  class: storage
+                  subclass: aladdin_register
+                  attributes:
+                    depth: 1
+                    width: 16
+                    datawidth: 16
+
+                - name: Cube_ALU
+                  class: intmac
+                  attributes:
+                    width: 16
+                    multiplier_width: 8
+                    adder_width: 16

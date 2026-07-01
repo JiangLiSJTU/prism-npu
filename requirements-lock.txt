@@ -1,0 +1,23 @@
+# Reproducibility lock file — exact runtime dependency versions verified
+# to work with PRISM (Tier 1 prediction tools).
+#
+# Generated 2026-05-10 against Python 3.9.6 on macOS arm64.
+# Verified: prism-render --check exit 0, prism-sweep + prism-ceiling smoke OK.
+#
+# To regenerate after upgrading deps:
+#   python3 -c "import numpy, scipy, yaml, jinja2; \
+#               print(f'numpy=={numpy.__version__}'); \
+#               print(f'scipy=={scipy.__version__}'); \
+#               print(f'PyYAML=={yaml.__version__}'); \
+#               print(f'Jinja2=={jinja2.__version__}')"
+#
+# For dev tooling (pytest, ruff), see pyproject.toml [project.optional-dependencies].
+
+# Runtime
+numpy==2.0.2
+scipy==1.13.1
+PyYAML==6.0.3
+Jinja2==3.1.6
+
+# Indirect (Jinja2)
+MarkupSafe>=2.0

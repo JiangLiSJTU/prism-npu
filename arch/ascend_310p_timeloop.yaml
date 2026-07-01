@@ -1,0 +1,134 @@
+# 昇腾 310P 架构描述（Timeloop + Accelergy 兼容，subtree/local v0.4 格式）
+# 更新日期：2026-05-06（修正版，对齐 910B4 YAML 格式）
+#
+# 关键规格（Atlas 300I Pro，8 AI Core）：
+#   FP16 算力（整卡）：70 TFLOPS（8 核）；LPDDR4X 带宽：204.8 GB/s
+#   L2 共享：8 MB；L1/核：1 MB；L0A/L0B：4 KB/核；L0C：64 KB/核
+#   Cube 粒度：16×16×16 = 4096 MACs/核（与 910B4 相同）
+#
+# 与 910B4 对比：
+#   核数：8 vs 24（3×）
+#   FP16算力：70 vs 280 TFLOPS（4×）→ NPU scale = 4.0
+#   DDR 带宽：204.8 vs 392 GB/s（1.91×）
+#   L2：8 MB vs 192 MB（24×，310P 严重受限）
+#   L1/核：1 MB vs 512KB（2×，310P 更大）
+#
+# YAML 格式规则（与 910B4 对齐）：
+#   - version: 0.4（subtree/local 格式）
+#   - System.attributes: global_cycle_seconds + technology（CactiSRAM 必需）
+#   - SRAM → class: smartbuffer_SRAM（唯一被 Docker 组件库认可的 SRAM 复合类）
+#   - Cube_Reg → class: storage, subclass: aladdin_register
+#   - Cube_ALU → class: intmac
+#
+# CACTI 深度限制：
+#   实际 L2=8MB 超出 CACTI 实用上限，用 depth=524288（1MB）近似
+#   L2 容量约束在 constraints.yaml 中通过 tiling 因子隐式设定
+#
+# bandwidth 字段（F5 bw_scale 替换用）：
+#   DRAM bandwidth: 204800 → bw_scale 替换此值
+
+architecture:
+  version: 0.4
+  subtree:
+    - name: System
+      attributes:
+        global_cycle_seconds: 1e-9    # 1 GHz 时钟；CactiSRAM 必需
+        technology: 40                # 40nm 近似（CACTI 支持 22-180nm；7nm 超范围）
+      local:
+
+        # ── DRAM（LPDDR4X，204.8 GB/s 整卡）─────────────────────────────
+        # bandwidth: 204800 MB/s = 204.8 GB/s（与 CHIP_SPECS bw_base 一致）
+        - name: DRAM
+          class: DRAM
+          attributes:
+            type: "HBM2"              # CACTI 识别的最近类型（LPDDR4X 不在支持列表）
+            width: 64                 # 64-bit word width；无 block_size → cluster_size=1
+            datawidth: 16             # Accelergy 能量估算用（FP16）
+            bandwidth: 204800         # MB/s（204.8 GB/s；F5 bw_scale 替换此值）
+
+        # ── L2 Cache（8 MB 共享，CACTI 用 1 MB 近似）────────────────────
+        # 实际 8 MB = 8×1024×1024 Bytes，但 CACTI 对大型 SRAM 会超时
+        # depth=524288 = 1 MB @ 16-bit（与 910B4 保持一致的 CACTI 近似）
+        # F5 l2_scale 扫描时替换此 depth 值
+        - name: L2_Buffer
+          class: smartbuffer_SRAM
+          attributes:
+            depth: 524288             # 1 MB CACTI 近似（实际 8 MB 受限于 CACTI）
+            width: 64
+            n_banks: 8                # 8 核共享，bank 数减半（vs 910B4 的 16）
+            datawidth: 16
+            read_bandwidth: 2048      # 310P L2 内部带宽（~256 GB/s @ 1GHz）
+            write_bandwidth: 2048
+
+      subtree:
+
+        # ── DaVinci Core × 8（Atlas 300I Pro）───────────────────────────
+        - name: DaVinci_Core[0..7]
+          local:
+
+            # ── L1 Buffer（1 MB/核 = 524288 × 16-bit words）─────────────
+            - name: L1_Buffer
+              class: smartbuffer_SRAM
+              attributes:
+                depth: 524288         # 1 MB @ 16-bit（vs 910B4 的 262144=512KB）
+                width: 64
+                n_banks: 16
+                datawidth: 16
+                read_bandwidth: 400
+                write_bandwidth: 400
+
+            # ── L0B Buffer（4 KB/核 = 2048 × 16-bit，权重）──────────────
+            - name: L0B_Buffer
+              class: smartbuffer_SRAM
+              attributes:
+                depth: 2048           # 4 KB @ 16-bit（vs 910B4 的 32768=64KB）
+                width: 64
+                n_banks: 2
+                datawidth: 16
+                read_bandwidth: 1024
+                write_bandwidth: 1024
+
+            # ── L0A Buffer（4 KB/核 = 2048 × 16-bit，激活值）────────────
+            - name: L0A_Buffer
+              class: smartbuffer_SRAM
+              attributes:
+                depth: 2048           # 4 KB @ 16-bit（vs 910B4 的 32768=64KB）
+                width: 64
+                n_banks: 2
+                datawidth: 16
+                read_bandwidth: 1024
+                write_bandwidth: 1024
+
+            # ── L0C Buffer（64 KB/核 = 32768 × 16-bit，部分和）──────────
+            - name: L0C_Buffer
+              class: smartbuffer_SRAM
+              attributes:
+                depth: 32768          # 64 KB @ 16-bit（vs 910B4 的 65536=128KB）
+                width: 64
+                n_banks: 4
+                datawidth: 16
+                read_bandwidth: 1024
+                write_bandwidth: 1024
+
+          subtree:
+
+            # ── Cube MAC × 4096（16×16×16，同 910B4 分块粒度）────────────
+            - name: Cube_MAC[0..4095]
+              local:
+
+                # ── Cube 寄存器文件（同 910B4）────────────────────────────
+                - name: Cube_Reg
+                  class: storage
+                  subclass: aladdin_register
+                  attributes:
+                    depth: 1
+                    width: 16
+                    datawidth: 16
+
+                # ── Cube ALU（同 910B4，intmac）───────────────────────────
+                - name: Cube_ALU
+                  class: intmac
+                  attributes:
+                    width: 16             # Aladdin 查表需要 width
+                    multiplier_width: 8
+                    adder_width: 16

@@ -1,0 +1,122 @@
+# 手写 mapping（generate_manual_mapping.py v0.1 自动生成）
+# 工作负载：M=128 N=3072 K=768
+# 架构：ascend_910b4（24 cores × 4096 MACs/core）
+#
+# Spatial 分解：
+#   L2_Buffer  spatial:  M=4  N=6  K=1     (24 cores 占用 / 24)
+#   L0C_Buffer spatial:  M=16 N=16 K=1   (256 MACs/core 占用 / 4096)
+#
+# Temporal 分解：
+#   Cube_Reg   temporal: M=1 N=1 K=128 (full K reduce)
+#   L0A_Buffer temporal: M=1 N=1 K=1
+#   L0B_Buffer temporal: M=1 N=1 K=1
+#   L0C_Buffer temporal: M=1 N=32 K=1
+#   L1_Buffer  temporal: M=2 N=1 K=1
+#   L2_Buffer  temporal: M=1 N=1 K=6  (每次刷新 K_inner tile 到 L0B)
+#   DRAM       temporal: M=1 N=1 K=1
+#
+# Per-core capacity check：
+#   L0A (Inputs FP16):     65536 bytes  (100.0% of 64 KB)
+#   L0B (Weights FP16):    65536 bytes  (100.0% of 64 KB)
+#   L0C (Outputs FP32):     1024 bytes  (0.8% of 128 KB)
+#
+# 维度乘积验证：
+#   M = 4 × 16 × 1 × 2 = 128 (target 128) ✓
+#   N = 6 × 16 × 1 × 32 = 3072 (target 3072) ✓
+#   K = 6 × 128 = 768 (target 768) ✓
+
+mapping:
+
+  # ── Datatype keep/bypass（WS dataflow）─────────────────────────────
+  - target: Cube_Reg
+    type: datatype
+    keep: []
+    bypass: [Weights, Inputs, Outputs]
+
+  - target: L0C_Buffer
+    type: datatype
+    keep: []
+    bypass: [Weights, Inputs, Outputs]
+
+  - target: L0A_Buffer
+    type: datatype
+    keep: [Inputs]
+    bypass: [Weights, Outputs]
+
+  - target: L0B_Buffer
+    type: datatype
+    keep: [Weights]
+    bypass: [Inputs, Outputs]
+
+  - target: L1_Buffer
+    type: datatype
+    keep: [Inputs]
+    bypass: [Weights, Outputs]
+
+  - target: L2_Buffer
+    type: datatype
+    keep: [Weights]
+    bypass: [Inputs, Outputs]
+
+  - target: DRAM
+    type: datatype
+    keep: [Weights, Inputs, Outputs]
+    bypass: []
+
+  # ── 时空映射（从内到外）────────────────────────────────────────────
+
+  # Cube_Reg: 最内层 K reduction
+  - target: Cube_Reg
+    type: temporal
+    factors: M1 N1 K128
+    permutation: KMN
+
+  # L0A: Inputs 缓冲，N 切片
+  - target: L0A_Buffer
+    type: temporal
+    factors: M1 N1 K1
+    permutation: NMK
+
+  # L0B: Weights 缓冲，M 切片（K 外层放在 L2 让 L0B 每次只持单个 K_inner tile）
+  - target: L0B_Buffer
+    type: temporal
+    factors: M1 N1 K1
+    permutation: MNK
+
+  # L0C spatial: 16×16 MAC 阵列展开
+  - target: L0C_Buffer
+    type: spatial
+    factors: M16 N16 K1
+    permutation: MNK
+    split: 3   # 全部因子进 X 方向（架构的 fanout 是 1D，Y=1）
+
+  # L0C temporal: N 多次累加 partial sum
+  - target: L0C_Buffer
+    type: temporal
+    factors: M1 N32 K1
+    permutation: NMK
+
+  # L1: 单核内缓冲，M 剩余切片
+  - target: L1_Buffer
+    type: temporal
+    factors: M2 N1 K1
+    permutation: MNK
+
+  # L2 spatial: 24 核展开
+  - target: L2_Buffer
+    type: spatial
+    factors: M4 N6 K1
+    permutation: MNK
+    split: 3   # 全部因子进 X 方向（架构的 fanout 是 1D，Y=1）
+
+  # L2 temporal: K 外层（每次 L2→L0B 加载新 K tile，绕过 L1）
+  - target: L2_Buffer
+    type: temporal
+    factors: M1 N1 K6
+    permutation: KMN
+
+  # DRAM: 顶层无切片（一次性）
+  - target: DRAM
+    type: temporal
+    factors: M1 N1 K1
+    permutation: MNK

@@ -1,0 +1,54 @@
+{
+  "fit_version": "v3_archetype_6_class",
+  "fitted_on_n_configs": 23,
+  "fitted_on_baseline_path": "data/calibration/pipe_baseline_per_model.json",
+  "formula": "aiv_time_us = alpha_archetype * aic_time_us",
+  "description": "6-archetype linear model for aiv_time, derived from msprof PipeUtilization measurements on 23 (model, batch) configs spanning BERT-base, GPT-2, HF-BERT (4-layer distilled w/ LM head), Net-Transformer (1-layer tiny classifier), Qwen3-0.6B (prefill + decode). v3 splits 'distilled' bucket into 'tiny_clf' (Net-Transformer-like, vocab*d small) vs 'distilled_lm' (HF-BERT-like, vocab*d large). The split matters because LM-head workload dominates AIV when vocab*d is large — Net-Transformer has α=1.2 vs HF-BERT α=5.6 despite both being layers<=4.",
+
+  "archetype_rules": {
+    "order": "first match wins; tested top-to-bottom",
+    "rules": [
+      {"id": 0, "name": "tiny_clf",      "match": "spec.layers <= 4 AND spec.vocab * spec.d_model < 5e6"},
+      {"id": 1, "name": "distilled_lm", "match": "spec.layers <= 4"},
+      {"id": 2, "name": "decode",       "match": "spec.S == 1"},
+      {"id": 3, "name": "large",        "match": "spec.d_model >= 1024"},
+      {"id": 4, "name": "gpt2_style",   "match": "spec.vocab >= 40000"},
+      {"id": 5, "name": "bert_style",   "match": "default (else)"}
+    ]
+  },
+
+  "alpha_by_archetype": {
+    "tiny_clf":     1.20,
+    "distilled_lm": 5.61,
+    "decode":       1.16,
+    "large":        1.17,
+    "gpt2_style":   2.06,
+    "bert_style":   0.94
+  },
+
+  "fit_quality": {
+    "train_mae_pct": 11.7,
+    "train_max_err_pct": 33.5,
+    "loo_cv_mae_pct": 19.0,
+    "baseline_v01_1_25x_mae_pct": 38.3,
+    "v2_5archetype_loo_mae_pct": 20.7,
+    "improvement_factor_vs_v01": 3.3
+  },
+
+  "per_archetype_n_train": {
+    "tiny_clf":     4,
+    "distilled_lm": 4,
+    "decode":       1,
+    "large":        6,
+    "gpt2_style":   4,
+    "bert_style":   4
+  },
+
+  "notes": [
+    "v3 key insight: 'distilled' is two distinct archetypes by AIV behavior. Net-Transformer (1-layer + 1024-class tiny classifier) has α=1.20 because LM head is small. HF-BERT (4-layer + 30522-vocab LM head) has α=5.61 because LM head softmax dominates AIV vec work despite small body.",
+    "Net-Transformer specifically validated the user's observation: 'AIV operations have tiny latency but their MTE data-fetch dominates' — for small kernels, the AIV/AIC ratio stays close to 1 unless something amplifies it (e.g. big vocab softmax in HF-BERT).",
+    "Wave 3 added 4 Net-Transformer configs (b=1/4/8/16) — fixed ATC `--input_shape` requirement",
+    "malconv2/kitsune Wave 3 msprof collected but NOT in this fit (non-transformer architectures; ModelSpec doesn't apply)",
+    "Qwen3-S4096-b1 remains the largest residual outlier (33.5% err) — AIC archetype amp's `large` bucket median (5.42) under-shoots its actual (14.16) due to S-dependence; needs more S=4096+ samples to split."
+  ]
+}

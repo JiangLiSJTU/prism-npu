@@ -1,0 +1,30 @@
+# Qwen3-0.6B prefill 模式 S=256（固定网络短上下文场景）
+# 派生自 qwen3_0.6b.yaml（decode S=1）+ S 扫描计算
+# 用途：scripts/microarch_exploration/regime_gate.py
+#
+# 算法（每层 ops，hidden=1024, intermediate=3072, num_q_heads=16, num_kv_heads=8, head_dim=128）：
+#   Linear ops = 31.45M × S
+#     = (Q+K+V+O+gate+up+down) × S × ... per layer
+#   Attention ops = 8192 × S²  (QK^T + AV，16 heads)
+#   per_layer @ S=256 = 31.45e6 × 256 + 8192 × 256² = 8.05G + 0.54G = 8.59G ops
+#   total @ 28 layers = 240.5G ops
+#
+# bytes_total（HBM 实际流量）：
+#   weight_overflow = max(0, 1200 - 96) × 1e6 = 1.104 GB（与 S 无关）
+#   activation_traffic ≈ 28 × S × hidden × 2 × 2 = 112 × S MB（read + write per layer）
+#     @ S=256: 28.7 MB
+#   bytes_total = 1.104e9 + 28.7e6 ≈ 1.13e9
+
+name: Qwen3-0.6B-prefill-S256
+arch: decoder
+layers: 28
+ops_b1: 2.405e+11           # 240.5 G ops @ S=256
+weight_mb: 1200.0
+bytes_total: 1.13e+9        # ≈ 1.13 GB（weight overflow + S=256 activation traffic）
+alpha_per_batch: null
+beta_layer_override: 560.4  # 沿用 S=512 d=1024 calib（长 S 是近似，含 compute 部分；待 Phase L 精细化）
+measured: {}                # 未实测
+note: |
+  Qwen3-0.6B prefill mode @ S=256（固定网络短上下文典型场景，例如单次安全审计输入）。
+  Linear ops 线性 S，attention ops 二次 S；S=256 时 attention 项仅占 6%，linear 项主导。
+  与 decode 模式 (qwen3_0.6b.yaml) 共享 28 层 + GQA + SwiGLU 结构。

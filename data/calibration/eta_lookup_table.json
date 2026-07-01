@@ -1,0 +1,12 @@
+{
+  "shape_class_thresholds": {
+    "large": 512,
+    "medium": 128
+  },
+  "large_ratio": 0.97,
+  "medium_ratio": 0.85,
+  "large_avg_eta": 0.85,
+  "medium_avg_eta": 0.7,
+  "lookup_table": {},
+  "train_n": 35
+}

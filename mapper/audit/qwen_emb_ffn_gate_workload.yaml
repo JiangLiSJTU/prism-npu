@@ -1,0 +1,25 @@
+problem:
+  instance:
+    K: 1024
+    M: 4096
+    N: 3072
+  shape:
+    data_spaces:
+    - name: Weights
+      projection:
+      - - - K
+      - - - N
+    - name: Inputs
+      projection:
+      - - - M
+      - - - K
+    - name: Outputs
+      projection:
+      - - - M
+      - - - N
+      read_write: true
+    dimensions:
+    - M
+    - N
+    - K
+    name: GEMM

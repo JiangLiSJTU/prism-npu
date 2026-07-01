@@ -1,0 +1,37 @@
+# ModernBERT-base — 22 层 encoder（S=4096, d=768, GLU FFN）
+# 用途：prism-regime 渐进验证 — compute-bound 测试
+# 数据来源：answerdotai/ModernBERT-base config.json（HuggingFace）
+#
+# 关键 Roofline 特征（S=4096 prefill）：
+#   FLOPs/inference：~902 GFLOPs（22 层 × 41 GFLOPs/层）
+#   算术强度：~3000 OPs/Byte（>> 910B4 拐点 1429 → compute-bound）
+#   权重 298 MB > L2 96 MB → HBM overflow 202 MB
+#   预期 regime：compute-bound（GEMM 占主导，host_gap 占比低）
+
+name: ModernBERT-base-S4096-b1
+arch: encoder
+layers: 22
+ops_b1: 902.0e9               # 902 G OPs（22 层 × 41.0 G/层，GLU FFN）
+weight_mb: 298.0              # 149M params × 2 bytes（FP16）
+bytes_total: 2.02e8           # HBM overflow = (298-96) × 1e6 = 202 MB
+alpha_per_batch: null
+beta_layer_override: null     # 待 910B 实测后反算
+note: |
+  S=4096, D=768, L=22, GeGLU FFN (intermediate=1152, GLU gate→2304×2),
+  MHA 12 heads d_head=64, RoPE, alternating local(128)/global attention.
+  Per-layer GEMM: QKV fused [4096,2304,768] + Output [4096,768,768] +
+  FFN Wi [4096,2304,768] + FFN Wo [4096,768,1152] = 41.0 GFLOPs/layer.
+  预期 compute-bound: 算术强度~3000 >> 910B4 拐点1429 OPs/Byte.
+
+# GEMM-level spec required by prism-predict-pipe (Issue #2).
+# d_ff = intermediate_size = 1152; ffn_type='glu' expands to 2 projections of
+# size [S, d_model]→[S, d_ff] for gate + up, plus a down [S, d_ff]→[S, d_model].
+gemm_spec:
+  S: 4096
+  d_model: 768
+  d_ff: 1152
+  n_heads: 12
+  n_kv_heads: 0
+  d_head: 64
+  vocab: 50368
+  ffn_type: glu

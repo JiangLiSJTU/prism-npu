@@ -1,0 +1,189 @@
+# Qwen3-0.6B 算子描述（Timeloop models 库）
+# 来源：HuggingFace Qwen/Qwen3-0.6B，config.json（AutoConfig 实测提取）
+# 更新日期：2026-04-30
+#
+# 模型规格（精确值，来自 config.json）：
+#   架构：Qwen3，Transformer Decoder，GQA + SwiGLU + RoPE + RMSNorm
+#   hidden_size:        1024
+#   intermediate_size:  3072（FFN，SwiGLU 三路：gate/up/down）
+#   num_hidden_layers:  28
+#   num_attention_heads: 16（Q heads）
+#   num_key_value_heads: 8（KV heads，GQA 2:1 分组）
+#   head_dim:           128
+#   vocab_size:         151936
+#   max_position_embeddings: 40960（RoPE）
+#   参数量：596,041,728（596.04M），INT8 大小：596.04 MB
+#
+# 关键 Roofline 特征（decode，batch=1，seq=1）：
+#   FLOPs/token：0.881 GFLOPs
+#   算术强度：~1.5 OPs/Byte（严重内存瓶颈，310P 拐点 683 OPs/Byte）
+#   权重 596MB >> L2 16MB，每次推理需从 DRAM 加载全部权重
+#   310P 带宽 204.8 GB/s → 理论最小延迟 596MB/204.8GB/s ≈ 2.9 ms/token
+#
+# 场景：Agent Guard（LLM 安全审计）/ 流量大模型协处理
+# 结论：权重远超 L2，严重内存瓶颈，需 HBM 或大 L2；310P 勉强可用（旁路部署）
+#
+# 参数量分布：
+#   Embedding（vocab×hidden）: 155,582,464（26.1%）
+#   每层 Attention（Q+K+V+O）: 6,291,456
+#   每层 FFN（gate+up+down）:  9,437,184
+#   每层 RMSNorm（×2）:        2,048
+#   每层合计:                  15,730,688
+#   28层合计:                  440,459,264（73.9%）
+#
+# 算子汇总（batch=1，decode 单步，seq=1）：
+# ┌──────────────────┬──────┬──────┬──────┬──────────┐
+# │ 算子             │  M   │  N   │  K   │ OPs(M)   │
+# ├──────────────────┼──────┼──────┼──────┼──────────┤
+# │ Q 投影           │    1 │ 2048 │ 1024 │    4.19  │ ×28层
+# │ K 投影（GQA）    │    1 │ 1024 │ 1024 │    2.10  │ ×28层
+# │ V 投影（GQA）    │    1 │ 1024 │ 1024 │    2.10  │ ×28层
+# │ O 投影           │    1 │ 1024 │ 2048 │    4.19  │ ×28层
+# │ FFN gate_proj    │    1 │ 3072 │ 1024 │    6.29  │ ×28层
+# │ FFN up_proj      │    1 │ 3072 │ 1024 │    6.29  │ ×28层
+# │ FFN down_proj    │    1 │ 1024 │ 3072 │    6.29  │ ×28层
+# ├──────────────────┼──────┼──────┼──────┼──────────┤
+# │ 单层合计         │      │      │      │   31.45  │
+# │ ×28层合计        │      │      │      │  880.6   │
+# └──────────────────┴──────┴──────┴──────┴──────────┘
+# 注：QK^T/AV 注意力计算在 decode 阶段（seq=1）OPs 极小，忽略不计
+
+problems:
+
+  # ── Q 投影：hidden(1024) → num_q_heads*head_dim(2048) ──────
+  - name: q_projection
+    note: "Q 投影，GQA，M=1（decode单步），N=num_q_heads*head_dim=2048，K=hidden=1024"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 1
+      N: 2048   # 16 heads × 128 head_dim
+      K: 1024
+
+  # ── K 投影（GQA，8 KV heads）──────────────────────────────
+  - name: k_projection
+    note: "K 投影，GQA，M=1，N=num_kv_heads*head_dim=1024，K=1024"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 1
+      N: 1024   # 8 KV heads × 128 head_dim
+      K: 1024
+
+  # ── V 投影（GQA，8 KV heads）──────────────────────────────
+  - name: v_projection
+    note: "V 投影，GQA，M=1，N=1024，K=1024"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 1
+      N: 1024
+      K: 1024
+
+  # ── O 投影：num_q_heads*head_dim(2048) → hidden(1024) ─────
+  - name: o_projection
+    note: "O 投影，M=1，N=hidden=1024，K=num_q_heads*head_dim=2048"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 1
+      N: 1024
+      K: 2048
+
+  # ── FFN gate_proj：hidden(1024) → intermediate(3072) ──────
+  - name: ffn_gate
+    note: "SwiGLU gate_proj，M=1，N=intermediate=3072，K=hidden=1024"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 1
+      N: 3072
+      K: 1024
+
+  # ── FFN up_proj：hidden(1024) → intermediate(3072) ────────
+  - name: ffn_up
+    note: "SwiGLU up_proj，M=1，N=3072，K=1024"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 1
+      N: 3072
+      K: 1024
+
+  # ── FFN down_proj：intermediate(3072) → hidden(1024) ──────
+  - name: ffn_down
+    note: "SwiGLU down_proj，M=1，N=hidden=1024，K=intermediate=3072"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 1
+      N: 1024
+      K: 3072
+
+# ── Vector 算子（RMSNorm + SiLU，roofline 脚本中建模）────────
+# RMSNorm（×2/层）：[1, 1024]，FLOPs ≈ 2×1024 = 2,048/层
+# SiLU（gate）：[1, 3072]，FLOPs ≈ 3,072/层
+# 合计 Vector OPs/层 ≈ 7,168（相对 GEMM 可忽略）

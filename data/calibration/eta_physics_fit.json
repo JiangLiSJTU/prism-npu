@@ -1,0 +1,35 @@
+{
+  "method": "physics-informed (η_pipeline · η_tile · η_mem · batch)",
+  "hardware": {
+    "CUBE": [
+      16,
+      16,
+      16
+    ],
+    "AI_ridge": 714.2857142857143
+  },
+  "params": {
+    "alpha_MN_coupling": 14.597652077846478,
+    "beta_MK_coupling": 2.5051309396869823,
+    "gamma_NK_coupling": 1.7483797813947597,
+    "delta_linear_edge": 2.480461057222181e-34,
+    "gamma_B_batch": 0.01016885060722087
+  },
+  "training": {
+    "n": 56,
+    "mae": 11.978099509479765,
+    "rmse": 16.329087694675472
+  },
+  "validation": {
+    "bert": {
+      "mae": 14.326629473374124,
+      "rmse": 18.927353276577584,
+      "n": 16
+    },
+    "gpt2": {
+      "mae": 12.07329829877654,
+      "rmse": 17.692141607916973,
+      "n": 16
+    }
+  }
+}

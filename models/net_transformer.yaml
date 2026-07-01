@@ -1,0 +1,250 @@
+# Net-Transformer 算子描述（Timeloop models 库）
+# 基于 NetTrans_structure_template.md Part 1-4（2026-04-28 填写完成）
+# 更新日期：2026-04-28
+#
+# 模型规格（Group-Query Attention，单层）：
+#   S=256, D_model=384, H=3, g=3, D_head=128, D_ffn=1536, L=1
+#   激活函数：ReLU（非 GELU）
+#   参数量：~6.24M，INT8 大小：~5.95 MB
+#
+# 算术强度（batch=1）：~112 OPs/Byte → 内存瓶颈（310P 拐点 683 OPs/Byte）
+# 算术强度（batch=16）：~389 OPs/Byte → 仍为内存瓶颈
+#
+# ⚠️ 注意：
+#   - 输入嵌入层为 Gather+Add，不计入 GEMM OPs，需单独建模延迟
+#   - QK^T 的 K=D_head=128，仅 8 个 16×16 分块，Cube 利用率偏低
+#   - 分类头维度 CLS_dim=1152（非标准，待确认）
+#
+# 算子汇总（batch=1, S=256）：
+# ┌──────────────────┬──────┬──────┬──────┬──────────┐
+# │ 算子             │  M   │  N   │  K   │ OPs(M)   │
+# ├──────────────────┼──────┼──────┼──────┼──────────┤
+# │ Q 投影           │  256 │  384 │  384 │   75.5   │
+# │ K 投影           │  256 │  128 │  384 │   25.2   │
+# │ V 投影           │  256 │  128 │  384 │   25.2   │
+# │ QK^T (per head)  │  256 │  256 │  128 │   50.3   │ ×3 heads
+# │ AV   (per head)  │  256 │  128 │  256 │   50.3   │ ×3 heads
+# │ 输出投影         │  256 │  384 │  384 │   75.5   │
+# │ FFN Linear1      │  256 │ 1536 │  384 │  302.0   │ 最大 GEMM
+# │ FFN Linear2      │  256 │  384 │ 1536 │  302.0   │
+# │ CLS 投影×2       │    1 │ 1152 │ 1152 │    2.7   │
+# │ CLS 输出投影     │    1 │ 1024 │ 1152 │    2.4   │
+# ├──────────────────┼──────┼──────┼──────┼──────────┤
+# │ 全模型合计       │      │      │      │  915.2   │
+# └──────────────────┴──────┴──────┴──────┴──────────┘
+
+problems:
+
+  # ── 算子 1：Q 投影 ──────────────────────────────────────────────
+  - name: q_projection
+    note: "Q 投影，M=S=256, N=D_model=384, K=D_model=384"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 256
+      N: 384
+      K: 384
+
+  # ── 算子 2：K 投影（GQA，N=D_model/g=128）──────────────────────
+  - name: k_projection
+    note: "K 投影（Group-Query Attention），M=256, N=128, K=384"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 256
+      N: 128
+      K: 384
+
+  # ── 算子 3：V 投影（GQA，N=D_model/g=128）──────────────────────
+  - name: v_projection
+    note: "V 投影（Group-Query Attention），M=256, N=128, K=384"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 256
+      N: 128
+      K: 384
+
+  # ── 算子 4：QK^T（注意力分数）──────────────────────────────────
+  - name: attention_qkt
+    note: |
+      QK^T: [H,S,D_head] × [H,D_head,S]
+      ⚠️ K=D_head=128，仅 8 个 16×16 分块，Cube 利用率偏低
+      H=3 通过 batch 维度建模
+    shape:
+      name: GEMM
+      dimensions: [M, N, K, H]
+      data-spaces:
+        - name: Q_matrix
+          projection: [[H], [M], [K]]
+        - name: K_matrix
+          projection: [[H], [K], [N]]
+        - name: Attn_scores
+          projection: [[H], [M], [N]]
+          read-write: true
+    instance:
+      M: 256    # S
+      N: 256    # S
+      K: 128    # D_head
+      H: 3      # num_heads
+
+  # ── 算子 5：AV（注意力加权求和）────────────────────────────────
+  - name: attention_av
+    note: "AV: [H,S,S] × [H,S,D_head]，N=D_head=128"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K, H]
+      data-spaces:
+        - name: Attn_weights
+          projection: [[H], [M], [K]]
+        - name: V_matrix
+          projection: [[H], [K], [N]]
+        - name: Attn_output
+          projection: [[H], [M], [N]]
+          read-write: true
+    instance:
+      M: 256    # S
+      N: 128    # D_head
+      K: 256    # S
+      H: 3      # num_heads
+
+  # ── 算子 6：输出投影 ─────────────────────────────────────────────
+  - name: output_projection
+    note: "Attention 输出投影，M=256, N=384, K=384"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 256
+      N: 384
+      K: 384
+
+  # ── 算子 7：FFN Linear1 ─────────────────────────────────────────
+  - name: ffn_linear1
+    note: "FFN 扩展层，最大 GEMM，M=256, N=1536, K=384"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 256
+      N: 1536   # D_ffn = 4 × D_model
+      K: 384
+
+  # ── 算子 8：FFN Linear2 ─────────────────────────────────────────
+  - name: ffn_linear2
+    note: "FFN 收缩层，M=256, N=384, K=1536"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 256
+      N: 384
+      K: 1536
+
+  # ── 算子 9：CLS Token 投影（分类头，×2）────────────────────────
+  - name: cls_projection
+    note: "分类头 CLS 投影，M=1（单样本），N=K=1152（CLS_dim）"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 1
+      N: 1152   # CLS_dim
+      K: 1152
+
+  # ── 算子 10：CLS Token 输出投影 ─────────────────────────────────
+  - name: cls_output_projection
+    note: "分类头输出投影，M=1, N=D_out=1024, K=CLS_dim=1152"
+    shape:
+      name: GEMM
+      dimensions: [M, N, K]
+      data-spaces:
+        - name: Weights
+          projection: [[K], [N]]
+        - name: Inputs
+          projection: [[M], [K]]
+        - name: Outputs
+          projection: [[M], [N]]
+          read-write: true
+    instance:
+      M: 1
+      N: 1024   # D_out
+      K: 1152
+
+# ── Vector 算子（roofline_analysis.py 中建模）──────────────────
+# ReLU（注意力后）：[1, 3, 256, 256] = 196,608 elements
+#   FLOPs = 196,608；Bytes = 2 × 196,608 × 2 = 786,432
+#   OI = 0.25 OPs/Byte → 严重内存瓶颈
+#
+# ReLU（FFN）：[1, 256, 1536] = 393,216 elements
+#   FLOPs = 393,216；Bytes = 2 × 393,216 × 2 = 1,572,864
+#   OI = 0.25 OPs/Byte → 严重内存瓶颈
+#
+# LayerNorm×2：[1, 256, 384]
+#   FLOPs = 5 × 256 × 384 = 491,520 per instance
+#   Bytes = 2 × 256 × 384 × 2 = 393,216
+#   OI = 1.25 OPs/Byte → 内存瓶颈
+#
+# 输入嵌入（Gather+Add，不计 OPs）：
+#   4 × Gather：输入 seq=256，输出 256×384，随机访存
+#   1 × Add：256×384 element-wise
+#   延迟主要来自 Gather 的随机访存，需单独建模

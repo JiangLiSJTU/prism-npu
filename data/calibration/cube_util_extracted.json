@@ -1,0 +1,2252 @@
+{
+  "msprof_bert_base_b16_ArithmeticUtilization": {
+    "csv_path": "msprof_bert_base_b16_ArithmeticUtilization/PROF_000001_20260508115232100_ORJRDNKRIPLGADHA/mindstudio_profiler_output/op_summary_20260508115242.csv",
+    "agg": {
+      "n_ops": 5820,
+      "total_aicore_time_us": 140857.656,
+      "cube_util_fp16_pct": 74.62,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 74.62,
+      "avg_block_dim": 18.5
+    },
+    "full_pipe": {
+      "total_duration_us": 300136.679,
+      "cube_active_us": 105107.733,
+      "vector_active_us": 26572.024,
+      "cube_active_pct_of_total": 35.02,
+      "vector_active_pct_of_total": 8.853,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 152728.895,
+          "count": 11580,
+          "pct": 50.886
+        },
+        "AI_CORE": {
+          "total_duration_us": 147407.784,
+          "count": 5820,
+          "pct": 49.114
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 128,
+        "N": 768,
+        "K": 768,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 2880,
+        "aicore_time_us": 51669.496,
+        "cube_util_pct": 65.143
+      },
+      {
+        "M": 128,
+        "N": 768,
+        "K": 3072,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 720,
+        "aicore_time_us": 41141.438,
+        "cube_util_pct": 84.562
+      },
+      {
+        "M": 128,
+        "N": 3072,
+        "K": 768,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 720,
+        "aicore_time_us": 40706.81,
+        "cube_util_pct": 82.586
+      },
+      {
+        "M": 16,
+        "N": 768,
+        "K": 768,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 60,
+        "aicore_time_us": 209.072,
+        "cube_util_pct": 5.48
+      }
+    ]
+  },
+  "msprof_bert_base_b1_ArithmeticUtilization": {
+    "csv_path": "msprof_bert_base_b1_ArithmeticUtilization/PROF_000001_20260505131823223_BADNLKIBFMBJAKGA/mindstudio_profiler_output/op_summary_20260505131833.csv",
+    "agg": {
+      "n_ops": 3395,
+      "total_aicore_time_us": 19590.926,
+      "cube_util_fp16_pct": 32.345,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 32.345,
+      "avg_block_dim": 12.0
+    },
+    "full_pipe": {
+      "total_duration_us": 64242.577,
+      "cube_active_us": 6336.761,
+      "vector_active_us": 1249.139,
+      "cube_active_pct_of_total": 9.864,
+      "vector_active_pct_of_total": 1.944,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 41417.939,
+          "count": 6755,
+          "pct": 64.471
+        },
+        "AI_CORE": {
+          "total_duration_us": 22824.638,
+          "count": 3395,
+          "pct": 35.529
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 128,
+        "N": 768,
+        "K": 768,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 8575.28,
+        "cube_util_pct": 24.647
+      },
+      {
+        "M": 128,
+        "N": 768,
+        "K": 3072,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 420,
+        "aicore_time_us": 6263.034,
+        "cube_util_pct": 34.748
+      },
+      {
+        "M": 128,
+        "N": 3072,
+        "K": 768,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 420,
+        "aicore_time_us": 3551.477,
+        "cube_util_pct": 52.288
+      },
+      {
+        "M": 1,
+        "N": 768,
+        "K": 768,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 35,
+        "aicore_time_us": 117.989,
+        "cube_util_pct": 5.672
+      }
+    ]
+  },
+  "msprof_bert_base_b1_PipeUtilization": {
+    "csv_path": "msprof_bert_base_b1_PipeUtilization/PROF_000001_20260505131740085_JEHHRNGABEARLRGA/mindstudio_profiler_output/op_summary_20260505131754.csv",
+    "agg": {
+      "n_ops": 3395,
+      "total_aicore_time_us": 19516.082,
+      "cube_util_fp16_pct": 0.0,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 0.0,
+      "avg_block_dim": 12.0
+    },
+    "full_pipe": {
+      "total_duration_us": 63916.978,
+      "cube_active_us": 0.0,
+      "vector_active_us": 0.0,
+      "cube_active_pct_of_total": 0.0,
+      "vector_active_pct_of_total": 0.0,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 41195.904,
+          "count": 6755,
+          "pct": 64.452
+        },
+        "AI_CORE": {
+          "total_duration_us": 22721.074,
+          "count": 3395,
+          "pct": 35.548
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 128,
+        "N": 768,
+        "K": 768,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 8524.919,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 128,
+        "N": 768,
+        "K": 3072,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 420,
+        "aicore_time_us": 6255.185,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 128,
+        "N": 3072,
+        "K": 768,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 420,
+        "aicore_time_us": 3556.43,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 1,
+        "N": 768,
+        "K": 768,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 35,
+        "aicore_time_us": 120.894,
+        "cube_util_pct": 0.0
+      }
+    ]
+  },
+  "msprof_bert_base_b4_ArithmeticUtilization": {
+    "csv_path": "msprof_bert_base_b4_ArithmeticUtilization/PROF_000001_20260508115206010_FHBKCOEPEMAKKCOA/mindstudio_profiler_output/op_summary_20260508115217.csv",
+    "agg": {
+      "n_ops": 5820,
+      "total_aicore_time_us": 53249.024,
+      "cube_util_fp16_pct": 64.03,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 64.03,
+      "avg_block_dim": 14.5
+    },
+    "full_pipe": {
+      "total_duration_us": 144485.266,
+      "cube_active_us": 34095.376,
+      "vector_active_us": 6858.624,
+      "cube_active_pct_of_total": 23.598,
+      "vector_active_pct_of_total": 4.747,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 85673.722,
+          "count": 11580,
+          "pct": 59.296
+        },
+        "AI_CORE": {
+          "total_duration_us": 58811.544,
+          "count": 5820,
+          "pct": 40.704
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 128,
+        "N": 768,
+        "K": 768,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 2880,
+        "aicore_time_us": 20432.998,
+        "cube_util_pct": 59.637
+      },
+      {
+        "M": 128,
+        "N": 768,
+        "K": 3072,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 720,
+        "aicore_time_us": 16810.362,
+        "cube_util_pct": 72.669
+      },
+      {
+        "M": 128,
+        "N": 3072,
+        "K": 768,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 720,
+        "aicore_time_us": 12180.46,
+        "cube_util_pct": 72.936
+      },
+      {
+        "M": 4,
+        "N": 768,
+        "K": 768,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 60,
+        "aicore_time_us": 210.163,
+        "cube_util_pct": 5.451
+      }
+    ]
+  },
+  "msprof_bert_base_b8_ArithmeticUtilization": {
+    "csv_path": "msprof_bert_base_b8_ArithmeticUtilization/PROF_000001_20260508115219059_LDJBQQNOABPDQBBC/mindstudio_profiler_output/op_summary_20260508115229.csv",
+    "agg": {
+      "n_ops": 5820,
+      "total_aicore_time_us": 116088.254,
+      "cube_util_fp16_pct": 50.671,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 50.671,
+      "avg_block_dim": 18.5
+    },
+    "full_pipe": {
+      "total_duration_us": 230503.286,
+      "cube_active_us": 58823.515,
+      "vector_active_us": 13335.14,
+      "cube_active_pct_of_total": 25.52,
+      "vector_active_pct_of_total": 5.785,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 107585.353,
+          "count": 11580,
+          "pct": 46.674
+        },
+        "AI_CORE": {
+          "total_duration_us": 122917.933,
+          "count": 5820,
+          "pct": 53.326
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 128,
+        "N": 768,
+        "K": 768,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 2880,
+        "aicore_time_us": 53949.362,
+        "cube_util_pct": 36.259
+      },
+      {
+        "M": 128,
+        "N": 768,
+        "K": 3072,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 720,
+        "aicore_time_us": 35165.787,
+        "cube_util_pct": 59.504
+      },
+      {
+        "M": 128,
+        "N": 3072,
+        "K": 768,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 720,
+        "aicore_time_us": 22342.609,
+        "cube_util_pct": 75.263
+      },
+      {
+        "M": 8,
+        "N": 768,
+        "K": 768,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 60,
+        "aicore_time_us": 222.062,
+        "cube_util_pct": 5.155
+      }
+    ]
+  },
+  "msprof_gpt2_small_b16_ArithmeticUtilization": {
+    "csv_path": "msprof_gpt2_small_b16_ArithmeticUtilization/PROF_000001_20260508115342265_ALEJHKIGGMQBRFHB/mindstudio_profiler_output/op_summary_20260508115408.csv",
+    "agg": {
+      "n_ops": 4380,
+      "total_aicore_time_us": 1001815.736,
+      "cube_util_fp16_pct": 59.594,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 59.594,
+      "avg_block_dim": 20.0
+    },
+    "full_pipe": {
+      "total_duration_us": 3083121.119,
+      "cube_active_us": 597025.133,
+      "vector_active_us": 247624.977,
+      "cube_active_pct_of_total": 19.364,
+      "vector_active_pct_of_total": 8.032,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 2044130.659,
+          "count": 11040,
+          "pct": 66.301
+        },
+        "AI_CORE": {
+          "total_duration_us": 1038990.46,
+          "count": 4380,
+          "pct": 33.699
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 8192,
+        "N": 768,
+        "K": 3072,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 720,
+        "aicore_time_us": 171447.187,
+        "cube_util_pct": 91.602
+      },
+      {
+        "M": 8192,
+        "N": 3072,
+        "K": 768,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 720,
+        "aicore_time_us": 124422.693,
+        "cube_util_pct": 88.022
+      },
+      {
+        "M": 8192,
+        "N": 2304,
+        "K": 768,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 720,
+        "aicore_time_us": 108450.545,
+        "cube_util_pct": 84.456
+      },
+      {
+        "M": 8192,
+        "N": 768,
+        "K": 768,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 720,
+        "aicore_time_us": 43390.894,
+        "cube_util_pct": 71.522
+      }
+    ]
+  },
+  "msprof_gpt2_small_b1_ArithmeticUtilization": {
+    "csv_path": "msprof_gpt2_small_b1_ArithmeticUtilization/PROF_000001_20260508115245134_IOIEBJFKRFHDBKCC/mindstudio_profiler_output/op_summary_20260508115258.csv",
+    "agg": {
+      "n_ops": 4380,
+      "total_aicore_time_us": 82906.982,
+      "cube_util_fp16_pct": 44.705,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 44.705,
+      "avg_block_dim": 19.0
+    },
+    "full_pipe": {
+      "total_duration_us": 278729.06,
+      "cube_active_us": 37063.657,
+      "vector_active_us": 16221.383,
+      "cube_active_pct_of_total": 13.297,
+      "vector_active_pct_of_total": 5.82,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 189789.645,
+          "count": 11040,
+          "pct": 68.091
+        },
+        "AI_CORE": {
+          "total_duration_us": 88939.415,
+          "count": 4380,
+          "pct": 31.909
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 512,
+        "N": 768,
+        "K": 3072,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 720,
+        "aicore_time_us": 18608.697,
+        "cube_util_pct": 45.937
+      },
+      {
+        "M": 512,
+        "N": 3072,
+        "K": 768,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 720,
+        "aicore_time_us": 16774.679,
+        "cube_util_pct": 50.717
+      },
+      {
+        "M": 512,
+        "N": 2304,
+        "K": 768,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 720,
+        "aicore_time_us": 12090.955,
+        "cube_util_pct": 50.951
+      },
+      {
+        "M": 512,
+        "N": 768,
+        "K": 768,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 720,
+        "aicore_time_us": 7917.488,
+        "cube_util_pct": 26.074
+      }
+    ]
+  },
+  "msprof_gpt2_small_b1_PipeUtilization": {
+    "csv_path": "msprof_gpt2_small_b1_PipeUtilization/PROF_000001_20260505131836271_FKHEEIKADPCJPMLB/mindstudio_profiler_output/op_summary_20260505131849.csv",
+    "agg": {
+      "n_ops": 1825,
+      "total_aicore_time_us": 34320.948,
+      "cube_util_fp16_pct": 0.0,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 0.0,
+      "avg_block_dim": 19.0
+    },
+    "full_pipe": {
+      "total_duration_us": 113454.679,
+      "cube_active_us": 0.0,
+      "vector_active_us": 0.0,
+      "cube_active_pct_of_total": 0.0,
+      "vector_active_pct_of_total": 0.0,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 76651.351,
+          "count": 4600,
+          "pct": 67.561
+        },
+        "AI_CORE": {
+          "total_duration_us": 36803.328,
+          "count": 1825,
+          "pct": 32.439
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 512,
+        "N": 768,
+        "K": 3072,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 300,
+        "aicore_time_us": 7657.822,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 3072,
+        "K": 768,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 300,
+        "aicore_time_us": 7027.526,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 2304,
+        "K": 768,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 300,
+        "aicore_time_us": 5016.161,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 768,
+        "K": 768,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 300,
+        "aicore_time_us": 3288.603,
+        "cube_util_pct": 0.0
+      }
+    ]
+  },
+  "msprof_gpt2_small_b4_ArithmeticUtilization": {
+    "csv_path": "msprof_gpt2_small_b4_ArithmeticUtilization/PROF_000001_20260508115301176_JJCBRBLFCJLKJJDC/mindstudio_profiler_output/op_summary_20260508115318.csv",
+    "agg": {
+      "n_ops": 4380,
+      "total_aicore_time_us": 218417.917,
+      "cube_util_fp16_pct": 65.342,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 65.342,
+      "avg_block_dim": 19.3
+    },
+    "full_pipe": {
+      "total_duration_us": 781979.405,
+      "cube_active_us": 142717.655,
+      "vector_active_us": 62340.529,
+      "cube_active_pct_of_total": 18.251,
+      "vector_active_pct_of_total": 7.972,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 551503.039,
+          "count": 11040,
+          "pct": 70.527
+        },
+        "AI_CORE": {
+          "total_duration_us": 230476.366,
+          "count": 4380,
+          "pct": 29.473
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 2048,
+        "N": 768,
+        "K": 3072,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 720,
+        "aicore_time_us": 40157.008,
+        "cube_util_pct": 84.002
+      },
+      {
+        "M": 2048,
+        "N": 3072,
+        "K": 768,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 720,
+        "aicore_time_us": 39731.636,
+        "cube_util_pct": 71.345
+      },
+      {
+        "M": 2048,
+        "N": 2304,
+        "K": 768,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 720,
+        "aicore_time_us": 28784.816,
+        "cube_util_pct": 78.795
+      },
+      {
+        "M": 2048,
+        "N": 768,
+        "K": 768,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 720,
+        "aicore_time_us": 12672.07,
+        "cube_util_pct": 67.206
+      }
+    ]
+  },
+  "msprof_gpt2_small_b8_ArithmeticUtilization": {
+    "csv_path": "msprof_gpt2_small_b8_ArithmeticUtilization/PROF_000001_20260508115320222_NCNBERMHMALAEMIC/mindstudio_profiler_output/op_summary_20260508115340.csv",
+    "agg": {
+      "n_ops": 4380,
+      "total_aicore_time_us": 437530.575,
+      "cube_util_fp16_pct": 65.966,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 65.966,
+      "avg_block_dim": 19.7
+    },
+    "full_pipe": {
+      "total_duration_us": 1436563.22,
+      "cube_active_us": 288623.024,
+      "vector_active_us": 124064.303,
+      "cube_active_pct_of_total": 20.091,
+      "vector_active_pct_of_total": 8.636,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 979652.37,
+          "count": 11040,
+          "pct": 68.194
+        },
+        "AI_CORE": {
+          "total_duration_us": 456910.85,
+          "count": 4380,
+          "pct": 31.806
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 4096,
+        "N": 768,
+        "K": 3072,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 720,
+        "aicore_time_us": 79455.562,
+        "cube_util_pct": 84.857
+      },
+      {
+        "M": 4096,
+        "N": 3072,
+        "K": 768,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 720,
+        "aicore_time_us": 74310.144,
+        "cube_util_pct": 79.456
+      },
+      {
+        "M": 4096,
+        "N": 2304,
+        "K": 768,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 720,
+        "aicore_time_us": 56913.521,
+        "cube_util_pct": 79.4
+      },
+      {
+        "M": 4096,
+        "N": 768,
+        "K": 768,
+        "op_kind": "MM",
+        "op_type": "MatMulV2",
+        "count": 720,
+        "aicore_time_us": 27674.014,
+        "cube_util_pct": 59.931
+      }
+    ]
+  },
+  "msprof_qwen3_06b_b1_ArithmeticUtilization": {
+    "csv_path": "msprof_qwen3_06b_b1_ArithmeticUtilization/PROF_000001_20260508021955883_FPRDCHKEFNRJLPCA/mindstudio_profiler_output/op_summary_20260508022023.csv",
+    "agg": {
+      "n_ops": 15180,
+      "total_aicore_time_us": 332343.34,
+      "cube_util_fp16_pct": 66.94,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 66.94,
+      "avg_block_dim": 16.7
+    },
+    "full_pipe": {
+      "total_duration_us": 965554.896,
+      "cube_active_us": 222470.14,
+      "vector_active_us": 42560.764,
+      "cube_active_pct_of_total": 23.041,
+      "vector_active_pct_of_total": 4.408,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 604709.525,
+          "count": 57060,
+          "pct": 62.628
+        },
+        "AI_CORE": {
+          "total_duration_us": 360845.371,
+          "count": 15180,
+          "pct": 37.372
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 512,
+        "N": 3072,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 81503.073,
+        "cube_util_pct": 65.751
+      },
+      {
+        "M": 128,
+        "N": 128,
+        "K": 512,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 40445.474,
+        "cube_util_pct": 81.854
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 3072,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 38997.787,
+        "cube_util_pct": 67.71
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 30215.139,
+        "cube_util_pct": 59.601
+      },
+      {
+        "M": 512,
+        "N": 2048,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 28221.478,
+        "cube_util_pct": 64.223
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 2048,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 28039.425,
+        "cube_util_pct": 62.679
+      },
+      {
+        "M": 512,
+        "N": 128,
+        "K": 512,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 12829.399,
+        "cube_util_pct": 68.132
+      }
+    ]
+  },
+  "msprof_qwen3_06b_b1_L2Cache": {
+    "csv_path": "msprof_qwen3_06b_b1_L2Cache/PROF_000001_20260508022026931_DGIEAHCQGCBCOOIA/mindstudio_profiler_output/op_summary_20260508022100.csv",
+    "agg": {
+      "n_ops": 15180,
+      "total_aicore_time_us": 332271.957,
+      "cube_util_fp16_pct": 0.0,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 0.0,
+      "avg_block_dim": 16.7
+    },
+    "full_pipe": {
+      "total_duration_us": 968388.645,
+      "cube_active_us": 0.0,
+      "vector_active_us": 0.0,
+      "cube_active_pct_of_total": 0.0,
+      "vector_active_pct_of_total": 0.0,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 607759.022,
+          "count": 57060,
+          "pct": 62.76
+        },
+        "AI_CORE": {
+          "total_duration_us": 360629.623,
+          "count": 15180,
+          "pct": 37.24
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 512,
+        "N": 3072,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 81426.595,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 128,
+        "N": 128,
+        "K": 512,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 40309.776,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 3072,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 38932.141,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 30200.998,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 2048,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 28336.574,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 2048,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 28216.327,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 128,
+        "K": 512,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 12822.844,
+        "cube_util_pct": 0.0
+      }
+    ]
+  },
+  "msprof_qwen3_06b_b4_ArithmeticUtilization": {
+    "csv_path": "msprof_qwen3_06b_b4_ArithmeticUtilization/PROF_000001_20260508022155146_BMPANAEMJQNCGEHC/mindstudio_profiler_output/op_summary_20260508022229.csv",
+    "agg": {
+      "n_ops": 15180,
+      "total_aicore_time_us": 1105943.028,
+      "cube_util_fp16_pct": 70.534,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 70.534,
+      "avg_block_dim": 17.8
+    },
+    "full_pipe": {
+      "total_duration_us": 2292606.098,
+      "cube_active_us": 780067.255,
+      "vector_active_us": 159121.411,
+      "cube_active_pct_of_total": 34.025,
+      "vector_active_pct_of_total": 6.941,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 1150548.047,
+          "count": 57060,
+          "pct": 50.185
+        },
+        "AI_CORE": {
+          "total_duration_us": 1142058.051,
+          "count": 15180,
+          "pct": 49.815
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 512,
+        "N": 3072,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 306081.322,
+        "cube_util_pct": 65.554
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 3072,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 127338.496,
+        "cube_util_pct": 83.304
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 96354.819,
+        "cube_util_pct": 75.152
+      },
+      {
+        "M": 512,
+        "N": 2048,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 94730.617,
+        "cube_util_pct": 76.488
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 2048,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 82919.958,
+        "cube_util_pct": 85.317
+      },
+      {
+        "M": 128,
+        "N": 128,
+        "K": 512,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 50304.564,
+        "cube_util_pct": 73.789
+      },
+      {
+        "M": 512,
+        "N": 128,
+        "K": 512,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 46817.231,
+        "cube_util_pct": 65.358
+      }
+    ]
+  },
+  "msprof_qwen3_06b_b4_L2Cache": {
+    "csv_path": "msprof_qwen3_06b_b4_L2Cache/PROF_000001_20260508022233201_NAMNILOKEIIKOCQA/mindstudio_profiler_output/op_summary_20260508022310.csv",
+    "agg": {
+      "n_ops": 15180,
+      "total_aicore_time_us": 1106030.291,
+      "cube_util_fp16_pct": 0.0,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 0.0,
+      "avg_block_dim": 17.8
+    },
+    "full_pipe": {
+      "total_duration_us": 2300641.521,
+      "cube_active_us": 0.0,
+      "vector_active_us": 0.0,
+      "cube_active_pct_of_total": 0.0,
+      "vector_active_pct_of_total": 0.0,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 1158526.24,
+          "count": 57060,
+          "pct": 50.357
+        },
+        "AI_CORE": {
+          "total_duration_us": 1142115.281,
+          "count": 15180,
+          "pct": 49.643
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 512,
+        "N": 3072,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 305817.091,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 3072,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 127981.002,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 96402.758,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 2048,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 95024.006,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 2048,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 83062.084,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 128,
+        "N": 128,
+        "K": 512,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 50380.508,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 128,
+        "K": 512,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 46681.16,
+        "cube_util_pct": 0.0
+      }
+    ]
+  },
+  "msprof_qwen3_06b_b4_Memory": {
+    "csv_path": "msprof_qwen3_06b_b4_Memory/PROF_000001_20260508022315230_DLDKACGBLFKPIAFB/mindstudio_profiler_output/op_summary_20260508022350.csv",
+    "agg": {
+      "n_ops": 15180,
+      "total_aicore_time_us": 1105680.294,
+      "cube_util_fp16_pct": 0.0,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 0.0,
+      "avg_block_dim": 17.8
+    },
+    "full_pipe": {
+      "total_duration_us": 2299352.159,
+      "cube_active_us": 0.0,
+      "vector_active_us": 0.0,
+      "cube_active_pct_of_total": 0.0,
+      "vector_active_pct_of_total": 0.0,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 1157707.67,
+          "count": 57060,
+          "pct": 50.349
+        },
+        "AI_CORE": {
+          "total_duration_us": 1141644.489,
+          "count": 15180,
+          "pct": 49.651
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 512,
+        "N": 3072,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 306033.722,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 3072,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 127336.686,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 96307.267,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 2048,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 94729.329,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 2048,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 82981.754,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 128,
+        "N": 128,
+        "K": 512,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 50224.472,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 128,
+        "K": 512,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 46781.724,
+        "cube_util_pct": 0.0
+      }
+    ]
+  },
+  "msprof_qwen3_06b_b4_PipeUtilization": {
+    "csv_path": "msprof_qwen3_06b_b4_PipeUtilization/PROF_000001_20260508022105111_KEPKNIGNJAPHEBDB/mindstudio_profiler_output/op_summary_20260508022150.csv",
+    "agg": {
+      "n_ops": 15180,
+      "total_aicore_time_us": 1106244.744,
+      "cube_util_fp16_pct": 0.0,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 0.0,
+      "avg_block_dim": 17.8
+    },
+    "full_pipe": {
+      "total_duration_us": 2296048.449,
+      "cube_active_us": 0.0,
+      "vector_active_us": 0.0,
+      "cube_active_pct_of_total": 0.0,
+      "vector_active_pct_of_total": 0.0,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 1153966.907,
+          "count": 57060,
+          "pct": 50.259
+        },
+        "AI_CORE": {
+          "total_duration_us": 1142081.542,
+          "count": 15180,
+          "pct": 49.741
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 512,
+        "N": 3072,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 305937.123,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 3072,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 128032.522,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 96316.753,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 2048,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 95057.582,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 2048,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 83046.216,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 128,
+        "N": 128,
+        "K": 512,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 50368.525,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 128,
+        "K": 512,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 46797.757,
+        "cube_util_pct": 0.0
+      }
+    ]
+  },
+  "msprof_qwen3_06b_b8_ArithmeticUtilization": {
+    "csv_path": "msprof_qwen3_06b_b8_ArithmeticUtilization/PROF_000001_20260508022455299_EIMDHQMDHQCIOBAA/mindstudio_profiler_output/op_summary_20260508022540.csv",
+    "agg": {
+      "n_ops": 15180,
+      "total_aicore_time_us": 2198944.875,
+      "cube_util_fp16_pct": 75.489,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 75.489,
+      "avg_block_dim": 17.8
+    },
+    "full_pipe": {
+      "total_duration_us": 4441580.971,
+      "cube_active_us": 1659957.706,
+      "vector_active_us": 311996.044,
+      "cube_active_pct_of_total": 37.373,
+      "vector_active_pct_of_total": 7.024,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 2112741.748,
+          "count": 57060,
+          "pct": 47.567
+        },
+        "AI_CORE": {
+          "total_duration_us": 2328839.223,
+          "count": 15180,
+          "pct": 52.433
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 512,
+        "N": 3072,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 581505.706,
+        "cube_util_pct": 69.013
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 3072,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 233474.697,
+        "cube_util_pct": 90.842
+      },
+      {
+        "M": 512,
+        "N": 2048,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 187166.843,
+        "cube_util_pct": 88.487
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 173460.543,
+        "cube_util_pct": 84.024
+      },
+      {
+        "M": 128,
+        "N": 128,
+        "K": 512,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 165374.304,
+        "cube_util_pct": 60.495
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 2048,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 160943.087,
+        "cube_util_pct": 88.064
+      },
+      {
+        "M": 512,
+        "N": 128,
+        "K": 512,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 127507.1,
+        "cube_util_pct": 49.387
+      }
+    ]
+  },
+  "msprof_qwen3_06b_b8_L2Cache": {
+    "csv_path": "msprof_qwen3_06b_b8_L2Cache/PROF_000001_20260508022544357_BRHAEELKECCPJLDC/mindstudio_profiler_output/op_summary_20260508022634.csv",
+    "agg": {
+      "n_ops": 15180,
+      "total_aicore_time_us": 2199317.355,
+      "cube_util_fp16_pct": 0.0,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 0.0,
+      "avg_block_dim": 17.8
+    },
+    "full_pipe": {
+      "total_duration_us": 4460021.651,
+      "cube_active_us": 0.0,
+      "vector_active_us": 0.0,
+      "cube_active_pct_of_total": 0.0,
+      "vector_active_pct_of_total": 0.0,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 2127957.834,
+          "count": 57060,
+          "pct": 47.712
+        },
+        "AI_CORE": {
+          "total_duration_us": 2332063.817,
+          "count": 15180,
+          "pct": 52.288
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 512,
+        "N": 3072,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 581341.174,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 3072,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 234422.052,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 2048,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 185934.594,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 172565.981,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 128,
+        "N": 128,
+        "K": 512,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 164886.026,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 2048,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 160998.726,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 128,
+        "K": 512,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 128722.705,
+        "cube_util_pct": 0.0
+      }
+    ]
+  },
+  "msprof_qwen3_06b_b8_Memory": {
+    "csv_path": "msprof_qwen3_06b_b8_Memory/PROF_000001_20260508022639392_QMIEAIFRDCOGKGAC/mindstudio_profiler_output/op_summary_20260508022727.csv",
+    "agg": {
+      "n_ops": 15180,
+      "total_aicore_time_us": 2196853.837,
+      "cube_util_fp16_pct": 0.0,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 0.0,
+      "avg_block_dim": 17.8
+    },
+    "full_pipe": {
+      "total_duration_us": 4440422.976,
+      "cube_active_us": 0.0,
+      "vector_active_us": 0.0,
+      "cube_active_pct_of_total": 0.0,
+      "vector_active_pct_of_total": 0.0,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 2112437.957,
+          "count": 57060,
+          "pct": 47.573
+        },
+        "AI_CORE": {
+          "total_duration_us": 2327985.019,
+          "count": 15180,
+          "pct": 52.427
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 512,
+        "N": 3072,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 581587.993,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 3072,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 233487.265,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 2048,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 186127.13,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 172366.876,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 128,
+        "N": 128,
+        "K": 512,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 165255.249,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 2048,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 160970.925,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 128,
+        "K": 512,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 127625.135,
+        "cube_util_pct": 0.0
+      }
+    ]
+  },
+  "msprof_qwen3_06b_b8_PipeUtilization": {
+    "csv_path": "msprof_qwen3_06b_b8_PipeUtilization/PROF_000001_20260508022354272_AGJKBRMEBNNBFOBC/mindstudio_profiler_output/op_summary_20260508022449.csv",
+    "agg": {
+      "n_ops": 15180,
+      "total_aicore_time_us": 2199277.296,
+      "cube_util_fp16_pct": 0.0,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 0.0,
+      "avg_block_dim": 17.8
+    },
+    "full_pipe": {
+      "total_duration_us": 4456326.671,
+      "cube_active_us": 0.0,
+      "vector_active_us": 0.0,
+      "cube_active_pct_of_total": 0.0,
+      "vector_active_pct_of_total": 0.0,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 2124025.79,
+          "count": 57060,
+          "pct": 47.663
+        },
+        "AI_CORE": {
+          "total_duration_us": 2332300.881,
+          "count": 15180,
+          "pct": 52.337
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 512,
+        "N": 3072,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 581404.23,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 3072,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 234352.857,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 2048,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 185986.25,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 172543.17,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 128,
+        "N": 128,
+        "K": 512,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 164793.78,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 1024,
+        "K": 2048,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 161025.262,
+        "cube_util_pct": 0.0
+      },
+      {
+        "M": 512,
+        "N": 128,
+        "K": 512,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 129032.405,
+        "cube_util_pct": 0.0
+      }
+    ]
+  },
+  "msprof_qwen3_prefill_S256_b1_ArithmeticUtilization": {
+    "csv_path": "msprof_qwen3_prefill_S256_b1_ArithmeticUtilization/PROF_000001_20260508025048942_KLIFRJPBDNAMMKNA/mindstudio_profiler_output/op_summary_20260508025114.csv",
+    "agg": {
+      "n_ops": 15180,
+      "total_aicore_time_us": 216392.675,
+      "cube_util_fp16_pct": 52.455,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 52.455,
+      "avg_block_dim": 15.1
+    },
+    "full_pipe": {
+      "total_duration_us": 665441.799,
+      "cube_active_us": 113509.042,
+      "vector_active_us": 16522.323,
+      "cube_active_pct_of_total": 17.058,
+      "vector_active_pct_of_total": 2.483,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 430733.772,
+          "count": 57060,
+          "pct": 64.729
+        },
+        "AI_CORE": {
+          "total_duration_us": 234708.027,
+          "count": 15180,
+          "pct": 35.271
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 256,
+        "N": 3072,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 59400.819,
+        "cube_util_pct": 65.276
+      },
+      {
+        "M": 256,
+        "N": 1024,
+        "K": 3072,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 33795.501,
+        "cube_util_pct": 47.617
+      },
+      {
+        "M": 256,
+        "N": 1024,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 26021.234,
+        "cube_util_pct": 40.949
+      },
+      {
+        "M": 256,
+        "N": 1024,
+        "K": 2048,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 23491.643,
+        "cube_util_pct": 45.684
+      },
+      {
+        "M": 256,
+        "N": 2048,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 16944.358,
+        "cube_util_pct": 57.254
+      },
+      {
+        "M": 128,
+        "N": 128,
+        "K": 256,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 5554.643,
+        "cube_util_pct": 45.17
+      },
+      {
+        "M": 256,
+        "N": 128,
+        "K": 256,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 5410.678,
+        "cube_util_pct": 40.39
+      }
+    ]
+  },
+  "msprof_qwen3_prefill_S256_b4_ArithmeticUtilization": {
+    "csv_path": "msprof_qwen3_prefill_S256_b4_ArithmeticUtilization/PROF_000001_20260508102440371_FLGJQIAAPIQKBEFC/mindstudio_profiler_output/op_summary_20260508102512.csv",
+    "agg": {
+      "n_ops": 15180,
+      "total_aicore_time_us": 525895.629,
+      "cube_util_fp16_pct": 74.059,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 74.059,
+      "avg_block_dim": 16.5
+    },
+    "full_pipe": {
+      "total_duration_us": 1250471.874,
+      "cube_active_us": 389474.33,
+      "vector_active_us": 58282.39,
+      "cube_active_pct_of_total": 31.146,
+      "vector_active_pct_of_total": 4.661,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 707343.949,
+          "count": 57060,
+          "pct": 56.566
+        },
+        "AI_CORE": {
+          "total_duration_us": 543127.925,
+          "count": 15180,
+          "pct": 43.434
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 256,
+        "N": 3072,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 137957.214,
+        "cube_util_pct": 80.874
+      },
+      {
+        "M": 256,
+        "N": 1024,
+        "K": 3072,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 68092.632,
+        "cube_util_pct": 81.006
+      },
+      {
+        "M": 256,
+        "N": 1024,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 50386.478,
+        "cube_util_pct": 73.543
+      },
+      {
+        "M": 256,
+        "N": 1024,
+        "K": 2048,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 46860.127,
+        "cube_util_pct": 78.52
+      },
+      {
+        "M": 256,
+        "N": 2048,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 45262.382,
+        "cube_util_pct": 81.223
+      },
+      {
+        "M": 256,
+        "N": 128,
+        "K": 256,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 15342.594,
+        "cube_util_pct": 56.938
+      },
+      {
+        "M": 128,
+        "N": 128,
+        "K": 256,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 14094.746,
+        "cube_util_pct": 56.926
+      }
+    ]
+  },
+  "msprof_qwen3_prefill_S256_b8_ArithmeticUtilization": {
+    "csv_path": "msprof_qwen3_prefill_S256_b8_ArithmeticUtilization/PROF_000001_20260508102714567_IHQJJJJBIAMRHQIB/mindstudio_profiler_output/op_summary_20260508102747.csv",
+    "agg": {
+      "n_ops": 15180,
+      "total_aicore_time_us": 977834.077,
+      "cube_util_fp16_pct": 82.274,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 82.274,
+      "avg_block_dim": 17.3
+    },
+    "full_pipe": {
+      "total_duration_us": 2038302.667,
+      "cube_active_us": 804504.392,
+      "vector_active_us": 112587.444,
+      "cube_active_pct_of_total": 39.469,
+      "vector_active_pct_of_total": 5.524,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 1009186.319,
+          "count": 57060,
+          "pct": 49.511
+        },
+        "AI_CORE": {
+          "total_duration_us": 1029116.348,
+          "count": 15180,
+          "pct": 50.489
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 256,
+        "N": 3072,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 258798.64,
+        "cube_util_pct": 84.947
+      },
+      {
+        "M": 256,
+        "N": 1024,
+        "K": 3072,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 123255.59,
+        "cube_util_pct": 87.786
+      },
+      {
+        "M": 256,
+        "N": 2048,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 96152.615,
+        "cube_util_pct": 85.735
+      },
+      {
+        "M": 256,
+        "N": 1024,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 88156.913,
+        "cube_util_pct": 83.144
+      },
+      {
+        "M": 256,
+        "N": 1024,
+        "K": 2048,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 83841.275,
+        "cube_util_pct": 86.303
+      },
+      {
+        "M": 256,
+        "N": 128,
+        "K": 256,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 25342.327,
+        "cube_util_pct": 60.326
+      },
+      {
+        "M": 128,
+        "N": 128,
+        "K": 256,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 24834.437,
+        "cube_util_pct": 71.266
+      }
+    ]
+  },
+  "msprof_qwen3_prefill_S4096_b1_ArithmeticUtilization": {
+    "csv_path": "msprof_qwen3_prefill_S4096_b1_ArithmeticUtilization/PROF_000001_20260508025335126_MIFMQONMFOJNGQLA/mindstudio_profiler_output/op_summary_20260508025434.csv",
+    "agg": {
+      "n_ops": 15180,
+      "total_aicore_time_us": 6647014.996,
+      "cube_util_fp16_pct": 73.947,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 73.947,
+      "avg_block_dim": 19.8
+    },
+    "full_pipe": {
+      "total_duration_us": 14970675.756,
+      "cube_active_us": 4915257.232,
+      "vector_active_us": 1410939.297,
+      "cube_active_pct_of_total": 32.833,
+      "vector_active_pct_of_total": 9.425,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 8154089.699,
+          "count": 57060,
+          "pct": 54.467
+        },
+        "AI_CORE": {
+          "total_duration_us": 6816586.057,
+          "count": 15180,
+          "pct": 45.533
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 128,
+        "N": 128,
+        "K": 4096,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 3099355.131,
+        "cube_util_pct": 95.853
+      },
+      {
+        "M": 4096,
+        "N": 128,
+        "K": 4096,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 1879905.649,
+        "cube_util_pct": 32.752
+      },
+      {
+        "M": 4096,
+        "N": 3072,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 410904.494,
+        "cube_util_pct": 92.267
+      },
+      {
+        "M": 4096,
+        "N": 1024,
+        "K": 3072,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 211897.237,
+        "cube_util_pct": 87.487
+      },
+      {
+        "M": 4096,
+        "N": 1024,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 3360,
+        "aicore_time_us": 153080.934,
+        "cube_util_pct": 83.14
+      },
+      {
+        "M": 4096,
+        "N": 2048,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 150531.824,
+        "cube_util_pct": 84.508
+      },
+      {
+        "M": 4096,
+        "N": 1024,
+        "K": 2048,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 1680,
+        "aicore_time_us": 136603.213,
+        "cube_util_pct": 90.956
+      }
+    ]
+  },
+  "msprof_qwen3_prefill_S4096_b4_ArithmeticUtilization_v3": {
+    "csv_path": "msprof_qwen3_prefill_S4096_b4_ArithmeticUtilization_v3/PROF_000001_20260508152923279_FNFJHBLJCOBPEJKC/mindstudio_profiler_output/op_summary_20260508152937.csv",
+    "agg": {
+      "n_ops": 252,
+      "total_aicore_time_us": 329165.071,
+      "cube_util_fp16_pct": 76.54,
+      "cube_util_int8_pct": 0.0,
+      "cube_util_total_pct": 76.54,
+      "avg_block_dim": 20.0
+    },
+    "full_pipe": {
+      "total_duration_us": 957121.282,
+      "cube_active_us": 251943.757,
+      "vector_active_us": 79678.831,
+      "cube_active_pct_of_total": 26.323,
+      "vector_active_pct_of_total": 8.325,
+      "task_type_breakdown": {
+        "AI_VECTOR_CORE": {
+          "total_duration_us": 563070.817,
+          "count": 950,
+          "pct": 58.83
+        },
+        "AI_CORE": {
+          "total_duration_us": 394050.465,
+          "count": 252,
+          "pct": 41.17
+        }
+      }
+    },
+    "top_shapes_by_aicore_time": [
+      {
+        "M": 128,
+        "N": 128,
+        "K": 4096,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 28,
+        "aicore_time_us": 179564.982,
+        "cube_util_pct": 95.554
+      },
+      {
+        "M": 4096,
+        "N": 128,
+        "K": 4096,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 28,
+        "aicore_time_us": 87026.143,
+        "cube_util_pct": 31.704
+      },
+      {
+        "M": 4096,
+        "N": 3072,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 56,
+        "aicore_time_us": 25567.538,
+        "cube_util_pct": 82.787
+      },
+      {
+        "M": 4096,
+        "N": 1024,
+        "K": 3072,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 28,
+        "aicore_time_us": 11816.23,
+        "cube_util_pct": 85.665
+      },
+      {
+        "M": 4096,
+        "N": 2048,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 28,
+        "aicore_time_us": 9435.28,
+        "cube_util_pct": 76.464
+      },
+      {
+        "M": 4096,
+        "N": 1024,
+        "K": 1024,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 56,
+        "aicore_time_us": 8127.052,
+        "cube_util_pct": 88.378
+      },
+      {
+        "M": 4096,
+        "N": 1024,
+        "K": 2048,
+        "op_kind": "BMM",
+        "op_type": "BatchMatMulV2",
+        "count": 28,
+        "aicore_time_us": 7627.846,
+        "cube_util_pct": 92.886
+      }
+    ]
+  }
+}

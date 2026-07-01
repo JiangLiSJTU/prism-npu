@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "prism"
+version = "0.1.0"
+description = "Pipeline-aware Roofline & Inference Sweep Model — NPU 架构探索工具链：Roofline + η_real 拟合 + Pipe-aware 架构 sweep + 优化天花板预测"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [{ name = "PRISM Contributors" }]
+license = { text = "MIT" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering",
+]
+dependencies = [
+    # numpy: tested on 1.x and 2.x; >=1.20 for typing, <3 to guard against future API breaks.
+    # No deprecated aliases (np.bool/np.int/np.float) used in src — verified by grep.
+    "numpy>=1.20,<3",
+    "scipy>=1.7",
+    "pyyaml>=6.0",
+    "jinja2>=3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "ruff>=0.1",
+]
+docs = [
+    "mkdocs>=1.5",
+    "mkdocs-material>=9.0",
+]
+
+[project.scripts]
+prism-extract       = "prism.eta_real.extract:main"
+prism-fit           = "prism.eta_real.fit:main"
+prism-regime        = "prism.roofline.regime:main"
+prism-sweep         = "prism.sweep.runner:main"
+prism-ceiling       = "prism.ceiling.predict:main"
+prism-mapping       = "prism.mapper.runner:main"
+prism-render        = "prism.reports.render:main"
+prism-predict-pipe  = "prism.predict_pipe.predict:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["prism*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+markers = [
+    "smoke: end-to-end smoke tests requiring prism-* CLI in PATH (skipped if not installed)",
+]
+
+[tool.ruff]
+line-length = 110
+target-version = "py39"

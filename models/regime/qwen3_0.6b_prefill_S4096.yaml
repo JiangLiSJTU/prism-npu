@@ -1,0 +1,20 @@
+# Qwen3-0.6B prefill 模式 S=4096（长上下文 LLM 场景）
+# 派生自 qwen3_0.6b.yaml + S 扫描
+#
+# per_layer @ S=4096 = 31.45e6 × 4096 + 8192 × 4096² = 128.8G + 137.4G = 266.2G ops
+# total @ 28 layers = 7.45 T ops
+# bytes activation @ S=4096 ≈ 460 MB → bytes_total ≈ 1.56 GB
+
+name: Qwen3-0.6B-prefill-S4096
+arch: decoder
+layers: 28
+ops_b1: 7.454e+12           # 7.45 T ops @ S=4096（attention 项 = linear 项）
+weight_mb: 1200.0
+bytes_total: 1.56e+9        # ≈ 1.56 GB（weight overflow 1.1G + activation 0.46G）
+alpha_per_batch: null
+beta_layer_override: 560.4
+measured: {}
+note: |
+  Qwen3-0.6B prefill mode @ S=4096（长文档 / Agent 上下文场景）。
+  attention 项 137.4G/层 ≈ linear 项 128.8G/层——attention 的 O(S²·d) 已与 linear 的 O(S·d²) 相当。
+  预期此场景在 910B4 上切换到 compute-bound regime（T_compute ~ 38 ms vs T_overhead 15.8 ms）。

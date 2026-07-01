@@ -1,0 +1,5001 @@
+{
+  "version": "v1",
+  "host_gap_target_per_kernel_us": 10.0,
+  "ub_l1_fused_residual": 0.05,
+  "hbm3_bw_gbs": 800,
+  "hbm2e_bw_gbs_baseline": 392,
+  "configs": {
+    "BERT-base-S128-b1": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 650.5,
+          "aiv_time_us": 918.1,
+          "kernel_gap_us": 561.9,
+          "host_gap_us": 14079.4,
+          "wall_clock_us": 16209.9
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 192.0,
+          "mte1": 223.8,
+          "mte2": 516.4,
+          "fixpipe": 75.6,
+          "scalar": 76.1
+        },
+        "aiv_pipes_us": {
+          "vec": 76.6,
+          "mte2": 216.0,
+          "mte3": 85.2,
+          "scalar": 117.0,
+          "idle": 423.4
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 516.4,
+          "aiv_time_us": 216.0,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 14079.4,
+          "wall_clock_us": 14811.8
+        },
+        "reduction_pct_vs_baseline": 8.62,
+        "aic_pipes_us": {
+          "mac": 192.0,
+          "mte1": 223.8,
+          "mte2": 516.4,
+          "fixpipe": 75.6,
+          "scalar": 76.1
+        },
+        "aiv_pipes_us": {
+          "vec": 76.6,
+          "mte2": 216.0,
+          "mte3": 85.2,
+          "scalar": 117.0
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 516.4,
+          "aiv_time_us": 216.0,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 3380.0,
+          "wall_clock_us": 4112.4
+        },
+        "reduction_pct_vs_baseline": 74.63,
+        "aic_pipes_us": {
+          "mac": 192.0,
+          "mte1": 223.8,
+          "mte2": 516.4,
+          "fixpipe": 75.6,
+          "scalar": 76.1
+        },
+        "aiv_pipes_us": {
+          "vec": 76.6,
+          "mte2": 216.0,
+          "mte3": 85.2,
+          "scalar": 117.0
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 516.4,
+          "aiv_time_us": 117.0,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 3380.0,
+          "wall_clock_us": 4013.4
+        },
+        "reduction_pct_vs_baseline": 75.24,
+        "aic_pipes_us": {
+          "mac": 192.0,
+          "mte1": 223.8,
+          "mte2": 516.4,
+          "fixpipe": 75.6,
+          "scalar": 76.1
+        },
+        "aiv_pipes_us": {
+          "vec": 76.6,
+          "mte2": 10.8,
+          "mte3": 85.2,
+          "scalar": 117.0
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 253.03599999999997,
+          "aiv_time_us": 117.0,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 3380.0,
+          "wall_clock_us": 3750.036
+        },
+        "reduction_pct_vs_baseline": 76.87,
+        "aic_pipes_us": {
+          "mac": 192.0,
+          "mte1": 223.8,
+          "mte2": 253.04,
+          "fixpipe": 75.6,
+          "scalar": 76.1
+        },
+        "aiv_pipes_us": {
+          "vec": 76.6,
+          "mte2": 10.8,
+          "mte3": 85.2,
+          "scalar": 117.0
+        }
+      }
+    },
+    "GPT-2-S512-b1": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 1716.0,
+          "aiv_time_us": 3375.6,
+          "kernel_gap_us": 581.1,
+          "host_gap_us": 11607.3,
+          "wall_clock_us": 17280.0
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 747.3,
+          "mte1": 548.3,
+          "mte2": 1153.1,
+          "fixpipe": 519.6,
+          "scalar": 130.9
+        },
+        "aiv_pipes_us": {
+          "vec": 1224.2,
+          "mte2": 1078.5,
+          "mte3": 564.1,
+          "scalar": 412.4,
+          "idle": 96.5
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 1153.1,
+          "aiv_time_us": 1224.2,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 11607.3,
+          "wall_clock_us": 13984.599999999999
+        },
+        "reduction_pct_vs_baseline": 19.07,
+        "aic_pipes_us": {
+          "mac": 747.3,
+          "mte1": 548.3,
+          "mte2": 1153.1,
+          "fixpipe": 519.6,
+          "scalar": 130.9
+        },
+        "aiv_pipes_us": {
+          "vec": 1224.2,
+          "mte2": 1078.5,
+          "mte3": 564.1,
+          "scalar": 412.4
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 1153.1,
+          "aiv_time_us": 1224.2,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 3210.0,
+          "wall_clock_us": 5587.3
+        },
+        "reduction_pct_vs_baseline": 67.67,
+        "aic_pipes_us": {
+          "mac": 747.3,
+          "mte1": 548.3,
+          "mte2": 1153.1,
+          "fixpipe": 519.6,
+          "scalar": 130.9
+        },
+        "aiv_pipes_us": {
+          "vec": 1224.2,
+          "mte2": 1078.5,
+          "mte3": 564.1,
+          "scalar": 412.4
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 1153.1,
+          "aiv_time_us": 1224.2,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 3210.0,
+          "wall_clock_us": 5587.3
+        },
+        "reduction_pct_vs_baseline": 67.67,
+        "aic_pipes_us": {
+          "mac": 747.3,
+          "mte1": 548.3,
+          "mte2": 1153.1,
+          "fixpipe": 519.6,
+          "scalar": 130.9
+        },
+        "aiv_pipes_us": {
+          "vec": 1224.2,
+          "mte2": 53.93,
+          "mte3": 564.1,
+          "scalar": 412.4
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 747.3,
+          "aiv_time_us": 1224.2,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 3210.0,
+          "wall_clock_us": 5181.5
+        },
+        "reduction_pct_vs_baseline": 70.01,
+        "aic_pipes_us": {
+          "mac": 747.3,
+          "mte1": 548.3,
+          "mte2": 565.02,
+          "fixpipe": 519.6,
+          "scalar": 130.9
+        },
+        "aiv_pipes_us": {
+          "vec": 1224.2,
+          "mte2": 53.93,
+          "mte3": 564.1,
+          "scalar": 412.4
+        }
+      }
+    },
+    "Qwen3-prefill-S512-b4": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 138280.6,
+          "aiv_time_us": 129458.0,
+          "kernel_gap_us": 19267.5,
+          "host_gap_us": 14873.9,
+          "wall_clock_us": 301880.0
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 89996.3,
+          "mte1": 71863.4,
+          "mte2": 124983.6,
+          "fixpipe": 49614.4,
+          "scalar": 10134.7
+        },
+        "aiv_pipes_us": {
+          "vec": 32742.0,
+          "mte2": 70468.3,
+          "mte3": 53481.7,
+          "scalar": 7586.4,
+          "idle": 0.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 124983.6,
+          "aiv_time_us": 70468.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 14873.9,
+          "wall_clock_us": 210325.80000000002
+        },
+        "reduction_pct_vs_baseline": 30.33,
+        "aic_pipes_us": {
+          "mac": 89996.3,
+          "mte1": 71863.4,
+          "mte2": 124983.6,
+          "fixpipe": 49614.4,
+          "scalar": 10134.7
+        },
+        "aiv_pipes_us": {
+          "vec": 32742.0,
+          "mte2": 70468.3,
+          "mte3": 53481.7,
+          "scalar": 7586.4
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 124983.6,
+          "aiv_time_us": 70468.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 14873.9,
+          "wall_clock_us": 210325.80000000002
+        },
+        "reduction_pct_vs_baseline": 30.33,
+        "aic_pipes_us": {
+          "mac": 89996.3,
+          "mte1": 71863.4,
+          "mte2": 124983.6,
+          "fixpipe": 49614.4,
+          "scalar": 10134.7
+        },
+        "aiv_pipes_us": {
+          "vec": 32742.0,
+          "mte2": 70468.3,
+          "mte3": 53481.7,
+          "scalar": 7586.4
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 124983.6,
+          "aiv_time_us": 53481.7,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 14873.9,
+          "wall_clock_us": 193339.19999999998
+        },
+        "reduction_pct_vs_baseline": 35.95,
+        "aic_pipes_us": {
+          "mac": 89996.3,
+          "mte1": 71863.4,
+          "mte2": 124983.6,
+          "fixpipe": 49614.4,
+          "scalar": 10134.7
+        },
+        "aiv_pipes_us": {
+          "vec": 32742.0,
+          "mte2": 3523.42,
+          "mte3": 53481.7,
+          "scalar": 7586.4
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 89996.3,
+          "aiv_time_us": 53481.7,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 14873.9,
+          "wall_clock_us": 158351.9
+        },
+        "reduction_pct_vs_baseline": 47.54,
+        "aic_pipes_us": {
+          "mac": 89996.3,
+          "mte1": 71863.4,
+          "mte2": 61241.96,
+          "fixpipe": 49614.4,
+          "scalar": 10134.7
+        },
+        "aiv_pipes_us": {
+          "vec": 32742.0,
+          "mte2": 3523.42,
+          "mte3": 53481.7,
+          "scalar": 7586.4
+        }
+      }
+    },
+    "Qwen3-prefill-S512-b8": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 274909.7,
+          "aiv_time_us": 244352.4,
+          "kernel_gap_us": 37778.8,
+          "host_gap_us": 46719.2,
+          "wall_clock_us": 603760.1
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 185684.3,
+          "mte1": 148978.1,
+          "mte2": 249165.8,
+          "fixpipe": 110896.5,
+          "scalar": 19570.5
+        },
+        "aiv_pipes_us": {
+          "vec": 64457.4,
+          "mte2": 148896.8,
+          "mte3": 117630.4,
+          "scalar": 12419.6,
+          "idle": 0.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 249165.8,
+          "aiv_time_us": 148896.8,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 46719.2,
+          "wall_clock_us": 444781.8
+        },
+        "reduction_pct_vs_baseline": 26.33,
+        "aic_pipes_us": {
+          "mac": 185684.3,
+          "mte1": 148978.1,
+          "mte2": 249165.8,
+          "fixpipe": 110896.5,
+          "scalar": 19570.5
+        },
+        "aiv_pipes_us": {
+          "vec": 64457.4,
+          "mte2": 148896.8,
+          "mte3": 117630.4,
+          "scalar": 12419.6
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 249165.8,
+          "aiv_time_us": 148896.8,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 46719.2,
+          "wall_clock_us": 444781.8
+        },
+        "reduction_pct_vs_baseline": 26.33,
+        "aic_pipes_us": {
+          "mac": 185684.3,
+          "mte1": 148978.1,
+          "mte2": 249165.8,
+          "fixpipe": 110896.5,
+          "scalar": 19570.5
+        },
+        "aiv_pipes_us": {
+          "vec": 64457.4,
+          "mte2": 148896.8,
+          "mte3": 117630.4,
+          "scalar": 12419.6
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 249165.8,
+          "aiv_time_us": 117630.4,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 46719.2,
+          "wall_clock_us": 413515.39999999997
+        },
+        "reduction_pct_vs_baseline": 31.51,
+        "aic_pipes_us": {
+          "mac": 185684.3,
+          "mte1": 148978.1,
+          "mte2": 249165.8,
+          "fixpipe": 110896.5,
+          "scalar": 19570.5
+        },
+        "aiv_pipes_us": {
+          "vec": 64457.4,
+          "mte2": 7444.84,
+          "mte3": 117630.4,
+          "scalar": 12419.6
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 185684.3,
+          "aiv_time_us": 117630.4,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 46719.2,
+          "wall_clock_us": 350033.89999999997
+        },
+        "reduction_pct_vs_baseline": 42.02,
+        "aic_pipes_us": {
+          "mac": 185684.3,
+          "mte1": 148978.1,
+          "mte2": 122091.24,
+          "fixpipe": 110896.5,
+          "scalar": 19570.5
+        },
+        "aiv_pipes_us": {
+          "vec": 64457.4,
+          "mte2": 7444.84,
+          "mte3": 117630.4,
+          "scalar": 12419.6
+        }
+      }
+    },
+    "Qwen3-prefill-S256-b1": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 21639.0,
+          "aiv_time_us": 34057.6,
+          "kernel_gap_us": 10328.6,
+          "host_gap_us": 11974.8,
+          "wall_clock_us": 78000.0
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 10388.8,
+          "mte1": 9522.5,
+          "mte2": 18788.8,
+          "fixpipe": 4813.6,
+          "scalar": 2274.1
+        },
+        "aiv_pipes_us": {
+          "vec": 2479.0,
+          "mte2": 13282.3,
+          "mte3": 6841.9,
+          "scalar": 2317.1,
+          "idle": 9137.3
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 18788.8,
+          "aiv_time_us": 13282.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 11974.8,
+          "wall_clock_us": 44045.899999999994
+        },
+        "reduction_pct_vs_baseline": 43.53,
+        "aic_pipes_us": {
+          "mac": 10388.8,
+          "mte1": 9522.5,
+          "mte2": 18788.8,
+          "fixpipe": 4813.6,
+          "scalar": 2274.1
+        },
+        "aiv_pipes_us": {
+          "vec": 2479.0,
+          "mte2": 13282.3,
+          "mte3": 6841.9,
+          "scalar": 2317.1
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 18788.8,
+          "aiv_time_us": 13282.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 11974.8,
+          "wall_clock_us": 44045.899999999994
+        },
+        "reduction_pct_vs_baseline": 43.53,
+        "aic_pipes_us": {
+          "mac": 10388.8,
+          "mte1": 9522.5,
+          "mte2": 18788.8,
+          "fixpipe": 4813.6,
+          "scalar": 2274.1
+        },
+        "aiv_pipes_us": {
+          "vec": 2479.0,
+          "mte2": 13282.3,
+          "mte3": 6841.9,
+          "scalar": 2317.1
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 18788.8,
+          "aiv_time_us": 6841.9,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 11974.8,
+          "wall_clock_us": 37605.5
+        },
+        "reduction_pct_vs_baseline": 51.79,
+        "aic_pipes_us": {
+          "mac": 10388.8,
+          "mte1": 9522.5,
+          "mte2": 18788.8,
+          "fixpipe": 4813.6,
+          "scalar": 2274.1
+        },
+        "aiv_pipes_us": {
+          "vec": 2479.0,
+          "mte2": 664.12,
+          "mte3": 6841.9,
+          "scalar": 2317.1
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 10388.8,
+          "aiv_time_us": 6841.9,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 11974.8,
+          "wall_clock_us": 29205.499999999996
+        },
+        "reduction_pct_vs_baseline": 62.56,
+        "aic_pipes_us": {
+          "mac": 10388.8,
+          "mte1": 9522.5,
+          "mte2": 9206.51,
+          "fixpipe": 4813.6,
+          "scalar": 2274.1
+        },
+        "aiv_pipes_us": {
+          "vec": 2479.0,
+          "mte2": 664.12,
+          "mte3": 6841.9,
+          "scalar": 2317.1
+        }
+      }
+    },
+    "Qwen3-prefill-S256-b4": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 52526.3,
+          "aiv_time_us": 61866.3,
+          "kernel_gap_us": 10370.5,
+          "host_gap_us": 15236.8,
+          "wall_clock_us": 139999.9
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 35785.4,
+          "mte1": 28115.4,
+          "mte2": 47570.8,
+          "fixpipe": 18132.2,
+          "scalar": 4983.0
+        },
+        "aiv_pipes_us": {
+          "vec": 8690.0,
+          "mte2": 31625.3,
+          "mte3": 22636.5,
+          "scalar": 3110.2,
+          "idle": 0.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 47570.8,
+          "aiv_time_us": 31625.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 15236.8,
+          "wall_clock_us": 94432.90000000001
+        },
+        "reduction_pct_vs_baseline": 32.55,
+        "aic_pipes_us": {
+          "mac": 35785.4,
+          "mte1": 28115.4,
+          "mte2": 47570.8,
+          "fixpipe": 18132.2,
+          "scalar": 4983.0
+        },
+        "aiv_pipes_us": {
+          "vec": 8690.0,
+          "mte2": 31625.3,
+          "mte3": 22636.5,
+          "scalar": 3110.2
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 47570.8,
+          "aiv_time_us": 31625.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 15236.8,
+          "wall_clock_us": 94432.90000000001
+        },
+        "reduction_pct_vs_baseline": 32.55,
+        "aic_pipes_us": {
+          "mac": 35785.4,
+          "mte1": 28115.4,
+          "mte2": 47570.8,
+          "fixpipe": 18132.2,
+          "scalar": 4983.0
+        },
+        "aiv_pipes_us": {
+          "vec": 8690.0,
+          "mte2": 31625.3,
+          "mte3": 22636.5,
+          "scalar": 3110.2
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 47570.8,
+          "aiv_time_us": 22636.5,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 15236.8,
+          "wall_clock_us": 85444.1
+        },
+        "reduction_pct_vs_baseline": 38.97,
+        "aic_pipes_us": {
+          "mac": 35785.4,
+          "mte1": 28115.4,
+          "mte2": 47570.8,
+          "fixpipe": 18132.2,
+          "scalar": 4983.0
+        },
+        "aiv_pipes_us": {
+          "vec": 8690.0,
+          "mte2": 1581.27,
+          "mte3": 22636.5,
+          "scalar": 3110.2
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 35785.4,
+          "aiv_time_us": 22636.5,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 15236.8,
+          "wall_clock_us": 73658.7
+        },
+        "reduction_pct_vs_baseline": 47.39,
+        "aic_pipes_us": {
+          "mac": 35785.4,
+          "mte1": 28115.4,
+          "mte2": 23309.69,
+          "fixpipe": 18132.2,
+          "scalar": 4983.0
+        },
+        "aiv_pipes_us": {
+          "vec": 8690.0,
+          "mte2": 1581.27,
+          "mte3": 22636.5,
+          "scalar": 3110.2
+        }
+      }
+    },
+    "Qwen3-prefill-S256-b8": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 97460.2,
+          "aiv_time_us": 91358.5,
+          "kernel_gap_us": 15010.7,
+          "host_gap_us": 21170.6,
+          "wall_clock_us": 225000.00000000003
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 73034.0,
+          "mte1": 58939.7,
+          "mte2": 89472.7,
+          "fixpipe": 36478.7,
+          "scalar": 8839.5
+        },
+        "aiv_pipes_us": {
+          "vec": 16695.2,
+          "mte2": 52105.8,
+          "mte3": 39536.3,
+          "scalar": 3875.3,
+          "idle": 0.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 89472.7,
+          "aiv_time_us": 52105.8,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 21170.6,
+          "wall_clock_us": 162749.1
+        },
+        "reduction_pct_vs_baseline": 27.67,
+        "aic_pipes_us": {
+          "mac": 73034.0,
+          "mte1": 58939.7,
+          "mte2": 89472.7,
+          "fixpipe": 36478.7,
+          "scalar": 8839.5
+        },
+        "aiv_pipes_us": {
+          "vec": 16695.2,
+          "mte2": 52105.8,
+          "mte3": 39536.3,
+          "scalar": 3875.3
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 89472.7,
+          "aiv_time_us": 52105.8,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 21170.6,
+          "wall_clock_us": 162749.1
+        },
+        "reduction_pct_vs_baseline": 27.67,
+        "aic_pipes_us": {
+          "mac": 73034.0,
+          "mte1": 58939.7,
+          "mte2": 89472.7,
+          "fixpipe": 36478.7,
+          "scalar": 8839.5
+        },
+        "aiv_pipes_us": {
+          "vec": 16695.2,
+          "mte2": 52105.8,
+          "mte3": 39536.3,
+          "scalar": 3875.3
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 89472.7,
+          "aiv_time_us": 39536.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 21170.6,
+          "wall_clock_us": 150179.6
+        },
+        "reduction_pct_vs_baseline": 33.25,
+        "aic_pipes_us": {
+          "mac": 73034.0,
+          "mte1": 58939.7,
+          "mte2": 89472.7,
+          "fixpipe": 36478.7,
+          "scalar": 8839.5
+        },
+        "aiv_pipes_us": {
+          "vec": 16695.2,
+          "mte2": 2605.29,
+          "mte3": 39536.3,
+          "scalar": 3875.3
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 73034.0,
+          "aiv_time_us": 39536.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 21170.6,
+          "wall_clock_us": 133740.9
+        },
+        "reduction_pct_vs_baseline": 40.56,
+        "aic_pipes_us": {
+          "mac": 73034.0,
+          "mte1": 58939.7,
+          "mte2": 43841.62,
+          "fixpipe": 36478.7,
+          "scalar": 8839.5
+        },
+        "aiv_pipes_us": {
+          "vec": 16695.2,
+          "mte2": 2605.29,
+          "mte3": 39536.3,
+          "scalar": 3875.3
+        }
+      }
+    },
+    "Qwen3-prefill-S4096-b1": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 1331318.6,
+          "aiv_time_us": 1583847.8,
+          "kernel_gap_us": 70999.1,
+          "host_gap_us": 63834.5,
+          "wall_clock_us": 3050000.0000000005
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 447562.5,
+          "mte1": 379871.2,
+          "mte2": 721671.5,
+          "fixpipe": 740253.1,
+          "scalar": 46297.1
+        },
+        "aiv_pipes_us": {
+          "vec": 460510.1,
+          "mte2": 1159015.3,
+          "mte3": 534741.6,
+          "scalar": 57100.3,
+          "idle": 0.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 740253.1,
+          "aiv_time_us": 1159015.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 63834.5,
+          "wall_clock_us": 1963102.9
+        },
+        "reduction_pct_vs_baseline": 35.64,
+        "aic_pipes_us": {
+          "mac": 447562.5,
+          "mte1": 379871.2,
+          "mte2": 721671.5,
+          "fixpipe": 740253.1,
+          "scalar": 46297.1
+        },
+        "aiv_pipes_us": {
+          "vec": 460510.1,
+          "mte2": 1159015.3,
+          "mte3": 534741.6,
+          "scalar": 57100.3
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 740253.1,
+          "aiv_time_us": 1159015.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 63834.5,
+          "wall_clock_us": 1963102.9
+        },
+        "reduction_pct_vs_baseline": 35.64,
+        "aic_pipes_us": {
+          "mac": 447562.5,
+          "mte1": 379871.2,
+          "mte2": 721671.5,
+          "fixpipe": 740253.1,
+          "scalar": 46297.1
+        },
+        "aiv_pipes_us": {
+          "vec": 460510.1,
+          "mte2": 1159015.3,
+          "mte3": 534741.6,
+          "scalar": 57100.3
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 740253.1,
+          "aiv_time_us": 534741.6,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 63834.5,
+          "wall_clock_us": 1338829.2
+        },
+        "reduction_pct_vs_baseline": 56.1,
+        "aic_pipes_us": {
+          "mac": 447562.5,
+          "mte1": 379871.2,
+          "mte2": 721671.5,
+          "fixpipe": 740253.1,
+          "scalar": 46297.1
+        },
+        "aiv_pipes_us": {
+          "vec": 460510.1,
+          "mte2": 57950.77,
+          "mte3": 534741.6,
+          "scalar": 57100.3
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 740253.1,
+          "aiv_time_us": 534741.6,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 63834.5,
+          "wall_clock_us": 1338829.2
+        },
+        "reduction_pct_vs_baseline": 56.1,
+        "aic_pipes_us": {
+          "mac": 447562.5,
+          "mte1": 379871.2,
+          "mte2": 353619.03,
+          "fixpipe": 740253.1,
+          "scalar": 46297.1
+        },
+        "aiv_pipes_us": {
+          "vec": 460510.1,
+          "mte2": 57950.77,
+          "mte3": 534741.6,
+          "scalar": 57100.3
+        }
+      }
+    },
+    "Qwen3-decode-Min4-Skv128-b1": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 2488.9,
+          "aiv_time_us": 2877.1,
+          "kernel_gap_us": 2119.8,
+          "host_gap_us": 204.2,
+          "wall_clock_us": 7690.0
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 163.6,
+          "mte1": 477.2,
+          "mte2": 2111.2,
+          "fixpipe": 188.7,
+          "scalar": 152.6
+        },
+        "aiv_pipes_us": {
+          "vec": 246.7,
+          "mte2": 795.2,
+          "mte3": 205.2,
+          "scalar": 281.3,
+          "idle": 1348.6
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 2111.2,
+          "aiv_time_us": 795.2,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 204.2,
+          "wall_clock_us": 3110.5999999999995
+        },
+        "reduction_pct_vs_baseline": 59.55,
+        "aic_pipes_us": {
+          "mac": 163.6,
+          "mte1": 477.2,
+          "mte2": 2111.2,
+          "fixpipe": 188.7,
+          "scalar": 152.6
+        },
+        "aiv_pipes_us": {
+          "vec": 246.7,
+          "mte2": 795.2,
+          "mte3": 205.2,
+          "scalar": 281.3
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 2111.2,
+          "aiv_time_us": 795.2,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 204.2,
+          "wall_clock_us": 3110.5999999999995
+        },
+        "reduction_pct_vs_baseline": 59.55,
+        "aic_pipes_us": {
+          "mac": 163.6,
+          "mte1": 477.2,
+          "mte2": 2111.2,
+          "fixpipe": 188.7,
+          "scalar": 152.6
+        },
+        "aiv_pipes_us": {
+          "vec": 246.7,
+          "mte2": 795.2,
+          "mte3": 205.2,
+          "scalar": 281.3
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 2111.2,
+          "aiv_time_us": 281.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 204.2,
+          "wall_clock_us": 2596.7
+        },
+        "reduction_pct_vs_baseline": 66.23,
+        "aic_pipes_us": {
+          "mac": 163.6,
+          "mte1": 477.2,
+          "mte2": 2111.2,
+          "fixpipe": 188.7,
+          "scalar": 152.6
+        },
+        "aiv_pipes_us": {
+          "vec": 246.7,
+          "mte2": 39.76,
+          "mte3": 205.2,
+          "scalar": 281.3
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 1034.4879999999998,
+          "aiv_time_us": 281.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 204.2,
+          "wall_clock_us": 1519.9879999999998
+        },
+        "reduction_pct_vs_baseline": 80.23,
+        "aic_pipes_us": {
+          "mac": 163.6,
+          "mte1": 477.2,
+          "mte2": 1034.49,
+          "fixpipe": 188.7,
+          "scalar": 152.6
+        },
+        "aiv_pipes_us": {
+          "vec": 246.7,
+          "mte2": 39.76,
+          "mte3": 205.2,
+          "scalar": 281.3
+        }
+      }
+    },
+    "Net-Transformer-S256-L1-b1": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 81.2,
+          "aiv_time_us": 114.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 195.5
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 9.7,
+          "mte1": 15.1,
+          "mte2": 51.0,
+          "fixpipe": 5.9,
+          "scalar": 5.7
+        },
+        "aiv_pipes_us": {
+          "vec": 3.6,
+          "mte2": 30.8,
+          "mte3": 12.2,
+          "scalar": 15.6,
+          "idle": 52.1
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 51.0,
+          "aiv_time_us": 30.8,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 81.8
+        },
+        "reduction_pct_vs_baseline": 58.16,
+        "aic_pipes_us": {
+          "mac": 9.7,
+          "mte1": 15.1,
+          "mte2": 51.0,
+          "fixpipe": 5.9,
+          "scalar": 5.7
+        },
+        "aiv_pipes_us": {
+          "vec": 3.6,
+          "mte2": 30.8,
+          "mte3": 12.2,
+          "scalar": 15.6
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 51.0,
+          "aiv_time_us": 30.8,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 81.8
+        },
+        "reduction_pct_vs_baseline": 58.16,
+        "aic_pipes_us": {
+          "mac": 9.7,
+          "mte1": 15.1,
+          "mte2": 51.0,
+          "fixpipe": 5.9,
+          "scalar": 5.7
+        },
+        "aiv_pipes_us": {
+          "vec": 3.6,
+          "mte2": 30.8,
+          "mte3": 12.2,
+          "scalar": 15.6
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 51.0,
+          "aiv_time_us": 15.6,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 66.6
+        },
+        "reduction_pct_vs_baseline": 65.93,
+        "aic_pipes_us": {
+          "mac": 9.7,
+          "mte1": 15.1,
+          "mte2": 51.0,
+          "fixpipe": 5.9,
+          "scalar": 5.7
+        },
+        "aiv_pipes_us": {
+          "vec": 3.6,
+          "mte2": 1.54,
+          "mte3": 12.2,
+          "scalar": 15.6
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 24.99,
+          "aiv_time_us": 15.6,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 40.589999999999996
+        },
+        "reduction_pct_vs_baseline": 79.24,
+        "aic_pipes_us": {
+          "mac": 9.7,
+          "mte1": 15.1,
+          "mte2": 24.99,
+          "fixpipe": 5.9,
+          "scalar": 5.7
+        },
+        "aiv_pipes_us": {
+          "vec": 3.6,
+          "mte2": 1.54,
+          "mte3": 12.2,
+          "scalar": 15.6
+        }
+      }
+    },
+    "Qwen3-Embedding-S4096-b1": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 1331318.6,
+          "aiv_time_us": 1583847.8,
+          "kernel_gap_us": 70999.1,
+          "host_gap_us": 63834.5,
+          "wall_clock_us": 3050000.0000000005
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 447562.5,
+          "mte1": 379871.2,
+          "mte2": 721671.5,
+          "fixpipe": 740253.1,
+          "scalar": 46297.1
+        },
+        "aiv_pipes_us": {
+          "vec": 460510.1,
+          "mte2": 1159015.3,
+          "mte3": 534741.6,
+          "scalar": 57100.3,
+          "idle": 0.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 740253.1,
+          "aiv_time_us": 1159015.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 63834.5,
+          "wall_clock_us": 1963102.9
+        },
+        "reduction_pct_vs_baseline": 35.64,
+        "aic_pipes_us": {
+          "mac": 447562.5,
+          "mte1": 379871.2,
+          "mte2": 721671.5,
+          "fixpipe": 740253.1,
+          "scalar": 46297.1
+        },
+        "aiv_pipes_us": {
+          "vec": 460510.1,
+          "mte2": 1159015.3,
+          "mte3": 534741.6,
+          "scalar": 57100.3
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 740253.1,
+          "aiv_time_us": 1159015.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 63834.5,
+          "wall_clock_us": 1963102.9
+        },
+        "reduction_pct_vs_baseline": 35.64,
+        "aic_pipes_us": {
+          "mac": 447562.5,
+          "mte1": 379871.2,
+          "mte2": 721671.5,
+          "fixpipe": 740253.1,
+          "scalar": 46297.1
+        },
+        "aiv_pipes_us": {
+          "vec": 460510.1,
+          "mte2": 1159015.3,
+          "mte3": 534741.6,
+          "scalar": 57100.3
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 740253.1,
+          "aiv_time_us": 534741.6,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 63834.5,
+          "wall_clock_us": 1338829.2
+        },
+        "reduction_pct_vs_baseline": 56.1,
+        "aic_pipes_us": {
+          "mac": 447562.5,
+          "mte1": 379871.2,
+          "mte2": 721671.5,
+          "fixpipe": 740253.1,
+          "scalar": 46297.1
+        },
+        "aiv_pipes_us": {
+          "vec": 460510.1,
+          "mte2": 57950.77,
+          "mte3": 534741.6,
+          "scalar": 57100.3
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 740253.1,
+          "aiv_time_us": 534741.6,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 63834.5,
+          "wall_clock_us": 1338829.2
+        },
+        "reduction_pct_vs_baseline": 56.1,
+        "aic_pipes_us": {
+          "mac": 447562.5,
+          "mte1": 379871.2,
+          "mte2": 353619.03,
+          "fixpipe": 740253.1,
+          "scalar": 46297.1
+        },
+        "aiv_pipes_us": {
+          "vec": 460510.1,
+          "mte2": 57950.77,
+          "mte3": 534741.6,
+          "scalar": 57100.3
+        }
+      }
+    },
+    "BERT-base-S128-b4": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 1069.4,
+          "aiv_time_us": 1393.6,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 2463.0
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 654.4,
+          "mte1": 503.2,
+          "mte2": 889.2,
+          "fixpipe": 296.2,
+          "scalar": 135.1
+        },
+        "aiv_pipes_us": {
+          "vec": 253.9,
+          "mte2": 488.6,
+          "mte3": 140.5,
+          "scalar": 126.5,
+          "idle": 384.1
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 889.2,
+          "aiv_time_us": 488.6,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 1377.8000000000002
+        },
+        "reduction_pct_vs_baseline": 44.06,
+        "aic_pipes_us": {
+          "mac": 654.4,
+          "mte1": 503.2,
+          "mte2": 889.2,
+          "fixpipe": 296.2,
+          "scalar": 135.1
+        },
+        "aiv_pipes_us": {
+          "vec": 253.9,
+          "mte2": 488.6,
+          "mte3": 140.5,
+          "scalar": 126.5
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 889.2,
+          "aiv_time_us": 488.6,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 1377.8000000000002
+        },
+        "reduction_pct_vs_baseline": 44.06,
+        "aic_pipes_us": {
+          "mac": 654.4,
+          "mte1": 503.2,
+          "mte2": 889.2,
+          "fixpipe": 296.2,
+          "scalar": 135.1
+        },
+        "aiv_pipes_us": {
+          "vec": 253.9,
+          "mte2": 488.6,
+          "mte3": 140.5,
+          "scalar": 126.5
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 889.2,
+          "aiv_time_us": 253.9,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 1143.1000000000001
+        },
+        "reduction_pct_vs_baseline": 53.59,
+        "aic_pipes_us": {
+          "mac": 654.4,
+          "mte1": 503.2,
+          "mte2": 889.2,
+          "fixpipe": 296.2,
+          "scalar": 135.1
+        },
+        "aiv_pipes_us": {
+          "vec": 253.9,
+          "mte2": 24.43,
+          "mte3": 140.5,
+          "scalar": 126.5
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 654.4,
+          "aiv_time_us": 253.9,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 908.3
+        },
+        "reduction_pct_vs_baseline": 63.12,
+        "aic_pipes_us": {
+          "mac": 654.4,
+          "mte1": 503.2,
+          "mte2": 435.71,
+          "fixpipe": 296.2,
+          "scalar": 135.1
+        },
+        "aiv_pipes_us": {
+          "vec": 253.9,
+          "mte2": 24.43,
+          "mte3": 140.5,
+          "scalar": 126.5
+        }
+      }
+    },
+    "BERT-base-S128-b8": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 2328.0,
+          "aiv_time_us": 1826.5,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 4154.5
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 1107.5,
+          "mte1": 1195.7,
+          "mte2": 1767.2,
+          "fixpipe": 540.9,
+          "scalar": 253.1
+        },
+        "aiv_pipes_us": {
+          "vec": 495.5,
+          "mte2": 601.2,
+          "mte3": 222.0,
+          "scalar": 170.8,
+          "idle": 336.9
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 1767.2,
+          "aiv_time_us": 601.2,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 2368.4
+        },
+        "reduction_pct_vs_baseline": 42.99,
+        "aic_pipes_us": {
+          "mac": 1107.5,
+          "mte1": 1195.7,
+          "mte2": 1767.2,
+          "fixpipe": 540.9,
+          "scalar": 253.1
+        },
+        "aiv_pipes_us": {
+          "vec": 495.5,
+          "mte2": 601.2,
+          "mte3": 222.0,
+          "scalar": 170.8
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 1767.2,
+          "aiv_time_us": 601.2,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 2368.4
+        },
+        "reduction_pct_vs_baseline": 42.99,
+        "aic_pipes_us": {
+          "mac": 1107.5,
+          "mte1": 1195.7,
+          "mte2": 1767.2,
+          "fixpipe": 540.9,
+          "scalar": 253.1
+        },
+        "aiv_pipes_us": {
+          "vec": 495.5,
+          "mte2": 601.2,
+          "mte3": 222.0,
+          "scalar": 170.8
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 1767.2,
+          "aiv_time_us": 495.5,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 2262.7
+        },
+        "reduction_pct_vs_baseline": 45.54,
+        "aic_pipes_us": {
+          "mac": 1107.5,
+          "mte1": 1195.7,
+          "mte2": 1767.2,
+          "fixpipe": 540.9,
+          "scalar": 253.1
+        },
+        "aiv_pipes_us": {
+          "vec": 495.5,
+          "mte2": 30.06,
+          "mte3": 222.0,
+          "scalar": 170.8
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 1195.7,
+          "aiv_time_us": 495.5,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 1691.2
+        },
+        "reduction_pct_vs_baseline": 59.29,
+        "aic_pipes_us": {
+          "mac": 1107.5,
+          "mte1": 1195.7,
+          "mte2": 865.93,
+          "fixpipe": 540.9,
+          "scalar": 253.1
+        },
+        "aiv_pipes_us": {
+          "vec": 495.5,
+          "mte2": 30.06,
+          "mte3": 222.0,
+          "scalar": 170.8
+        }
+      }
+    },
+    "BERT-base-S128-b16": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 2812.6,
+          "aiv_time_us": 2718.9,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 5531.5
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 2054.0,
+          "mte1": 1658.8,
+          "mte2": 2402.1,
+          "fixpipe": 924.1,
+          "scalar": 309.9
+        },
+        "aiv_pipes_us": {
+          "vec": 964.0,
+          "mte2": 901.1,
+          "mte3": 508.6,
+          "scalar": 193.9,
+          "idle": 151.3
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 2402.1,
+          "aiv_time_us": 964.0,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 3366.1
+        },
+        "reduction_pct_vs_baseline": 39.15,
+        "aic_pipes_us": {
+          "mac": 2054.0,
+          "mte1": 1658.8,
+          "mte2": 2402.1,
+          "fixpipe": 924.1,
+          "scalar": 309.9
+        },
+        "aiv_pipes_us": {
+          "vec": 964.0,
+          "mte2": 901.1,
+          "mte3": 508.6,
+          "scalar": 193.9
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 2402.1,
+          "aiv_time_us": 964.0,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 3366.1
+        },
+        "reduction_pct_vs_baseline": 39.15,
+        "aic_pipes_us": {
+          "mac": 2054.0,
+          "mte1": 1658.8,
+          "mte2": 2402.1,
+          "fixpipe": 924.1,
+          "scalar": 309.9
+        },
+        "aiv_pipes_us": {
+          "vec": 964.0,
+          "mte2": 901.1,
+          "mte3": 508.6,
+          "scalar": 193.9
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 2402.1,
+          "aiv_time_us": 964.0,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 3366.1
+        },
+        "reduction_pct_vs_baseline": 39.15,
+        "aic_pipes_us": {
+          "mac": 2054.0,
+          "mte1": 1658.8,
+          "mte2": 2402.1,
+          "fixpipe": 924.1,
+          "scalar": 309.9
+        },
+        "aiv_pipes_us": {
+          "vec": 964.0,
+          "mte2": 45.06,
+          "mte3": 508.6,
+          "scalar": 193.9
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 2054.0,
+          "aiv_time_us": 964.0,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 3018.0
+        },
+        "reduction_pct_vs_baseline": 45.44,
+        "aic_pipes_us": {
+          "mac": 2054.0,
+          "mte1": 1658.8,
+          "mte2": 1177.03,
+          "fixpipe": 924.1,
+          "scalar": 309.9
+        },
+        "aiv_pipes_us": {
+          "vec": 964.0,
+          "mte2": 45.06,
+          "mte3": 508.6,
+          "scalar": 193.9
+        }
+      }
+    },
+    "GPT-2-S512-b4": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 4365.5,
+          "aiv_time_us": 10228.9,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 14594.4
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 2753.6,
+          "mte1": 2252.3,
+          "mte2": 3367.8,
+          "fixpipe": 1721.6,
+          "scalar": 699.6
+        },
+        "aiv_pipes_us": {
+          "vec": 4595.0,
+          "mte2": 4175.1,
+          "mte3": 2466.8,
+          "scalar": 975.0,
+          "idle": 0.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 3367.8,
+          "aiv_time_us": 4595.0,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 7962.8
+        },
+        "reduction_pct_vs_baseline": 45.44,
+        "aic_pipes_us": {
+          "mac": 2753.6,
+          "mte1": 2252.3,
+          "mte2": 3367.8,
+          "fixpipe": 1721.6,
+          "scalar": 699.6
+        },
+        "aiv_pipes_us": {
+          "vec": 4595.0,
+          "mte2": 4175.1,
+          "mte3": 2466.8,
+          "scalar": 975.0
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 3367.8,
+          "aiv_time_us": 4595.0,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 7962.8
+        },
+        "reduction_pct_vs_baseline": 45.44,
+        "aic_pipes_us": {
+          "mac": 2753.6,
+          "mte1": 2252.3,
+          "mte2": 3367.8,
+          "fixpipe": 1721.6,
+          "scalar": 699.6
+        },
+        "aiv_pipes_us": {
+          "vec": 4595.0,
+          "mte2": 4175.1,
+          "mte3": 2466.8,
+          "scalar": 975.0
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 3367.8,
+          "aiv_time_us": 4595.0,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 7962.8
+        },
+        "reduction_pct_vs_baseline": 45.44,
+        "aic_pipes_us": {
+          "mac": 2753.6,
+          "mte1": 2252.3,
+          "mte2": 3367.8,
+          "fixpipe": 1721.6,
+          "scalar": 699.6
+        },
+        "aiv_pipes_us": {
+          "vec": 4595.0,
+          "mte2": 208.76,
+          "mte3": 2466.8,
+          "scalar": 975.0
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 2753.6,
+          "aiv_time_us": 4595.0,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 7348.6
+        },
+        "reduction_pct_vs_baseline": 49.65,
+        "aic_pipes_us": {
+          "mac": 2753.6,
+          "mte1": 2252.3,
+          "mte2": 1650.22,
+          "fixpipe": 1721.6,
+          "scalar": 699.6
+        },
+        "aiv_pipes_us": {
+          "vec": 4595.0,
+          "mte2": 208.76,
+          "mte3": 2466.8,
+          "scalar": 975.0
+        }
+      }
+    },
+    "GPT-2-S512-b8": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 8761.2,
+          "aiv_time_us": 19624.0,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 28385.2
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 5521.8,
+          "mte1": 4788.8,
+          "mte2": 6657.8,
+          "fixpipe": 3638.0,
+          "scalar": 1366.8
+        },
+        "aiv_pipes_us": {
+          "vec": 9160.3,
+          "mte2": 8235.7,
+          "mte3": 4931.6,
+          "scalar": 2031.5,
+          "idle": 0.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 6657.8,
+          "aiv_time_us": 9160.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 15818.099999999999
+        },
+        "reduction_pct_vs_baseline": 44.27,
+        "aic_pipes_us": {
+          "mac": 5521.8,
+          "mte1": 4788.8,
+          "mte2": 6657.8,
+          "fixpipe": 3638.0,
+          "scalar": 1366.8
+        },
+        "aiv_pipes_us": {
+          "vec": 9160.3,
+          "mte2": 8235.7,
+          "mte3": 4931.6,
+          "scalar": 2031.5
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 6657.8,
+          "aiv_time_us": 9160.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 15818.099999999999
+        },
+        "reduction_pct_vs_baseline": 44.27,
+        "aic_pipes_us": {
+          "mac": 5521.8,
+          "mte1": 4788.8,
+          "mte2": 6657.8,
+          "fixpipe": 3638.0,
+          "scalar": 1366.8
+        },
+        "aiv_pipes_us": {
+          "vec": 9160.3,
+          "mte2": 8235.7,
+          "mte3": 4931.6,
+          "scalar": 2031.5
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 6657.8,
+          "aiv_time_us": 9160.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 15818.099999999999
+        },
+        "reduction_pct_vs_baseline": 44.27,
+        "aic_pipes_us": {
+          "mac": 5521.8,
+          "mte1": 4788.8,
+          "mte2": 6657.8,
+          "fixpipe": 3638.0,
+          "scalar": 1366.8
+        },
+        "aiv_pipes_us": {
+          "vec": 9160.3,
+          "mte2": 411.79,
+          "mte3": 4931.6,
+          "scalar": 2031.5
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 5521.8,
+          "aiv_time_us": 9160.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 14682.099999999999
+        },
+        "reduction_pct_vs_baseline": 48.28,
+        "aic_pipes_us": {
+          "mac": 5521.8,
+          "mte1": 4788.8,
+          "mte2": 3262.32,
+          "fixpipe": 3638.0,
+          "scalar": 1366.8
+        },
+        "aiv_pipes_us": {
+          "vec": 9160.3,
+          "mte2": 411.79,
+          "mte3": 4931.6,
+          "scalar": 2031.5
+        }
+      }
+    },
+    "GPT-2-S512-b16": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 19954.4,
+          "aiv_time_us": 40139.6,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 60094.0
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 11256.2,
+          "mte1": 9737.7,
+          "mte2": 16079.0,
+          "fixpipe": 9356.0,
+          "scalar": 2670.9
+        },
+        "aiv_pipes_us": {
+          "vec": 18215.9,
+          "mte2": 18301.3,
+          "mte3": 11072.3,
+          "scalar": 3920.5,
+          "idle": 0.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 16079.0,
+          "aiv_time_us": 18301.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 34380.3
+        },
+        "reduction_pct_vs_baseline": 42.79,
+        "aic_pipes_us": {
+          "mac": 11256.2,
+          "mte1": 9737.7,
+          "mte2": 16079.0,
+          "fixpipe": 9356.0,
+          "scalar": 2670.9
+        },
+        "aiv_pipes_us": {
+          "vec": 18215.9,
+          "mte2": 18301.3,
+          "mte3": 11072.3,
+          "scalar": 3920.5
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 16079.0,
+          "aiv_time_us": 18301.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 34380.3
+        },
+        "reduction_pct_vs_baseline": 42.79,
+        "aic_pipes_us": {
+          "mac": 11256.2,
+          "mte1": 9737.7,
+          "mte2": 16079.0,
+          "fixpipe": 9356.0,
+          "scalar": 2670.9
+        },
+        "aiv_pipes_us": {
+          "vec": 18215.9,
+          "mte2": 18301.3,
+          "mte3": 11072.3,
+          "scalar": 3920.5
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 16079.0,
+          "aiv_time_us": 18215.9,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 34294.9
+        },
+        "reduction_pct_vs_baseline": 42.93,
+        "aic_pipes_us": {
+          "mac": 11256.2,
+          "mte1": 9737.7,
+          "mte2": 16079.0,
+          "fixpipe": 9356.0,
+          "scalar": 2670.9
+        },
+        "aiv_pipes_us": {
+          "vec": 18215.9,
+          "mte2": 915.07,
+          "mte3": 11072.3,
+          "scalar": 3920.5
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 11256.2,
+          "aiv_time_us": 18215.9,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 29472.100000000002
+        },
+        "reduction_pct_vs_baseline": 50.96,
+        "aic_pipes_us": {
+          "mac": 11256.2,
+          "mte1": 9737.7,
+          "mte2": 7878.71,
+          "fixpipe": 9356.0,
+          "scalar": 2670.9
+        },
+        "aiv_pipes_us": {
+          "vec": 18215.9,
+          "mte2": 915.07,
+          "mte3": 11072.3,
+          "scalar": 3920.5
+        }
+      }
+    },
+    "HF-BERT-S128-b1": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 90.5,
+          "aiv_time_us": 491.2,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 581.7
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 8.4,
+          "mte1": 20.9,
+          "mte2": 50.5,
+          "fixpipe": 14.4,
+          "scalar": 14.8
+        },
+        "aiv_pipes_us": {
+          "vec": 19.4,
+          "mte2": 111.0,
+          "mte3": 53.5,
+          "scalar": 43.5,
+          "idle": 263.9
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 50.5,
+          "aiv_time_us": 111.0,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 161.5
+        },
+        "reduction_pct_vs_baseline": 72.24,
+        "aic_pipes_us": {
+          "mac": 8.4,
+          "mte1": 20.9,
+          "mte2": 50.5,
+          "fixpipe": 14.4,
+          "scalar": 14.8
+        },
+        "aiv_pipes_us": {
+          "vec": 19.4,
+          "mte2": 111.0,
+          "mte3": 53.5,
+          "scalar": 43.5
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 50.5,
+          "aiv_time_us": 111.0,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 161.5
+        },
+        "reduction_pct_vs_baseline": 72.24,
+        "aic_pipes_us": {
+          "mac": 8.4,
+          "mte1": 20.9,
+          "mte2": 50.5,
+          "fixpipe": 14.4,
+          "scalar": 14.8
+        },
+        "aiv_pipes_us": {
+          "vec": 19.4,
+          "mte2": 111.0,
+          "mte3": 53.5,
+          "scalar": 43.5
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 50.5,
+          "aiv_time_us": 53.5,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 104.0
+        },
+        "reduction_pct_vs_baseline": 82.12,
+        "aic_pipes_us": {
+          "mac": 8.4,
+          "mte1": 20.9,
+          "mte2": 50.5,
+          "fixpipe": 14.4,
+          "scalar": 14.8
+        },
+        "aiv_pipes_us": {
+          "vec": 19.4,
+          "mte2": 5.55,
+          "mte3": 53.5,
+          "scalar": 43.5
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 24.745,
+          "aiv_time_us": 53.5,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 78.245
+        },
+        "reduction_pct_vs_baseline": 86.55,
+        "aic_pipes_us": {
+          "mac": 8.4,
+          "mte1": 20.9,
+          "mte2": 24.75,
+          "fixpipe": 14.4,
+          "scalar": 14.8
+        },
+        "aiv_pipes_us": {
+          "vec": 19.4,
+          "mte2": 5.55,
+          "mte3": 53.5,
+          "scalar": 43.5
+        }
+      }
+    },
+    "HF-BERT-S128-b4": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 115.8,
+          "aiv_time_us": 670.8,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 786.5999999999999
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 23.8,
+          "mte1": 27.5,
+          "mte2": 64.2,
+          "fixpipe": 29.7,
+          "scalar": 16.3
+        },
+        "aiv_pipes_us": {
+          "vec": 40.5,
+          "mte2": 206.3,
+          "mte3": 86.3,
+          "scalar": 47.2,
+          "idle": 290.7
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 64.2,
+          "aiv_time_us": 206.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 270.5
+        },
+        "reduction_pct_vs_baseline": 65.61,
+        "aic_pipes_us": {
+          "mac": 23.8,
+          "mte1": 27.5,
+          "mte2": 64.2,
+          "fixpipe": 29.7,
+          "scalar": 16.3
+        },
+        "aiv_pipes_us": {
+          "vec": 40.5,
+          "mte2": 206.3,
+          "mte3": 86.3,
+          "scalar": 47.2
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 64.2,
+          "aiv_time_us": 206.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 270.5
+        },
+        "reduction_pct_vs_baseline": 65.61,
+        "aic_pipes_us": {
+          "mac": 23.8,
+          "mte1": 27.5,
+          "mte2": 64.2,
+          "fixpipe": 29.7,
+          "scalar": 16.3
+        },
+        "aiv_pipes_us": {
+          "vec": 40.5,
+          "mte2": 206.3,
+          "mte3": 86.3,
+          "scalar": 47.2
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 64.2,
+          "aiv_time_us": 86.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 150.5
+        },
+        "reduction_pct_vs_baseline": 80.87,
+        "aic_pipes_us": {
+          "mac": 23.8,
+          "mte1": 27.5,
+          "mte2": 64.2,
+          "fixpipe": 29.7,
+          "scalar": 16.3
+        },
+        "aiv_pipes_us": {
+          "vec": 40.5,
+          "mte2": 10.32,
+          "mte3": 86.3,
+          "scalar": 47.2
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 31.458000000000002,
+          "aiv_time_us": 86.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 117.758
+        },
+        "reduction_pct_vs_baseline": 85.03,
+        "aic_pipes_us": {
+          "mac": 23.8,
+          "mte1": 27.5,
+          "mte2": 31.46,
+          "fixpipe": 29.7,
+          "scalar": 16.3
+        },
+        "aiv_pipes_us": {
+          "vec": 40.5,
+          "mte2": 10.32,
+          "mte3": 86.3,
+          "scalar": 47.2
+        }
+      }
+    },
+    "HF-BERT-S128-b8": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 138.6,
+          "aiv_time_us": 813.4,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 952.0
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 43.9,
+          "mte1": 42.3,
+          "mte2": 83.0,
+          "fixpipe": 67.1,
+          "scalar": 17.5
+        },
+        "aiv_pipes_us": {
+          "vec": 76.2,
+          "mte2": 298.4,
+          "mte3": 127.4,
+          "scalar": 47.4,
+          "idle": 264.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 83.0,
+          "aiv_time_us": 298.4,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 381.4
+        },
+        "reduction_pct_vs_baseline": 59.94,
+        "aic_pipes_us": {
+          "mac": 43.9,
+          "mte1": 42.3,
+          "mte2": 83.0,
+          "fixpipe": 67.1,
+          "scalar": 17.5
+        },
+        "aiv_pipes_us": {
+          "vec": 76.2,
+          "mte2": 298.4,
+          "mte3": 127.4,
+          "scalar": 47.4
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 83.0,
+          "aiv_time_us": 298.4,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 381.4
+        },
+        "reduction_pct_vs_baseline": 59.94,
+        "aic_pipes_us": {
+          "mac": 43.9,
+          "mte1": 42.3,
+          "mte2": 83.0,
+          "fixpipe": 67.1,
+          "scalar": 17.5
+        },
+        "aiv_pipes_us": {
+          "vec": 76.2,
+          "mte2": 298.4,
+          "mte3": 127.4,
+          "scalar": 47.4
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 83.0,
+          "aiv_time_us": 127.4,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 210.4
+        },
+        "reduction_pct_vs_baseline": 77.9,
+        "aic_pipes_us": {
+          "mac": 43.9,
+          "mte1": 42.3,
+          "mte2": 83.0,
+          "fixpipe": 67.1,
+          "scalar": 17.5
+        },
+        "aiv_pipes_us": {
+          "vec": 76.2,
+          "mte2": 14.92,
+          "mte3": 127.4,
+          "scalar": 47.4
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 67.1,
+          "aiv_time_us": 127.4,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 194.5
+        },
+        "reduction_pct_vs_baseline": 79.57,
+        "aic_pipes_us": {
+          "mac": 43.9,
+          "mte1": 42.3,
+          "mte2": 40.67,
+          "fixpipe": 67.1,
+          "scalar": 17.5
+        },
+        "aiv_pipes_us": {
+          "vec": 76.2,
+          "mte2": 14.92,
+          "mte3": 127.4,
+          "scalar": 47.4
+        }
+      }
+    },
+    "HF-BERT-S128-b16": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 181.8,
+          "aiv_time_us": 986.7,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 1168.5
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 81.5,
+          "mte1": 63.0,
+          "mte2": 110.2,
+          "fixpipe": 100.7,
+          "scalar": 21.1
+        },
+        "aiv_pipes_us": {
+          "vec": 116.8,
+          "mte2": 455.1,
+          "mte3": 159.5,
+          "scalar": 45.3,
+          "idle": 209.9
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 110.2,
+          "aiv_time_us": 455.1,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 565.3000000000001
+        },
+        "reduction_pct_vs_baseline": 51.62,
+        "aic_pipes_us": {
+          "mac": 81.5,
+          "mte1": 63.0,
+          "mte2": 110.2,
+          "fixpipe": 100.7,
+          "scalar": 21.1
+        },
+        "aiv_pipes_us": {
+          "vec": 116.8,
+          "mte2": 455.1,
+          "mte3": 159.5,
+          "scalar": 45.3
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 110.2,
+          "aiv_time_us": 455.1,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 565.3000000000001
+        },
+        "reduction_pct_vs_baseline": 51.62,
+        "aic_pipes_us": {
+          "mac": 81.5,
+          "mte1": 63.0,
+          "mte2": 110.2,
+          "fixpipe": 100.7,
+          "scalar": 21.1
+        },
+        "aiv_pipes_us": {
+          "vec": 116.8,
+          "mte2": 455.1,
+          "mte3": 159.5,
+          "scalar": 45.3
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 110.2,
+          "aiv_time_us": 159.5,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 269.7
+        },
+        "reduction_pct_vs_baseline": 76.92,
+        "aic_pipes_us": {
+          "mac": 81.5,
+          "mte1": 63.0,
+          "mte2": 110.2,
+          "fixpipe": 100.7,
+          "scalar": 21.1
+        },
+        "aiv_pipes_us": {
+          "vec": 116.8,
+          "mte2": 22.76,
+          "mte3": 159.5,
+          "scalar": 45.3
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 100.7,
+          "aiv_time_us": 159.5,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 260.2
+        },
+        "reduction_pct_vs_baseline": 77.73,
+        "aic_pipes_us": {
+          "mac": 81.5,
+          "mte1": 63.0,
+          "mte2": 54.0,
+          "fixpipe": 100.7,
+          "scalar": 21.1
+        },
+        "aiv_pipes_us": {
+          "vec": 116.8,
+          "mte2": 22.76,
+          "mte3": 159.5,
+          "scalar": 45.3
+        }
+      }
+    },
+    "Net-Transformer-S256-L1-b4": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 114.2,
+          "aiv_time_us": 153.0,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 267.2
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 28.8,
+          "mte1": 28.4,
+          "mte2": 73.0,
+          "fixpipe": 20.3,
+          "scalar": 9.1
+        },
+        "aiv_pipes_us": {
+          "vec": 9.4,
+          "mte2": 44.2,
+          "mte3": 18.9,
+          "scalar": 20.7,
+          "idle": 59.9
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 73.0,
+          "aiv_time_us": 44.2,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 117.2
+        },
+        "reduction_pct_vs_baseline": 56.14,
+        "aic_pipes_us": {
+          "mac": 28.8,
+          "mte1": 28.4,
+          "mte2": 73.0,
+          "fixpipe": 20.3,
+          "scalar": 9.1
+        },
+        "aiv_pipes_us": {
+          "vec": 9.4,
+          "mte2": 44.2,
+          "mte3": 18.9,
+          "scalar": 20.7
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 73.0,
+          "aiv_time_us": 44.2,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 117.2
+        },
+        "reduction_pct_vs_baseline": 56.14,
+        "aic_pipes_us": {
+          "mac": 28.8,
+          "mte1": 28.4,
+          "mte2": 73.0,
+          "fixpipe": 20.3,
+          "scalar": 9.1
+        },
+        "aiv_pipes_us": {
+          "vec": 9.4,
+          "mte2": 44.2,
+          "mte3": 18.9,
+          "scalar": 20.7
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 73.0,
+          "aiv_time_us": 20.7,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 93.7
+        },
+        "reduction_pct_vs_baseline": 64.93,
+        "aic_pipes_us": {
+          "mac": 28.8,
+          "mte1": 28.4,
+          "mte2": 73.0,
+          "fixpipe": 20.3,
+          "scalar": 9.1
+        },
+        "aiv_pipes_us": {
+          "vec": 9.4,
+          "mte2": 2.21,
+          "mte3": 18.9,
+          "scalar": 20.7
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 35.769999999999996,
+          "aiv_time_us": 20.7,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 56.47
+        },
+        "reduction_pct_vs_baseline": 78.87,
+        "aic_pipes_us": {
+          "mac": 28.8,
+          "mte1": 28.4,
+          "mte2": 35.77,
+          "fixpipe": 20.3,
+          "scalar": 9.1
+        },
+        "aiv_pipes_us": {
+          "vec": 9.4,
+          "mte2": 2.21,
+          "mte3": 18.9,
+          "scalar": 20.7
+        }
+      }
+    },
+    "Net-Transformer-S256-L1-b8": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 149.3,
+          "aiv_time_us": 175.1,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 324.4
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 47.5,
+          "mte1": 40.1,
+          "mte2": 88.6,
+          "fixpipe": 40.9,
+          "scalar": 10.4
+        },
+        "aiv_pipes_us": {
+          "vec": 18.2,
+          "mte2": 69.5,
+          "mte3": 34.4,
+          "scalar": 12.5,
+          "idle": 40.3
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 88.6,
+          "aiv_time_us": 69.5,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 158.1
+        },
+        "reduction_pct_vs_baseline": 51.26,
+        "aic_pipes_us": {
+          "mac": 47.5,
+          "mte1": 40.1,
+          "mte2": 88.6,
+          "fixpipe": 40.9,
+          "scalar": 10.4
+        },
+        "aiv_pipes_us": {
+          "vec": 18.2,
+          "mte2": 69.5,
+          "mte3": 34.4,
+          "scalar": 12.5
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 88.6,
+          "aiv_time_us": 69.5,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 158.1
+        },
+        "reduction_pct_vs_baseline": 51.26,
+        "aic_pipes_us": {
+          "mac": 47.5,
+          "mte1": 40.1,
+          "mte2": 88.6,
+          "fixpipe": 40.9,
+          "scalar": 10.4
+        },
+        "aiv_pipes_us": {
+          "vec": 18.2,
+          "mte2": 69.5,
+          "mte3": 34.4,
+          "scalar": 12.5
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 88.6,
+          "aiv_time_us": 34.4,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 123.0
+        },
+        "reduction_pct_vs_baseline": 62.08,
+        "aic_pipes_us": {
+          "mac": 47.5,
+          "mte1": 40.1,
+          "mte2": 88.6,
+          "fixpipe": 40.9,
+          "scalar": 10.4
+        },
+        "aiv_pipes_us": {
+          "vec": 18.2,
+          "mte2": 3.48,
+          "mte3": 34.4,
+          "scalar": 12.5
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 47.5,
+          "aiv_time_us": 34.4,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 81.9
+        },
+        "reduction_pct_vs_baseline": 74.75,
+        "aic_pipes_us": {
+          "mac": 47.5,
+          "mte1": 40.1,
+          "mte2": 43.41,
+          "fixpipe": 40.9,
+          "scalar": 10.4
+        },
+        "aiv_pipes_us": {
+          "vec": 18.2,
+          "mte2": 3.48,
+          "mte3": 34.4,
+          "scalar": 12.5
+        }
+      }
+    },
+    "Net-Transformer-S256-L1-b16": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 211.5,
+          "aiv_time_us": 240.1,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 451.6
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 102.9,
+          "mte1": 89.4,
+          "mte2": 162.1,
+          "fixpipe": 79.7,
+          "scalar": 19.7
+        },
+        "aiv_pipes_us": {
+          "vec": 35.1,
+          "mte2": 103.7,
+          "mte3": 64.1,
+          "scalar": 23.3,
+          "idle": 13.9
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 162.1,
+          "aiv_time_us": 103.7,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 265.8
+        },
+        "reduction_pct_vs_baseline": 41.14,
+        "aic_pipes_us": {
+          "mac": 102.9,
+          "mte1": 89.4,
+          "mte2": 162.1,
+          "fixpipe": 79.7,
+          "scalar": 19.7
+        },
+        "aiv_pipes_us": {
+          "vec": 35.1,
+          "mte2": 103.7,
+          "mte3": 64.1,
+          "scalar": 23.3
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 162.1,
+          "aiv_time_us": 103.7,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 265.8
+        },
+        "reduction_pct_vs_baseline": 41.14,
+        "aic_pipes_us": {
+          "mac": 102.9,
+          "mte1": 89.4,
+          "mte2": 162.1,
+          "fixpipe": 79.7,
+          "scalar": 19.7
+        },
+        "aiv_pipes_us": {
+          "vec": 35.1,
+          "mte2": 103.7,
+          "mte3": 64.1,
+          "scalar": 23.3
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 162.1,
+          "aiv_time_us": 64.1,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 226.2
+        },
+        "reduction_pct_vs_baseline": 49.91,
+        "aic_pipes_us": {
+          "mac": 102.9,
+          "mte1": 89.4,
+          "mte2": 162.1,
+          "fixpipe": 79.7,
+          "scalar": 19.7
+        },
+        "aiv_pipes_us": {
+          "vec": 35.1,
+          "mte2": 5.19,
+          "mte3": 64.1,
+          "scalar": 23.3
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 102.9,
+          "aiv_time_us": 64.1,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 0.0,
+          "wall_clock_us": 167.0
+        },
+        "reduction_pct_vs_baseline": 63.02,
+        "aic_pipes_us": {
+          "mac": 102.9,
+          "mte1": 89.4,
+          "mte2": 79.43,
+          "fixpipe": 79.7,
+          "scalar": 19.7
+        },
+        "aiv_pipes_us": {
+          "vec": 35.1,
+          "mte2": 5.19,
+          "mte3": 64.1,
+          "scalar": 23.3
+        }
+      }
+    },
+    "ModernBERT-base-S4096-b1": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 55585.2,
+          "aiv_time_us": 252478.4,
+          "kernel_gap_us": 2749.1,
+          "host_gap_us": 12419.8,
+          "wall_clock_us": 323232.49999999994
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 10218.9,
+          "mte1": 8801.8,
+          "mte2": 21548.8,
+          "fixpipe": 37171.6,
+          "scalar": 1280.4
+        },
+        "aiv_pipes_us": {
+          "vec": 33078.5,
+          "mte2": 220128.3,
+          "mte3": 166479.3,
+          "scalar": 3227.5,
+          "idle": 0.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 37171.6,
+          "aiv_time_us": 220128.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 12419.8,
+          "wall_clock_us": 269719.7
+        },
+        "reduction_pct_vs_baseline": 16.56,
+        "aic_pipes_us": {
+          "mac": 10218.9,
+          "mte1": 8801.8,
+          "mte2": 21548.8,
+          "fixpipe": 37171.6,
+          "scalar": 1280.4
+        },
+        "aiv_pipes_us": {
+          "vec": 33078.5,
+          "mte2": 220128.3,
+          "mte3": 166479.3,
+          "scalar": 3227.5
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 37171.6,
+          "aiv_time_us": 220128.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 12419.8,
+          "wall_clock_us": 269719.7
+        },
+        "reduction_pct_vs_baseline": 16.56,
+        "aic_pipes_us": {
+          "mac": 10218.9,
+          "mte1": 8801.8,
+          "mte2": 21548.8,
+          "fixpipe": 37171.6,
+          "scalar": 1280.4
+        },
+        "aiv_pipes_us": {
+          "vec": 33078.5,
+          "mte2": 220128.3,
+          "mte3": 166479.3,
+          "scalar": 3227.5
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 37171.6,
+          "aiv_time_us": 166479.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 12419.8,
+          "wall_clock_us": 216070.69999999998
+        },
+        "reduction_pct_vs_baseline": 33.15,
+        "aic_pipes_us": {
+          "mac": 10218.9,
+          "mte1": 8801.8,
+          "mte2": 21548.8,
+          "fixpipe": 37171.6,
+          "scalar": 1280.4
+        },
+        "aiv_pipes_us": {
+          "vec": 33078.5,
+          "mte2": 11006.42,
+          "mte3": 166479.3,
+          "scalar": 3227.5
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 37171.6,
+          "aiv_time_us": 166479.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 12419.8,
+          "wall_clock_us": 216070.69999999998
+        },
+        "reduction_pct_vs_baseline": 33.15,
+        "aic_pipes_us": {
+          "mac": 10218.9,
+          "mte1": 8801.8,
+          "mte2": 10558.91,
+          "fixpipe": 37171.6,
+          "scalar": 1280.4
+        },
+        "aiv_pipes_us": {
+          "vec": 33078.5,
+          "mte2": 11006.42,
+          "mte3": 166479.3,
+          "scalar": 3227.5
+        }
+      }
+    },
+    "Llama-3.2-1B-prefill-S2048-b1": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 50198.0,
+          "aiv_time_us": 133360.4,
+          "kernel_gap_us": 1831.7,
+          "host_gap_us": 12011.4,
+          "wall_clock_us": 197401.5
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 29066.7,
+          "mte1": 24408.8,
+          "mte2": 43175.4,
+          "fixpipe": 12090.7,
+          "scalar": 2535.6
+        },
+        "aiv_pipes_us": {
+          "vec": 16346.8,
+          "mte2": 114472.9,
+          "mte3": 87892.4,
+          "scalar": 2045.2,
+          "idle": 0.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 43175.4,
+          "aiv_time_us": 114472.9,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 12011.4,
+          "wall_clock_us": 169659.69999999998
+        },
+        "reduction_pct_vs_baseline": 14.05,
+        "aic_pipes_us": {
+          "mac": 29066.7,
+          "mte1": 24408.8,
+          "mte2": 43175.4,
+          "fixpipe": 12090.7,
+          "scalar": 2535.6
+        },
+        "aiv_pipes_us": {
+          "vec": 16346.8,
+          "mte2": 114472.9,
+          "mte3": 87892.4,
+          "scalar": 2045.2
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 43175.4,
+          "aiv_time_us": 114472.9,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 9870.0,
+          "wall_clock_us": 167518.3
+        },
+        "reduction_pct_vs_baseline": 15.14,
+        "aic_pipes_us": {
+          "mac": 29066.7,
+          "mte1": 24408.8,
+          "mte2": 43175.4,
+          "fixpipe": 12090.7,
+          "scalar": 2535.6
+        },
+        "aiv_pipes_us": {
+          "vec": 16346.8,
+          "mte2": 114472.9,
+          "mte3": 87892.4,
+          "scalar": 2045.2
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 43175.4,
+          "aiv_time_us": 87892.4,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 9870.0,
+          "wall_clock_us": 140937.8
+        },
+        "reduction_pct_vs_baseline": 28.6,
+        "aic_pipes_us": {
+          "mac": 29066.7,
+          "mte1": 24408.8,
+          "mte2": 43175.4,
+          "fixpipe": 12090.7,
+          "scalar": 2535.6
+        },
+        "aiv_pipes_us": {
+          "vec": 16346.8,
+          "mte2": 5723.65,
+          "mte3": 87892.4,
+          "scalar": 2045.2
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 29066.7,
+          "aiv_time_us": 87892.4,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 9870.0,
+          "wall_clock_us": 126829.09999999999
+        },
+        "reduction_pct_vs_baseline": 35.75,
+        "aic_pipes_us": {
+          "mac": 29066.7,
+          "mte1": 24408.8,
+          "mte2": 21155.95,
+          "fixpipe": 12090.7,
+          "scalar": 2535.6
+        },
+        "aiv_pipes_us": {
+          "vec": 16346.8,
+          "mte2": 5723.65,
+          "mte3": 87892.4,
+          "scalar": 2045.2
+        }
+      }
+    },
+    "Qwen2.5-0.5B-prefill-S2048-b1": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 27793.9,
+          "aiv_time_us": 90130.5,
+          "kernel_gap_us": 2722.4,
+          "host_gap_us": 41608.4,
+          "wall_clock_us": 162255.19999999998
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 12898.0,
+          "mte1": 12353.3,
+          "mte2": 24432.4,
+          "fixpipe": 9293.8,
+          "scalar": 1361.6
+        },
+        "aiv_pipes_us": {
+          "vec": 11447.7,
+          "mte2": 75530.7,
+          "mte3": 61432.9,
+          "scalar": 1644.7,
+          "idle": 0.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 24432.4,
+          "aiv_time_us": 75530.7,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 41608.4,
+          "wall_clock_us": 141571.5
+        },
+        "reduction_pct_vs_baseline": 12.75,
+        "aic_pipes_us": {
+          "mac": 12898.0,
+          "mte1": 12353.3,
+          "mte2": 24432.4,
+          "fixpipe": 9293.8,
+          "scalar": 1361.6
+        },
+        "aiv_pipes_us": {
+          "vec": 11447.7,
+          "mte2": 75530.7,
+          "mte3": 61432.9,
+          "scalar": 1644.7
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 24432.4,
+          "aiv_time_us": 75530.7,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 14670.0,
+          "wall_clock_us": 114633.1
+        },
+        "reduction_pct_vs_baseline": 29.35,
+        "aic_pipes_us": {
+          "mac": 12898.0,
+          "mte1": 12353.3,
+          "mte2": 24432.4,
+          "fixpipe": 9293.8,
+          "scalar": 1361.6
+        },
+        "aiv_pipes_us": {
+          "vec": 11447.7,
+          "mte2": 75530.7,
+          "mte3": 61432.9,
+          "scalar": 1644.7
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 24432.4,
+          "aiv_time_us": 61432.9,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 14670.0,
+          "wall_clock_us": 100535.3
+        },
+        "reduction_pct_vs_baseline": 38.04,
+        "aic_pipes_us": {
+          "mac": 12898.0,
+          "mte1": 12353.3,
+          "mte2": 24432.4,
+          "fixpipe": 9293.8,
+          "scalar": 1361.6
+        },
+        "aiv_pipes_us": {
+          "vec": 11447.7,
+          "mte2": 3776.53,
+          "mte3": 61432.9,
+          "scalar": 1644.7
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 12898.0,
+          "aiv_time_us": 61432.9,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 14670.0,
+          "wall_clock_us": 89000.9
+        },
+        "reduction_pct_vs_baseline": 45.15,
+        "aic_pipes_us": {
+          "mac": 12898.0,
+          "mte1": 12353.3,
+          "mte2": 11971.88,
+          "fixpipe": 9293.8,
+          "scalar": 1361.6
+        },
+        "aiv_pipes_us": {
+          "vec": 11447.7,
+          "mte2": 3776.53,
+          "mte3": 61432.9,
+          "scalar": 1644.7
+        }
+      }
+    },
+    "SmolLM2-360M-prefill-S2048-b1": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 28827.7,
+          "aiv_time_us": 122241.4,
+          "kernel_gap_us": 3613.2,
+          "host_gap_us": 55934.9,
+          "wall_clock_us": 210617.2
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 13004.8,
+          "mte1": 11016.6,
+          "mte2": 23060.9,
+          "fixpipe": 8732.7,
+          "scalar": 1788.9
+        },
+        "aiv_pipes_us": {
+          "vec": 15489.0,
+          "mte2": 103181.3,
+          "mte3": 88187.5,
+          "scalar": 2222.7,
+          "idle": 0.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 23060.9,
+          "aiv_time_us": 103181.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 55934.9,
+          "wall_clock_us": 182177.1
+        },
+        "reduction_pct_vs_baseline": 13.5,
+        "aic_pipes_us": {
+          "mac": 13004.8,
+          "mte1": 11016.6,
+          "mte2": 23060.9,
+          "fixpipe": 8732.7,
+          "scalar": 1788.9
+        },
+        "aiv_pipes_us": {
+          "vec": 15489.0,
+          "mte2": 103181.3,
+          "mte3": 88187.5,
+          "scalar": 2222.7
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 23060.9,
+          "aiv_time_us": 103181.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 19470.0,
+          "wall_clock_us": 145712.2
+        },
+        "reduction_pct_vs_baseline": 30.82,
+        "aic_pipes_us": {
+          "mac": 13004.8,
+          "mte1": 11016.6,
+          "mte2": 23060.9,
+          "fixpipe": 8732.7,
+          "scalar": 1788.9
+        },
+        "aiv_pipes_us": {
+          "vec": 15489.0,
+          "mte2": 103181.3,
+          "mte3": 88187.5,
+          "scalar": 2222.7
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 23060.9,
+          "aiv_time_us": 88187.5,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 19470.0,
+          "wall_clock_us": 130718.4
+        },
+        "reduction_pct_vs_baseline": 37.94,
+        "aic_pipes_us": {
+          "mac": 13004.8,
+          "mte1": 11016.6,
+          "mte2": 23060.9,
+          "fixpipe": 8732.7,
+          "scalar": 1788.9
+        },
+        "aiv_pipes_us": {
+          "vec": 15489.0,
+          "mte2": 5159.07,
+          "mte3": 88187.5,
+          "scalar": 2222.7
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 13004.8,
+          "aiv_time_us": 88187.5,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 19470.0,
+          "wall_clock_us": 120662.3
+        },
+        "reduction_pct_vs_baseline": 42.71,
+        "aic_pipes_us": {
+          "mac": 13004.8,
+          "mte1": 11016.6,
+          "mte2": 11299.84,
+          "fixpipe": 8732.7,
+          "scalar": 1788.9
+        },
+        "aiv_pipes_us": {
+          "vec": 15489.0,
+          "mte2": 5159.07,
+          "mte3": 88187.5,
+          "scalar": 2222.7
+        }
+      }
+    },
+    "Qwen3-prefill-S4096-b1-sdpa": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 101130.1,
+          "aiv_time_us": 352286.9,
+          "kernel_gap_us": 3088.0,
+          "host_gap_us": -3769.2,
+          "wall_clock_us": 452735.8
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 48029.5,
+          "mte1": 39924.5,
+          "mte2": 97533.3,
+          "fixpipe": 42680.0,
+          "scalar": 4547.4
+        },
+        "aiv_pipes_us": {
+          "vec": 55090.4,
+          "mte2": 303255.1,
+          "mte3": 197903.7,
+          "scalar": 4667.1,
+          "idle": 0.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 97533.3,
+          "aiv_time_us": 303255.1,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": -3769.2,
+          "wall_clock_us": 397019.19999999995
+        },
+        "reduction_pct_vs_baseline": 12.31,
+        "aic_pipes_us": {
+          "mac": 48029.5,
+          "mte1": 39924.5,
+          "mte2": 97533.3,
+          "fixpipe": 42680.0,
+          "scalar": 4547.4
+        },
+        "aiv_pipes_us": {
+          "vec": 55090.4,
+          "mte2": 303255.1,
+          "mte3": 197903.7,
+          "scalar": 4667.1
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 97533.3,
+          "aiv_time_us": 303255.1,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": -3769.2,
+          "wall_clock_us": 397019.19999999995
+        },
+        "reduction_pct_vs_baseline": 12.31,
+        "aic_pipes_us": {
+          "mac": 48029.5,
+          "mte1": 39924.5,
+          "mte2": 97533.3,
+          "fixpipe": 42680.0,
+          "scalar": 4547.4
+        },
+        "aiv_pipes_us": {
+          "vec": 55090.4,
+          "mte2": 303255.1,
+          "mte3": 197903.7,
+          "scalar": 4667.1
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 97533.3,
+          "aiv_time_us": 197903.7,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": -3769.2,
+          "wall_clock_us": 291667.8
+        },
+        "reduction_pct_vs_baseline": 35.58,
+        "aic_pipes_us": {
+          "mac": 48029.5,
+          "mte1": 39924.5,
+          "mte2": 97533.3,
+          "fixpipe": 42680.0,
+          "scalar": 4547.4
+        },
+        "aiv_pipes_us": {
+          "vec": 55090.4,
+          "mte2": 15162.75,
+          "mte3": 197903.7,
+          "scalar": 4667.1
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 48029.5,
+          "aiv_time_us": 197903.7,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": -3769.2,
+          "wall_clock_us": 242164.0
+        },
+        "reduction_pct_vs_baseline": 46.51,
+        "aic_pipes_us": {
+          "mac": 48029.5,
+          "mte1": 39924.5,
+          "mte2": 47791.32,
+          "fixpipe": 42680.0,
+          "scalar": 4547.4
+        },
+        "aiv_pipes_us": {
+          "vec": 55090.4,
+          "mte2": 15162.75,
+          "mte3": 197903.7,
+          "scalar": 4667.1
+        }
+      }
+    },
+    "Qwen3-prefill-S256-b1-sdpa": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 4337.6,
+          "aiv_time_us": 9988.1,
+          "kernel_gap_us": 3088.0,
+          "host_gap_us": 64970.8,
+          "wall_clock_us": 82384.5
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 2079.5,
+          "mte1": 1910.8,
+          "mte2": 3788.3,
+          "fixpipe": 959.1,
+          "scalar": 455.5
+        },
+        "aiv_pipes_us": {
+          "vec": 645.8,
+          "mte2": 4208.0,
+          "mte3": 1872.4,
+          "scalar": 558.9,
+          "idle": 2703.1
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 3788.3,
+          "aiv_time_us": 4208.0,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 64970.8,
+          "wall_clock_us": 72967.1
+        },
+        "reduction_pct_vs_baseline": 11.43,
+        "aic_pipes_us": {
+          "mac": 2079.5,
+          "mte1": 1910.8,
+          "mte2": 3788.3,
+          "fixpipe": 959.1,
+          "scalar": 455.5
+        },
+        "aiv_pipes_us": {
+          "vec": 645.8,
+          "mte2": 4208.0,
+          "mte3": 1872.4,
+          "scalar": 558.9
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 3788.3,
+          "aiv_time_us": 4208.0,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 16640.0,
+          "wall_clock_us": 24636.3
+        },
+        "reduction_pct_vs_baseline": 70.1,
+        "aic_pipes_us": {
+          "mac": 2079.5,
+          "mte1": 1910.8,
+          "mte2": 3788.3,
+          "fixpipe": 959.1,
+          "scalar": 455.5
+        },
+        "aiv_pipes_us": {
+          "vec": 645.8,
+          "mte2": 4208.0,
+          "mte3": 1872.4,
+          "scalar": 558.9
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 3788.3,
+          "aiv_time_us": 1872.4,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 16640.0,
+          "wall_clock_us": 22300.7
+        },
+        "reduction_pct_vs_baseline": 72.93,
+        "aic_pipes_us": {
+          "mac": 2079.5,
+          "mte1": 1910.8,
+          "mte2": 3788.3,
+          "fixpipe": 959.1,
+          "scalar": 455.5
+        },
+        "aiv_pipes_us": {
+          "vec": 645.8,
+          "mte2": 210.4,
+          "mte3": 1872.4,
+          "scalar": 558.9
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 2079.5,
+          "aiv_time_us": 1872.4,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 16640.0,
+          "wall_clock_us": 20591.9
+        },
+        "reduction_pct_vs_baseline": 75.01,
+        "aic_pipes_us": {
+          "mac": 2079.5,
+          "mte1": 1910.8,
+          "mte2": 1856.27,
+          "fixpipe": 959.1,
+          "scalar": 455.5
+        },
+        "aiv_pipes_us": {
+          "vec": 645.8,
+          "mte2": 210.4,
+          "mte3": 1872.4,
+          "scalar": 558.9
+        }
+      }
+    },
+    "Qwen3-prefill-S256-b4-sdpa": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 10801.4,
+          "aiv_time_us": 18192.9,
+          "kernel_gap_us": 3088.0,
+          "host_gap_us": 62847.9,
+          "wall_clock_us": 94930.20000000001
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 7157.5,
+          "mte1": 5645.6,
+          "mte2": 9611.4,
+          "fixpipe": 3621.6,
+          "scalar": 972.0
+        },
+        "aiv_pipes_us": {
+          "vec": 2357.5,
+          "mte2": 10326.3,
+          "mte3": 6689.2,
+          "scalar": 847.2,
+          "idle": 0.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 9611.4,
+          "aiv_time_us": 10326.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 62847.9,
+          "wall_clock_us": 82785.6
+        },
+        "reduction_pct_vs_baseline": 12.79,
+        "aic_pipes_us": {
+          "mac": 7157.5,
+          "mte1": 5645.6,
+          "mte2": 9611.4,
+          "fixpipe": 3621.6,
+          "scalar": 972.0
+        },
+        "aiv_pipes_us": {
+          "vec": 2357.5,
+          "mte2": 10326.3,
+          "mte3": 6689.2,
+          "scalar": 847.2
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 9611.4,
+          "aiv_time_us": 10326.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 16640.0,
+          "wall_clock_us": 36577.7
+        },
+        "reduction_pct_vs_baseline": 61.47,
+        "aic_pipes_us": {
+          "mac": 7157.5,
+          "mte1": 5645.6,
+          "mte2": 9611.4,
+          "fixpipe": 3621.6,
+          "scalar": 972.0
+        },
+        "aiv_pipes_us": {
+          "vec": 2357.5,
+          "mte2": 10326.3,
+          "mte3": 6689.2,
+          "scalar": 847.2
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 9611.4,
+          "aiv_time_us": 6689.2,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 16640.0,
+          "wall_clock_us": 32940.6
+        },
+        "reduction_pct_vs_baseline": 65.3,
+        "aic_pipes_us": {
+          "mac": 7157.5,
+          "mte1": 5645.6,
+          "mte2": 9611.4,
+          "fixpipe": 3621.6,
+          "scalar": 972.0
+        },
+        "aiv_pipes_us": {
+          "vec": 2357.5,
+          "mte2": 516.31,
+          "mte3": 6689.2,
+          "scalar": 847.2
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 7157.5,
+          "aiv_time_us": 6689.2,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 16640.0,
+          "wall_clock_us": 30486.7
+        },
+        "reduction_pct_vs_baseline": 67.89,
+        "aic_pipes_us": {
+          "mac": 7157.5,
+          "mte1": 5645.6,
+          "mte2": 4709.59,
+          "fixpipe": 3621.6,
+          "scalar": 972.0
+        },
+        "aiv_pipes_us": {
+          "vec": 2357.5,
+          "mte2": 516.31,
+          "mte3": 6689.2,
+          "scalar": 847.2
+        }
+      }
+    },
+    "Qwen3-prefill-S512-b4-sdpa": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 22644.5,
+          "aiv_time_us": 33054.3,
+          "kernel_gap_us": 3088.0,
+          "host_gap_us": 59411.0,
+          "wall_clock_us": 118197.8
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 14369.4,
+          "mte1": 11533.0,
+          "mte2": 20801.9,
+          "fixpipe": 7808.3,
+          "scalar": 1605.2
+        },
+        "aiv_pipes_us": {
+          "vec": 6408.8,
+          "mte2": 21276.2,
+          "mte3": 16322.4,
+          "scalar": 1815.8,
+          "idle": 0.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 20801.9,
+          "aiv_time_us": 21276.2,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 59411.0,
+          "wall_clock_us": 101489.1
+        },
+        "reduction_pct_vs_baseline": 14.14,
+        "aic_pipes_us": {
+          "mac": 14369.4,
+          "mte1": 11533.0,
+          "mte2": 20801.9,
+          "fixpipe": 7808.3,
+          "scalar": 1605.2
+        },
+        "aiv_pipes_us": {
+          "vec": 6408.8,
+          "mte2": 21276.2,
+          "mte3": 16322.4,
+          "scalar": 1815.8
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 20801.9,
+          "aiv_time_us": 21276.2,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 16640.0,
+          "wall_clock_us": 58718.100000000006
+        },
+        "reduction_pct_vs_baseline": 50.32,
+        "aic_pipes_us": {
+          "mac": 14369.4,
+          "mte1": 11533.0,
+          "mte2": 20801.9,
+          "fixpipe": 7808.3,
+          "scalar": 1605.2
+        },
+        "aiv_pipes_us": {
+          "vec": 6408.8,
+          "mte2": 21276.2,
+          "mte3": 16322.4,
+          "scalar": 1815.8
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 20801.9,
+          "aiv_time_us": 16322.4,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 16640.0,
+          "wall_clock_us": 53764.3
+        },
+        "reduction_pct_vs_baseline": 54.51,
+        "aic_pipes_us": {
+          "mac": 14369.4,
+          "mte1": 11533.0,
+          "mte2": 20801.9,
+          "fixpipe": 7808.3,
+          "scalar": 1605.2
+        },
+        "aiv_pipes_us": {
+          "vec": 6408.8,
+          "mte2": 1063.81,
+          "mte3": 16322.4,
+          "scalar": 1815.8
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 14369.4,
+          "aiv_time_us": 16322.4,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 16640.0,
+          "wall_clock_us": 47331.8
+        },
+        "reduction_pct_vs_baseline": 59.96,
+        "aic_pipes_us": {
+          "mac": 14369.4,
+          "mte1": 11533.0,
+          "mte2": 10192.93,
+          "fixpipe": 7808.3,
+          "scalar": 1605.2
+        },
+        "aiv_pipes_us": {
+          "vec": 6408.8,
+          "mte2": 1063.81,
+          "mte3": 16322.4,
+          "scalar": 1815.8
+        }
+      }
+    },
+    "Qwen3-prefill-S256-b8-sdpa": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 20347.7,
+          "aiv_time_us": 26952.8,
+          "kernel_gap_us": 3088.0,
+          "host_gap_us": 60582.8,
+          "wall_clock_us": 110971.3
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 14625.7,
+          "mte1": 11776.3,
+          "mte2": 18635.5,
+          "fixpipe": 7384.0,
+          "scalar": 1735.2
+        },
+        "aiv_pipes_us": {
+          "vec": 4600.2,
+          "mte2": 17065.8,
+          "mte3": 12956.3,
+          "scalar": 1042.4,
+          "idle": 0.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 18635.5,
+          "aiv_time_us": 17065.8,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 60582.8,
+          "wall_clock_us": 96284.1
+        },
+        "reduction_pct_vs_baseline": 13.24,
+        "aic_pipes_us": {
+          "mac": 14625.7,
+          "mte1": 11776.3,
+          "mte2": 18635.5,
+          "fixpipe": 7384.0,
+          "scalar": 1735.2
+        },
+        "aiv_pipes_us": {
+          "vec": 4600.2,
+          "mte2": 17065.8,
+          "mte3": 12956.3,
+          "scalar": 1042.4
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 18635.5,
+          "aiv_time_us": 17065.8,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 16640.0,
+          "wall_clock_us": 52341.3
+        },
+        "reduction_pct_vs_baseline": 52.83,
+        "aic_pipes_us": {
+          "mac": 14625.7,
+          "mte1": 11776.3,
+          "mte2": 18635.5,
+          "fixpipe": 7384.0,
+          "scalar": 1735.2
+        },
+        "aiv_pipes_us": {
+          "vec": 4600.2,
+          "mte2": 17065.8,
+          "mte3": 12956.3,
+          "scalar": 1042.4
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 18635.5,
+          "aiv_time_us": 12956.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 16640.0,
+          "wall_clock_us": 48231.8
+        },
+        "reduction_pct_vs_baseline": 56.54,
+        "aic_pipes_us": {
+          "mac": 14625.7,
+          "mte1": 11776.3,
+          "mte2": 18635.5,
+          "fixpipe": 7384.0,
+          "scalar": 1735.2
+        },
+        "aiv_pipes_us": {
+          "vec": 4600.2,
+          "mte2": 853.29,
+          "mte3": 12956.3,
+          "scalar": 1042.4
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 14625.7,
+          "aiv_time_us": 12956.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 16640.0,
+          "wall_clock_us": 44222.0
+        },
+        "reduction_pct_vs_baseline": 60.15,
+        "aic_pipes_us": {
+          "mac": 14625.7,
+          "mte1": 11776.3,
+          "mte2": 9131.4,
+          "fixpipe": 7384.0,
+          "scalar": 1735.2
+        },
+        "aiv_pipes_us": {
+          "vec": 4600.2,
+          "mte2": 853.29,
+          "mte3": 12956.3,
+          "scalar": 1042.4
+        }
+      }
+    },
+    "Qwen3-prefill-S512-b8-sdpa": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 47199.7,
+          "aiv_time_us": 92166.6,
+          "kernel_gap_us": 3088.0,
+          "host_gap_us": 47489.7,
+          "wall_clock_us": 189944.0
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 29719.4,
+          "mte1": 23766.9,
+          "mte2": 43375.7,
+          "fixpipe": 18322.3,
+          "scalar": 3172.5
+        },
+        "aiv_pipes_us": {
+          "vec": 12702.5,
+          "mte2": 71535.2,
+          "mte3": 57483.5,
+          "scalar": 3112.3,
+          "idle": 0.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 43375.7,
+          "aiv_time_us": 71535.2,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 47489.7,
+          "wall_clock_us": 162400.59999999998
+        },
+        "reduction_pct_vs_baseline": 14.5,
+        "aic_pipes_us": {
+          "mac": 29719.4,
+          "mte1": 23766.9,
+          "mte2": 43375.7,
+          "fixpipe": 18322.3,
+          "scalar": 3172.5
+        },
+        "aiv_pipes_us": {
+          "vec": 12702.5,
+          "mte2": 71535.2,
+          "mte3": 57483.5,
+          "scalar": 3112.3
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 43375.7,
+          "aiv_time_us": 71535.2,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 16640.0,
+          "wall_clock_us": 131550.9
+        },
+        "reduction_pct_vs_baseline": 30.74,
+        "aic_pipes_us": {
+          "mac": 29719.4,
+          "mte1": 23766.9,
+          "mte2": 43375.7,
+          "fixpipe": 18322.3,
+          "scalar": 3172.5
+        },
+        "aiv_pipes_us": {
+          "vec": 12702.5,
+          "mte2": 71535.2,
+          "mte3": 57483.5,
+          "scalar": 3112.3
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 43375.7,
+          "aiv_time_us": 57483.5,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 16640.0,
+          "wall_clock_us": 117499.2
+        },
+        "reduction_pct_vs_baseline": 38.14,
+        "aic_pipes_us": {
+          "mac": 29719.4,
+          "mte1": 23766.9,
+          "mte2": 43375.7,
+          "fixpipe": 18322.3,
+          "scalar": 3172.5
+        },
+        "aiv_pipes_us": {
+          "vec": 12702.5,
+          "mte2": 3576.76,
+          "mte3": 57483.5,
+          "scalar": 3112.3
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 29719.4,
+          "aiv_time_us": 57483.5,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 16640.0,
+          "wall_clock_us": 103842.9
+        },
+        "reduction_pct_vs_baseline": 45.33,
+        "aic_pipes_us": {
+          "mac": 29719.4,
+          "mte1": 23766.9,
+          "mte2": 21254.09,
+          "fixpipe": 18322.3,
+          "scalar": 3172.5
+        },
+        "aiv_pipes_us": {
+          "vec": 12702.5,
+          "mte2": 3576.76,
+          "mte3": 57483.5,
+          "scalar": 3112.3
+        }
+      }
+    },
+    "ModernBERT-base-S4096-b1-sdpa": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 38305.7,
+          "aiv_time_us": 201400.5,
+          "kernel_gap_us": 2542.4,
+          "host_gap_us": 18374.0,
+          "wall_clock_us": 260622.6
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 10355.7,
+          "mte1": 10030.2,
+          "mte2": 31349.7,
+          "fixpipe": 19412.9,
+          "scalar": 1395.4
+        },
+        "aiv_pipes_us": {
+          "vec": 32100.6,
+          "mte2": 170304.1,
+          "mte3": 109155.6,
+          "scalar": 2944.2,
+          "idle": 0.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 31349.7,
+          "aiv_time_us": 170304.1,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 18374.0,
+          "wall_clock_us": 220027.80000000002
+        },
+        "reduction_pct_vs_baseline": 15.58,
+        "aic_pipes_us": {
+          "mac": 10355.7,
+          "mte1": 10030.2,
+          "mte2": 31349.7,
+          "fixpipe": 19412.9,
+          "scalar": 1395.4
+        },
+        "aiv_pipes_us": {
+          "vec": 32100.6,
+          "mte2": 170304.1,
+          "mte3": 109155.6,
+          "scalar": 2944.2
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 31349.7,
+          "aiv_time_us": 170304.1,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 13700.0,
+          "wall_clock_us": 215353.80000000002
+        },
+        "reduction_pct_vs_baseline": 17.37,
+        "aic_pipes_us": {
+          "mac": 10355.7,
+          "mte1": 10030.2,
+          "mte2": 31349.7,
+          "fixpipe": 19412.9,
+          "scalar": 1395.4
+        },
+        "aiv_pipes_us": {
+          "vec": 32100.6,
+          "mte2": 170304.1,
+          "mte3": 109155.6,
+          "scalar": 2944.2
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 31349.7,
+          "aiv_time_us": 109155.6,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 13700.0,
+          "wall_clock_us": 154205.30000000002
+        },
+        "reduction_pct_vs_baseline": 40.83,
+        "aic_pipes_us": {
+          "mac": 10355.7,
+          "mte1": 10030.2,
+          "mte2": 31349.7,
+          "fixpipe": 19412.9,
+          "scalar": 1395.4
+        },
+        "aiv_pipes_us": {
+          "vec": 32100.6,
+          "mte2": 8515.2,
+          "mte3": 109155.6,
+          "scalar": 2944.2
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 19412.9,
+          "aiv_time_us": 109155.6,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 13700.0,
+          "wall_clock_us": 142268.5
+        },
+        "reduction_pct_vs_baseline": 45.41,
+        "aic_pipes_us": {
+          "mac": 10355.7,
+          "mte1": 10030.2,
+          "mte2": 15361.35,
+          "fixpipe": 19412.9,
+          "scalar": 1395.4
+        },
+        "aiv_pipes_us": {
+          "vec": 32100.6,
+          "mte2": 8515.2,
+          "mte3": 109155.6,
+          "scalar": 2944.2
+        }
+      }
+    },
+    "Qwen2.5-0.5B-prefill-S2048-b1-sdpa": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 28398.6,
+          "aiv_time_us": 74338.0,
+          "kernel_gap_us": 2655.6,
+          "host_gap_us": 42654.4,
+          "wall_clock_us": 148046.6
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 12914.0,
+          "mte1": 12367.9,
+          "mte2": 26244.9,
+          "fixpipe": 10082.3,
+          "scalar": 1391.8
+        },
+        "aiv_pipes_us": {
+          "vec": 11116.2,
+          "mte2": 61621.4,
+          "mte3": 45719.3,
+          "scalar": 1586.5,
+          "idle": 0.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 26244.9,
+          "aiv_time_us": 61621.4,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 42654.4,
+          "wall_clock_us": 130520.70000000001
+        },
+        "reduction_pct_vs_baseline": 11.84,
+        "aic_pipes_us": {
+          "mac": 12914.0,
+          "mte1": 12367.9,
+          "mte2": 26244.9,
+          "fixpipe": 10082.3,
+          "scalar": 1391.8
+        },
+        "aiv_pipes_us": {
+          "vec": 11116.2,
+          "mte2": 61621.4,
+          "mte3": 45719.3,
+          "scalar": 1586.5
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 26244.9,
+          "aiv_time_us": 61621.4,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 14310.0,
+          "wall_clock_us": 102176.3
+        },
+        "reduction_pct_vs_baseline": 30.98,
+        "aic_pipes_us": {
+          "mac": 12914.0,
+          "mte1": 12367.9,
+          "mte2": 26244.9,
+          "fixpipe": 10082.3,
+          "scalar": 1391.8
+        },
+        "aiv_pipes_us": {
+          "vec": 11116.2,
+          "mte2": 61621.4,
+          "mte3": 45719.3,
+          "scalar": 1586.5
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 26244.9,
+          "aiv_time_us": 45719.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 14310.0,
+          "wall_clock_us": 86274.20000000001
+        },
+        "reduction_pct_vs_baseline": 41.72,
+        "aic_pipes_us": {
+          "mac": 12914.0,
+          "mte1": 12367.9,
+          "mte2": 26244.9,
+          "fixpipe": 10082.3,
+          "scalar": 1391.8
+        },
+        "aiv_pipes_us": {
+          "vec": 11116.2,
+          "mte2": 3081.07,
+          "mte3": 45719.3,
+          "scalar": 1586.5
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 12914.0,
+          "aiv_time_us": 45719.3,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 14310.0,
+          "wall_clock_us": 72943.3
+        },
+        "reduction_pct_vs_baseline": 50.73,
+        "aic_pipes_us": {
+          "mac": 12914.0,
+          "mte1": 12367.9,
+          "mte2": 12860.0,
+          "fixpipe": 10082.3,
+          "scalar": 1391.8
+        },
+        "aiv_pipes_us": {
+          "vec": 11116.2,
+          "mte2": 3081.07,
+          "mte3": 45719.3,
+          "scalar": 1586.5
+        }
+      }
+    },
+    "SmolLM2-360M-prefill-S2048-b1-sdpa": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 30303.9,
+          "aiv_time_us": 100047.5,
+          "kernel_gap_us": 3529.7,
+          "host_gap_us": 57465.5,
+          "wall_clock_us": 191346.6
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 13020.6,
+          "mte1": 11025.0,
+          "mte2": 25244.9,
+          "fixpipe": 9903.8,
+          "scalar": 1714.6
+        },
+        "aiv_pipes_us": {
+          "vec": 15002.9,
+          "mte2": 83110.5,
+          "mte3": 69204.5,
+          "scalar": 2198.0,
+          "idle": 0.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 25244.9,
+          "aiv_time_us": 83110.5,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 57465.5,
+          "wall_clock_us": 165820.9
+        },
+        "reduction_pct_vs_baseline": 13.34,
+        "aic_pipes_us": {
+          "mac": 13020.6,
+          "mte1": 11025.0,
+          "mte2": 25244.9,
+          "fixpipe": 9903.8,
+          "scalar": 1714.6
+        },
+        "aiv_pipes_us": {
+          "vec": 15002.9,
+          "mte2": 83110.5,
+          "mte3": 69204.5,
+          "scalar": 2198.0
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 25244.9,
+          "aiv_time_us": 83110.5,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 19020.0,
+          "wall_clock_us": 127375.4
+        },
+        "reduction_pct_vs_baseline": 33.43,
+        "aic_pipes_us": {
+          "mac": 13020.6,
+          "mte1": 11025.0,
+          "mte2": 25244.9,
+          "fixpipe": 9903.8,
+          "scalar": 1714.6
+        },
+        "aiv_pipes_us": {
+          "vec": 15002.9,
+          "mte2": 83110.5,
+          "mte3": 69204.5,
+          "scalar": 2198.0
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 25244.9,
+          "aiv_time_us": 69204.5,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 19020.0,
+          "wall_clock_us": 113469.4
+        },
+        "reduction_pct_vs_baseline": 40.7,
+        "aic_pipes_us": {
+          "mac": 13020.6,
+          "mte1": 11025.0,
+          "mte2": 25244.9,
+          "fixpipe": 9903.8,
+          "scalar": 1714.6
+        },
+        "aiv_pipes_us": {
+          "vec": 15002.9,
+          "mte2": 4155.53,
+          "mte3": 69204.5,
+          "scalar": 2198.0
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 13020.6,
+          "aiv_time_us": 69204.5,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 19020.0,
+          "wall_clock_us": 101245.1
+        },
+        "reduction_pct_vs_baseline": 47.09,
+        "aic_pipes_us": {
+          "mac": 13020.6,
+          "mte1": 11025.0,
+          "mte2": 12370.0,
+          "fixpipe": 9903.8,
+          "scalar": 1714.6
+        },
+        "aiv_pipes_us": {
+          "vec": 15002.9,
+          "mte2": 4155.53,
+          "mte3": 69204.5,
+          "scalar": 2198.0
+        }
+      }
+    },
+    "Llama-3.2-1B-prefill-S2048-b1-sdpa": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 50447.9,
+          "aiv_time_us": 105823.7,
+          "kernel_gap_us": 1783.4,
+          "host_gap_us": 15379.2,
+          "wall_clock_us": 173434.2
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 29075.3,
+          "mte1": 24384.2,
+          "mte2": 46631.5,
+          "fixpipe": 12306.3,
+          "scalar": 2531.4
+        },
+        "aiv_pipes_us": {
+          "vec": 15672.0,
+          "mte2": 90521.5,
+          "mte3": 66889.8,
+          "scalar": 1937.0,
+          "idle": 0.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 46631.5,
+          "aiv_time_us": 90521.5,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 15379.2,
+          "wall_clock_us": 152532.2
+        },
+        "reduction_pct_vs_baseline": 12.05,
+        "aic_pipes_us": {
+          "mac": 29075.3,
+          "mte1": 24384.2,
+          "mte2": 46631.5,
+          "fixpipe": 12306.3,
+          "scalar": 2531.4
+        },
+        "aiv_pipes_us": {
+          "vec": 15672.0,
+          "mte2": 90521.5,
+          "mte3": 66889.8,
+          "scalar": 1937.0
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 46631.5,
+          "aiv_time_us": 90521.5,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 9610.0,
+          "wall_clock_us": 146763.0
+        },
+        "reduction_pct_vs_baseline": 15.38,
+        "aic_pipes_us": {
+          "mac": 29075.3,
+          "mte1": 24384.2,
+          "mte2": 46631.5,
+          "fixpipe": 12306.3,
+          "scalar": 2531.4
+        },
+        "aiv_pipes_us": {
+          "vec": 15672.0,
+          "mte2": 90521.5,
+          "mte3": 66889.8,
+          "scalar": 1937.0
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 46631.5,
+          "aiv_time_us": 66889.8,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 9610.0,
+          "wall_clock_us": 123131.3
+        },
+        "reduction_pct_vs_baseline": 29.0,
+        "aic_pipes_us": {
+          "mac": 29075.3,
+          "mte1": 24384.2,
+          "mte2": 46631.5,
+          "fixpipe": 12306.3,
+          "scalar": 2531.4
+        },
+        "aiv_pipes_us": {
+          "vec": 15672.0,
+          "mte2": 4526.07,
+          "mte3": 66889.8,
+          "scalar": 1937.0
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 29075.3,
+          "aiv_time_us": 66889.8,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 9610.0,
+          "wall_clock_us": 105575.1
+        },
+        "reduction_pct_vs_baseline": 39.13,
+        "aic_pipes_us": {
+          "mac": 29075.3,
+          "mte1": 24384.2,
+          "mte2": 22849.44,
+          "fixpipe": 12306.3,
+          "scalar": 2531.4
+        },
+        "aiv_pipes_us": {
+          "vec": 15672.0,
+          "mte2": 4526.07,
+          "mte3": 66889.8,
+          "scalar": 1937.0
+        }
+      }
+    },
+    "Phi-3-mini-prefill-S2048-b1-sdpa": {
+      "S0_baseline": {
+        "scenario": "S0_baseline",
+        "description": "msprof 实测，无任何优化",
+        "wall_clock": {
+          "aic_time_us": 144524.2,
+          "aiv_time_us": 223640.1,
+          "kernel_gap_us": 3243.9,
+          "host_gap_us": 15797.5,
+          "wall_clock_us": 387205.70000000007
+        },
+        "reduction_pct_vs_baseline": 0.0,
+        "aic_pipes_us": {
+          "mac": 90253.3,
+          "mte1": 77322.6,
+          "mte2": 135611.2,
+          "fixpipe": 26111.0,
+          "scalar": 7869.0
+        },
+        "aiv_pipes_us": {
+          "vec": 32546.5,
+          "mte2": 186595.1,
+          "mte3": 136601.1,
+          "scalar": 4064.4,
+          "idle": 0.0
+        }
+      },
+      "S1_software_ceiling": {
+        "scenario": "S1_software_ceiling",
+        "description": "CANN TBE 算子完美双缓冲 + 完美指令调度（消除 bubble/idle/kernel_gap）",
+        "wall_clock": {
+          "aic_time_us": 135611.2,
+          "aiv_time_us": 186595.1,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 15797.5,
+          "wall_clock_us": 338003.80000000005
+        },
+        "reduction_pct_vs_baseline": 12.71,
+        "aic_pipes_us": {
+          "mac": 90253.3,
+          "mte1": 77322.6,
+          "mte2": 135611.2,
+          "fixpipe": 26111.0,
+          "scalar": 7869.0
+        },
+        "aiv_pipes_us": {
+          "vec": 32546.5,
+          "mte2": 186595.1,
+          "mte3": 136601.1,
+          "scalar": 4064.4
+        }
+      },
+      "S2_software_runtime_ceiling": {
+        "scenario": "S2_software_runtime_ceiling",
+        "description": "S1 + CANN runtime 优化（host_gap 降到 10.0 μs/kernel，已低于该值则保持）",
+        "wall_clock": {
+          "aic_time_us": 135611.2,
+          "aiv_time_us": 186595.1,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 15797.5,
+          "wall_clock_us": 338003.80000000005
+        },
+        "reduction_pct_vs_baseline": 12.71,
+        "aic_pipes_us": {
+          "mac": 90253.3,
+          "mte1": 77322.6,
+          "mte2": 135611.2,
+          "fixpipe": 26111.0,
+          "scalar": 7869.0
+        },
+        "aiv_pipes_us": {
+          "vec": 32546.5,
+          "mte2": 186595.1,
+          "mte3": 136601.1,
+          "scalar": 4064.4
+        }
+      },
+      "S3_hw_ub_l1_fused": {
+        "scenario": "S3_hw_ub_l1_fused",
+        "description": "S2 + 硬件 UB+L1 融合（aiv_mte2 × 0.05）",
+        "wall_clock": {
+          "aic_time_us": 135611.2,
+          "aiv_time_us": 136601.1,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 15797.5,
+          "wall_clock_us": 288009.80000000005
+        },
+        "reduction_pct_vs_baseline": 25.62,
+        "aic_pipes_us": {
+          "mac": 90253.3,
+          "mte1": 77322.6,
+          "mte2": 135611.2,
+          "fixpipe": 26111.0,
+          "scalar": 7869.0
+        },
+        "aiv_pipes_us": {
+          "vec": 32546.5,
+          "mte2": 9329.76,
+          "mte3": 136601.1,
+          "scalar": 4064.4
+        }
+      },
+      "S4_hw_ub_l1_fused_hbm3": {
+        "scenario": "S4_hw_ub_l1_fused_hbm3",
+        "description": "S3 + HBM3 800 GB/s（aic_mte2 × 0.490）",
+        "wall_clock": {
+          "aic_time_us": 90253.3,
+          "aiv_time_us": 136601.1,
+          "kernel_gap_us": 0.0,
+          "host_gap_us": 15797.5,
+          "wall_clock_us": 242651.90000000002
+        },
+        "reduction_pct_vs_baseline": 37.33,
+        "aic_pipes_us": {
+          "mac": 90253.3,
+          "mte1": 77322.6,
+          "mte2": 66449.49,
+          "fixpipe": 26111.0,
+          "scalar": 7869.0
+        },
+        "aiv_pipes_us": {
+          "vec": 32546.5,
+          "mte2": 9329.76,
+          "mte3": 136601.1,
+          "scalar": 4064.4
+        }
+      }
+    }
+  }
+}

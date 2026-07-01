@@ -1,0 +1,37 @@
+# SmolLM2-135M — 30 层 GQA decoder（S=1 decode, d=576, SwiGLU）
+# 用途：prism-regime 渐进验证 — memory-bound 测试
+# 数据来源：HuggingFaceTB/SmolLM2-135M config.json（HuggingFace）
+#
+# 关键 Roofline 特征（S=1 decode，单 token 自回归）：
+#   FLOPs/token：~212 MFLOPs（30 层 × 7.07 MFLOPs/层）
+#   算术强度：~0.5 OPs/Byte（<< 910B4 拐点 1429 → 极度 memory-bound）
+#   权重 270 MB > L2 96 MB → HBM overflow 174 MB
+#   预期 regime：memory-bound（权重加载主导，Cube 几乎空闲）
+
+name: SmolLM2-135M-decode-b1
+arch: decoder
+layers: 30
+ops_b1: 0.212e9               # 212 M OPs（30 层 × 7.07 M/层，decode M=1）
+weight_mb: 270.0              # 135M params × 2 bytes（FP16）
+bytes_total: 1.74e8           # HBM overflow = (270-96) × 1e6 = 174 MB
+alpha_per_batch: null
+beta_layer_override: null     # 待 910B 实测后反算
+note: |
+  S=1 (decode), D=576, L=30, SwiGLU FFN (intermediate=1536),
+  GQA 9Q/3KV heads d_head=64, RoPE.
+  Per-layer GEMM: Q[1,576,576] + K[1,192,576] + V[1,192,576] +
+  O[1,576,576] + FFN gate[1,1536,576] + FFN up[1,1536,576] +
+  FFN down[1,576,1536] = 7.07 MFLOPs/layer.
+  预期 memory-bound: 算术强度~0.5 OPs/Byte << 910B4 拐点1429.
+  30 层 × 270MB 权重 = 需反复从 HBM 加载，decode 天然低算术强度.
+
+# GEMM-level spec required by prism-predict-pipe (Issue #2).
+gemm_spec:
+  S: 1
+  d_model: 576
+  d_ff: 1536
+  n_heads: 9
+  n_kv_heads: 3
+  d_head: 64
+  vocab: 49152
+  ffn_type: swiglu

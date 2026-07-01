@@ -1,0 +1,27 @@
+# T5-small encoder — 6 层 encoder（S=512, d=512）
+# 数据来源：google/t5-small config.json
+# 典型场景：seq2seq encoder pass，对照 Flan-T5 看 FFN 类型差异
+
+name: T5-small-encoder-S512-b1
+arch: encoder
+layers: 6
+ops_b1: 8.0e9                 # ~8 GFLOPs encoder @ S=512
+weight_mb: 122.0              # 61M params × 2 bytes (encoder+decoder; FP16)
+bytes_total: 2.6e7            # HBM overflow = (122-96) × 1e6 = 26 MB（轻度溢出）
+alpha_per_batch: null
+beta_layer_override: null
+note: |
+  S=512, D=512, L=6 encoder, intermediate=2048, MHA 8 heads d_head=64.
+  T5-small uses original ReLU FFN (NOT gated) — ffn_type=standard.
+  注：T5 用 relative position bias，predict_pipe 忽略此项（量级 < 5%）.
+  预期 regime: host-bound (small model, short S, deep 程度低).
+
+gemm_spec:
+  S: 512
+  d_model: 512
+  d_ff: 2048
+  n_heads: 8
+  n_kv_heads: 0
+  d_head: 64
+  vocab: 32128
+  ffn_type: standard

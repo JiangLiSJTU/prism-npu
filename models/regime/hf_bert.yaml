@@ -1,0 +1,20 @@
+# HF BERT — 4 层蒸馏 encoder（S=128, d=256）
+# 用途：scripts/microarch_exploration/regime_gate.py
+# 数据来源：roofline_910b4_calibrated_v2.py KNOWN_MODELS_V2["HF BERT"]
+
+name: HF BERT
+arch: encoder
+layers: 4
+ops_b1: 880.0e+6              # 880 M OPs
+weight_mb: 24.0
+bytes_total: 0.0              # 权重(24MB)+激活/样本(~2.5MB) 在 B≤29 全部 < L2=96MB
+alpha_per_batch: null         # OLS 从实测数据拟合（regime_gate 计算）
+beta_layer_override: 93.2     # 实测反算 (491.6 - 119) / 4 = 93.2 μs/层 (S=128 d=256)
+measured:
+  1: 491.6
+  4: 607.7
+  8: 699.7
+  16: 864.0
+note: |
+  S=128, D=256, L=4；小 d 编码器；β_layer_enc_d256 校准点。
+  bytes_total 设为 0：B=16 时总数据 24+16×2.5=64MB < 96MB，HBM 流量≈0。

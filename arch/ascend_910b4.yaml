@@ -1,0 +1,136 @@
+# 昇腾 910B4 架构描述（Timeloop + Accelergy 兼容，subtree/local v0.4 格式）
+# 更新日期：2026-05-06
+#
+# 关键规格：
+#   FP16 算力：280 TFLOPS（24 核）；HBM2e 带宽：392 GB/s
+#   L2 共享：192 MB；L1/核：512 KB；L0A/L0B：64 KB/核；L0C：128 KB/核
+#   Cube 粒度：16×16×16 = 4096 MACs/核
+#
+# 层次规则：每个 subtree: 只允许 1 个元素（topology.cpp ParseTreeSpecs 断言）
+#   DRAM 和 L2_Buffer 放在 System.local，不作为单独 subtree 节点
+#
+# Accelergy 兼容类名（timeloop-mapper 二进制 + 旧版 Accelergy）：
+#   SRAM        →  CactiSRAM（需 technology 22-180nm；用 40nm 近似，energy 不精确但不影响 cycles）
+#   DRAM        →  CactiDRAM（type=HBM2，HBM2e 不在 CACTI 支持列表，用 HBM2 近似）
+#   storage + subclass: aladdin_register  →  Aladdin/Library（寄存器）
+#   intmac + width  →  Aladdin_table（MAC 单元，technology 40 → 40nm，Aladdin 支持）
+#
+# 注意：smartbuffer_SRAM 仅在 pytimeloop/timeloopfe v4 前端中定义，
+#       timeloop-mapper 二进制不支持，故改用 SRAM 类。
+#
+# Timeloop 兼容属性（避免 cluster_size 断言）：
+#   DRAM：无 block_size/cluster_size，width=64 → block_size=8，cluster_size=1
+#   SRAM：n_banks 不影响 cluster_size
+#
+# technology: 40（全局）= 40nm 近似 DaVinci 7nm
+#   CACTI 支持范围：22-180nm；7nm 超出范围会 crash
+#   Accelergy 能量值会偏大（40nm > 7nm），但 Timeloop cycles 不受影响
+#   F1 校准只比较 cycles，energy 近似值可接受
+
+architecture:
+  version: 0.4
+  subtree:
+    - name: System
+      attributes:
+        global_cycle_seconds: 1e-9    # 1 GHz 时钟；CactiSRAM/aladdin_register 必需
+        technology: 40                # 40nm 近似（CACTI 支持 22-180nm；7nm 超范围）
+      local:
+
+        # ── DRAM（HBM2，392 GB/s）─────────────────────────────────────────
+        # 注：CACTI 支持 HBM2 (3.9 pJ/bit)，不支持 HBM2e
+        # bandwidth: 392000 MB/s = 392 GB/s（与 CHIP_SPECS bw_base 一致，供 bw_scale 替换）
+        - name: DRAM
+          class: DRAM
+          attributes:
+            type: "HBM2"
+            width: 64             # 64-bit word width；无 block_size → cluster_size=1
+            datawidth: 16         # Accelergy 能量估算用（FP16）
+            bandwidth: 392000     # MB/s（HBM2e 392 GB/s；F4 bw_scale 替换此值）
+
+        # ── L2 Buffer（192 MB 共享，depth 取 CACTI 可处理值）────────────────
+        # 注：depth=524288（1MB）是实用上限，192MB CACTI 会超时；Timeloop 容量约束已在
+        #     constraints.yaml 中设定，depth 不影响 cycles 计算
+        # 注：class: smartbuffer_SRAM 是 Accelergy 的 compound 组件，分解为
+        #     SRAM（CactiSRAM 估算能量）+ intadder（Aladdin 估算），保证 ERT 非空
+        - name: L2_Buffer
+          class: smartbuffer_SRAM
+          attributes:
+            depth: 524288         # 524K × 16-bit = 1 MB（CACTI 可处理上限）
+            width: 64
+            n_banks: 16
+            datawidth: 16
+            read_bandwidth: 6400
+            write_bandwidth: 6400
+
+      subtree:
+
+        # ── DaVinci Core × 24（单个 subtree，满足 getLength()==1 断言） ────
+        - name: DaVinci_Core[0..23]
+          local:
+
+            # ── L1 Buffer（512 KB/核 = 262144 × 16-bit words） ──────────
+            - name: L1_Buffer
+              class: smartbuffer_SRAM
+              attributes:
+                depth: 262144     # 512 KB @ 16-bit
+                width: 64
+                n_banks: 16
+                datawidth: 16
+                read_bandwidth: 600
+                write_bandwidth: 600
+
+            # ── L0B Buffer（64 KB/核 = 32768 × 16-bit，权重） ───────────
+            - name: L0B_Buffer
+              class: smartbuffer_SRAM
+              attributes:
+                depth: 32768      # 64 KB @ 16-bit
+                width: 64
+                n_banks: 4
+                datawidth: 16
+                read_bandwidth: 2048
+                write_bandwidth: 2048
+
+            # ── L0A Buffer（64 KB/核 = 32768 × 16-bit，激活值） ─────────
+            - name: L0A_Buffer
+              class: smartbuffer_SRAM
+              attributes:
+                depth: 32768      # 64 KB @ 16-bit
+                width: 64
+                n_banks: 4
+                datawidth: 16
+                read_bandwidth: 2048
+                write_bandwidth: 2048
+
+            # ── L0C Buffer（128 KB/核 = 65536 × 16-bit，部分和） ────────
+            - name: L0C_Buffer
+              class: smartbuffer_SRAM
+              attributes:
+                depth: 65536      # 128 KB @ 16-bit
+                width: 64
+                n_banks: 8
+                datawidth: 16
+                read_bandwidth: 2048
+                write_bandwidth: 2048
+
+          subtree:
+
+            # ── Cube MAC × 4096（单个 subtree，满足断言） ──────────────
+            - name: Cube_MAC[0..4095]
+              local:
+
+                # ── Cube 寄存器文件（aladdin_register → Library/Aladdin ERT）──
+                - name: Cube_Reg
+                  class: storage
+                  subclass: aladdin_register
+                  attributes:
+                    depth: 1
+                    width: 16
+                    datawidth: 16
+
+                # ── Cube ALU（intmac，Aladdin_table 支持，需 width 属性）──
+                - name: Cube_ALU
+                  class: intmac
+                  attributes:
+                    width: 16             # Aladdin 查 adder.csv/multiplier.csv 需要
+                    multiplier_width: 8
+                    adder_width: 16

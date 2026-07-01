@@ -1,0 +1,84 @@
+# Manual mapping with Cube K-spatial test
+# Workload: M=128 N=3072 K=768
+# Test: 在 L0C spatial 加 K=16，把 Cube fanout 拉满 4096 = 16×16×16
+
+mapping:
+  - target: Cube_Reg
+    type: datatype
+    keep: []
+    bypass: [Weights, Inputs, Outputs]
+  - target: L0C_Buffer
+    type: datatype
+    keep: [Outputs]
+    bypass: [Weights, Inputs]
+  - target: L0A_Buffer
+    type: datatype
+    keep: [Inputs]
+    bypass: [Weights, Outputs]
+  - target: L0B_Buffer
+    type: datatype
+    keep: [Weights]
+    bypass: [Inputs, Outputs]
+  - target: L1_Buffer
+    type: datatype
+    keep: [Inputs]
+    bypass: [Weights, Outputs]
+  - target: L2_Buffer
+    type: datatype
+    keep: [Weights]
+    bypass: [Inputs, Outputs]
+  - target: DRAM
+    type: datatype
+    keep: [Weights, Inputs, Outputs]
+    bypass: []
+
+  # Cube_Reg 内层 K reduce（每周期 K=16 spatial × 1 step temporal）
+  - target: Cube_Reg
+    type: temporal
+    factors: M1 N1 K8    # K 在 cube 内 8 个时序 step（K_total=K_spatial*K_temp=16*8=128 per L0 tile）
+    permutation: KMN
+
+  - target: L0A_Buffer
+    type: temporal
+    factors: M2 N1 K1
+    permutation: MNK
+
+  - target: L0B_Buffer
+    type: temporal
+    factors: M1 N1 K1
+    permutation: MNK
+
+  # L0C spatial: 16×16×16 = 4096 (full Cube_MAC fanout)
+  - target: L0C_Buffer
+    type: spatial
+    factors: M16 N16 K16
+    permutation: MNK
+    split: 3
+
+  - target: L0C_Buffer
+    type: temporal
+    factors: M1 N32 K1
+    permutation: NMK
+
+  - target: L1_Buffer
+    type: temporal
+    factors: M1 N1 K1
+    permutation: MNK
+
+  # L2 spatial: 4×6 = 24 cores
+  - target: L2_Buffer
+    type: spatial
+    factors: M4 N6 K1
+    permutation: MNK
+    split: 3
+
+  - target: L2_Buffer
+    type: temporal
+    factors: M1 N1 K1
+    permutation: MNK
+
+  # DRAM K_outer = 6 (768 / 128 = 6)
+  - target: DRAM
+    type: temporal
+    factors: M1 N1 K6
+    permutation: KMN

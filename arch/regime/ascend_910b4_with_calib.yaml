@@ -1,0 +1,27 @@
+# 昇腾 910B4 — Roofline regime gate 输入（基线）
+# 用途：scripts/microarch_exploration/regime_gate.py
+# 数据来源：roofline_910b4_calibrated_v2.py (Phase C, 2026-05-05)
+#   ASCEND_910B4_V2 dict (lines 56-64) + CALIB_V2 dict (lines 75-98)
+#
+# 注：这是 Roofline 视角的简化抽象（不是 Timeloop 架构 yaml）；只承载 chip 顶层
+#     算力/带宽/容量参数与 v2 双 β_layer 校准常数。
+
+name: ascend_910b4_with_calib
+chip:
+  fp16_tflops: 280.0       # FP16，等于 INT8 560 TOPS / 2
+  hbm_bw_gbs:  392.0       # HBM2e 峰值
+  l2_mb:        96.0       # 修正：l2_size = 100663296 B / 1048576 = 96 MB（v1 误用 192 MB）
+  tdp_w:       300.0       # nominal
+calib:
+  beta_device_us:                119.0    # Kitsune B=1 直接读取
+  beta_layer_enc_us:             133.6    # OLS 综合（HF BERT + BERT-base，S=128）
+  beta_layer_enc_d768_us:        138.1    # BERT-base 单点反算（更精确，d=768）
+  beta_layer_enc_d256_us:         93.2    # HF BERT 单点反算（d=256）
+  beta_layer_dec_S256_d384_us:    80.4    # Net-Transformer 单点反算
+  beta_layer_dec_S512_d768_us:   355.6    # GPT-2-small 单点反算
+  beta_layer_dec_S512_d1024_us:  560.4    # Qwen3-0.6B 单点反算
+  eta_compute:                     0.70   # 沿用 v1 经验值
+note: |
+  All chip values match ASCEND_910B4_V2 in roofline_910b4_calibrated_v2.py.
+  All calib values match CALIB_V2 in the same file (verified 2026-05-06).
+  This file is the unmodified baseline used by predict_910b4_v2().
