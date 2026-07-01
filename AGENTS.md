@@ -75,7 +75,7 @@ This repo was sanitized for public release. Future commits **must not** reintrod
 
 **Exception**: academic citations referencing a paper's institutional byline are factual and OK.
 
-If you're unsure whether a term is acceptable, check `git log --grep="sanitize"` to find the canonical sanitization diff — anything removed there is in the "do not reintroduce" set.
+If you're unsure whether a term is acceptable, treat the four bullets above as the canonical "do not reintroduce" set; when still in doubt, prefer the industry-neutral term.
 
 ## Windows-specific gotchas
 
